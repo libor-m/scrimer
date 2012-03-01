@@ -20,11 +20,11 @@
 # all the hits from one read must follow each other
 #
 # Libor Morkovsky, 2012
-#
+# - version merging regions on the output, not region add (a bit more effective)
 
 import sys, re 
 
-# add a region, merging to any previous on the same chromosome/strand, if overlapping
+# add a region
 def addregion(regs, chr, start, end, reverse):
   # find chromosome + direction combination
   dir = "f"
@@ -39,35 +39,10 @@ def addregion(regs, chr, start, end, reverse):
   
   # otherwise try to find overlap with some of the existing regions
   regs[key].append((start, end))
-  regs[key].sort()
-  
-  newregs = []
-  idx = 0
-  # go through elements 0..len-2
-  while idx < len(regs[key]):
-    # current region
-    (start, end) = regs[key][idx]
-    
-    # go through all regions starting after this one
-    for nidx in xrange(idx + 1, len(regs[key])):
-      (nstart, nend) = regs[key][nidx]
-      # if there is an overlap, try to extend current region
-      if nstart < end:
-        end = max(end, nend)
-        # continue with merging after this element
-        idx = nidx
-      # we're in sorted list, there will be no more overlaps
-      else:
-        break
-    
-    idx += 1
-    newregs.append((start, end))
- 
-  # assign the merged list to regions for this sequence
-  regs[key] = newregs
   
     
-#  clip to chromosome length and output the regions  
+# clip to chromosome length and output the regions  
+# merging to overlapping regions on the same chromosome/strand
 def output_regions(num, regions):
   """
   A. The input script file format
@@ -86,9 +61,37 @@ def output_regions(num, regions):
   For best performance, the script should be sorted by the genomic
   sequence index. 
   """  
+  
   for key, ranges in regions.iteritems():
     (seq, dir) = (key[:len(key)-1], key[len(key)-1])
-    for start, end in ranges:
+    
+    # 
+    # merge overlapping
+    # 
+    ranges.sort()
+    newranges = []
+    idx = 0
+    # go through elements
+    while idx < len(ranges):
+      # current region
+      (start, end) = ranges[idx]
+      
+      # go through all regions starting after this one
+      for nidx in xrange(idx + 1, len(ranges)):
+        (nstart, nend) = ranges[nidx]
+        # if there is an overlap, try to extend current region
+        if nstart < end:
+          end = max(end, nend)
+          # continue with merging after this element
+          idx = nidx
+        # we're in sorted list, there will be no more overlaps
+        else:
+          break
+      
+      idx += 1
+      newranges.append((start, end))
+
+    for start, end in newranges:
       if start < 0: start = 0
       if end > chromosomes[seq][1]: end = chromosomes[seq][1]
       print "-%s -e %d -D %d %d %d" % (dir, num, chromosomes[seq][0], start, end)
