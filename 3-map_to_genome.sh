@@ -141,7 +141,8 @@ QUOTE
 # transfer the annotation
 ####
 
-# select features in EnsGene file
+# select features in EnsGene file 
+# probably a dead end
 intersectBed -wa -a /data/genomes/taeGut1/annot/ensGene_s.bed.gz -b 31-sim4db-tg/lu_master500_scr_fix.gff | uniq > 32-extracted-annotation/ensGene_sim4.bed
 intersectBed -wa -a /data/genomes/taeGut1/annot/ensGene_s.bed.gz -b 30-gmap-to-tg/lu_master500.gff | uniq > 32-extracted-annotation/ensGene_gmap.bed
 cat 32-extracted-annotation/ensGene_*.bed|sortBed -i stdin|uniq > 32-extracted-annotation/ensGene.bed
@@ -149,3 +150,6 @@ cat 32-extracted-annotation/ensGene_*.bed|sortBed -i stdin|uniq > 32-extracted-a
 intersectBed -wa -a /data/genomes/taeGut1/annot/xenoMrna_s.bed.gz -b 30-gmap-to-tg/lu_master500.gff | uniq > 32-extracted-annotation/xenoMrna_gmap.bed
 intersectBed -wa -a /data/genomes/taeGut1/annot/xenoMrna_s.bed.gz -b 31-sim4db-tg/lu_master500_scr_fix.gff | uniq > 32-extracted-annotation/xenoMrna_sim4.bed
 
+# liftover using the exon mapper coordinates
+./liftover.py 31-sim4db-tg/lu_master500_scr_fix.gff > 32-liftover/sim4db.gff
+./liftover.py 30-gmap-to-tg/lu_master500.gff > 32-liftover/gmap.gff

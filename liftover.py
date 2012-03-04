@@ -68,7 +68,10 @@ for gffeature in gff:
   gffeature.chrom = rmnum.sub('', gffeature.chrom)
   
   # remove the invalid sim4db intron attribute if present
-  if 'intron' in gffeature.attrs: del gffeature.attrs.remove('intron')
+  #if 'intron' in gffeature.attrs: del gffeature.attrs['intron']
+  
+  # we do not transfer the parent attributes now, so do not break the format
+  if 'Parent' in gffeature.attrs: del gffeature.attrs['Parent']
   
   # use the .fields[] to avoid coordinate conversion to bed format (-1 for start)
   gffeature.attrs['Target'] = "%s %s %s %s" % (gffeature.chrom, gffeature.fields[3], gffeature.fields[4], gffeature.strand)
