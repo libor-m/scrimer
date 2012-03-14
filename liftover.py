@@ -76,6 +76,9 @@ for gffeature in gff:
   # use the .fields[] to avoid coordinate conversion to bed format (-1 for start)
   gffeature.attrs['Target'] = "%s %s %s %s" % (gffeature.chrom, gffeature.fields[3], gffeature.fields[4], gffeature.strand)
   
+  # transfer the source application from original gff to attributes in the output
+  gffeature.attrs['source'] = gffeature.fields[1]
+  
   # copy the rest of the attribues intact
   gflist = [target_id, 'liftover', gffeature.fields[2], 
     target_start, target_end, gffeature.score, target_strand,

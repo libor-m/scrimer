@@ -119,6 +119,12 @@ grep chr10 31-sim4db-tg/lu_master500_scr.gff|sed s/0:chr/chr/ > 31-sim4db-tg/tes
 # fix chromosome names for the whole gff
 cat 31-sim4db-tg/lu_master500_scr.gff|sed s/^[0-9][0-9]*:chr/chr/ > 31-sim4db-tg/lu_master500_scr_fix.gff
 
+# run the fixed sim4db again
+sim4db -genomic /data/genomes/taeGut1/taeGut1.fa -cdna 0a-jp-newbler-contigs/lu_master500.fasta -script 31-sim4db-tg/lu_master500.sim4scr -output 31-sim4db-tg/lu_master500_sim4db2.gff -gff3 -interspecies -mincoverage 70 -minidentity 90 -minlength 60 -alignments -threads 7
+
+# fix chromosome names 
+sed s/^[0-9][0-9]*:chr/chr/ 31-sim4db-tg/lu_master500_sim4db2.gff > 31-sim4db-tg/lu_master500_sim4db2_fix.gff
+
 ####
 # exonerate
 ####
@@ -142,7 +148,7 @@ QUOTE
 ####
 
 # select features in EnsGene file 
-# probably a dead end
+# probably a dead end, the information will be transferred during liftover
 intersectBed -wa -a /data/genomes/taeGut1/annot/ensGene_s.bed.gz -b 31-sim4db-tg/lu_master500_scr_fix.gff | uniq > 32-extracted-annotation/ensGene_sim4.bed
 intersectBed -wa -a /data/genomes/taeGut1/annot/ensGene_s.bed.gz -b 30-gmap-to-tg/lu_master500.gff | uniq > 32-extracted-annotation/ensGene_gmap.bed
 cat 32-extracted-annotation/ensGene_*.bed|sortBed -i stdin|uniq > 32-extracted-annotation/ensGene.bed
@@ -151,5 +157,16 @@ intersectBed -wa -a /data/genomes/taeGut1/annot/xenoMrna_s.bed.gz -b 30-gmap-to-
 intersectBed -wa -a /data/genomes/taeGut1/annot/xenoMrna_s.bed.gz -b 31-sim4db-tg/lu_master500_scr_fix.gff | uniq > 32-extracted-annotation/xenoMrna_sim4.bed
 
 # liftover using the exon mapper coordinates
+#TODO: one of the mappers inverts the 'Target' coordinates when target and strand are both -
+# have a look at gff spec and find the solution
+#
+# sim4db manual (http://sourceforge.net/apps/mediawiki/kmer/index.php?title=Getting_Started_with_Sim4db)
+# Exon coordinates are nucleotide based, starting from 1. Genomic coordinates are always in the original sequence, 
+# while the cDNA coordinates will refer to positions in the reverse complement of the sequence if the match orientation is indicated as 'complement'.
+#
+# --> this is unnecessary, because the orientation of the transcript can be deduced from the target chromosome strand ..?
 ./liftover.py 31-sim4db-tg/lu_master500_scr_fix.gff > 32-liftover/sim4db.gff
 ./liftover.py 30-gmap-to-tg/lu_master500.gff > 32-liftover/gmap.gff
+
+# using the new sim4db
+./liftover.py 31-sim4db-tg/lu_master500_sim4db2_fix.gff > 32-liftover/sim4db_fixed.gff
