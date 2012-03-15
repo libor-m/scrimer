@@ -14,13 +14,16 @@
 
 import sys
 import pybedtools
+import itertools
 import re
 
 if len(sys.argv) < 2:
   sys.exit('use: %s gff_with_exons [bed_with_fetures] [...]' % sys.argv[0])
   
 # load all feature files as IntervalFiles
-featurefiles = [pybedtools.BedTool(fname).as_intervalfile() for fname in sys.argv[2:]]
+# convert to bed6 if needed
+bedtools = [pybedtools.BedTool(fname) for fname in sys.argv[2:]]
+featurefiles = [bedtool.as_intervalfile() if bedtool.field_count() < 12 else bedtool.bed6().as_intervalfile() for bedtool in bedtools]
 
 gff = pybedtools.BedTool(sys.argv[1])
 if gff.file_type != 'gff':
@@ -67,10 +70,7 @@ for gffeature in gff:
   target_id = rmnum.sub('', target_id)
   gffeature.chrom = rmnum.sub('', gffeature.chrom)
   
-  # remove the invalid sim4db intron attribute if present
-  #if 'intron' in gffeature.attrs: del gffeature.attrs['intron']
-  
-  # we do not transfer the parent attributes now, so do not break the format
+  # we do not transfer the parent features now, so do not break the format
   if 'Parent' in gffeature.attrs: del gffeature.attrs['Parent']
   
   # use the .fields[] to avoid coordinate conversion to bed format (-1 for start)
@@ -87,3 +87,13 @@ for gffeature in gff:
   # create the inverted feature
   invgff = pybedtools.create_interval_from_list(gflist)
   print str(invgff).strip()
+
+  # choose 
+  if gffeature.fields[2] != 'exon': continue
+  
+  # find any features (consider them exons) in the additional files
+  # that intersect with current exon (merge the hits from all files)
+  intersecting = itertools.chain.from_iterable([ff.all_hits(gffeature) for ff in featurefiles])
+  
+  # for each intersecting feature create 
+  for feature in intersecting:

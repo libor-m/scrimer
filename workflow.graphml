@@ -187,7 +187,6 @@ call variants<y:LabelModel>
       </data>
     </node>
     <node id="n10">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="56.0" width="223.75" x="172.5" y="920.20703125"/>
@@ -205,7 +204,6 @@ call variants<y:LabelModel>
       </data>
     </node>
     <node id="n11">
-      <data key="d5"/>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="56.0" width="240.0" x="451.25" y="920.20703125"/>
@@ -307,7 +305,6 @@ bed</y:EdgeLabel>
       </data>
     </edge>
     <edge id="e7" source="n5" target="n2">
-      <data key="d9"/>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="0.0" sy="28.0" tx="-35.75" ty="-28.0">
@@ -321,7 +318,6 @@ bed</y:EdgeLabel>
       </data>
     </edge>
     <edge id="e8" source="n4" target="n3">
-      <data key="d9"/>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="0.0" sy="28.0" tx="-78.875" ty="-6.1552734375">
@@ -335,7 +331,6 @@ bed</y:EdgeLabel>
       </data>
     </edge>
     <edge id="e9" source="n3" target="n6">
-      <data key="d9"/>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="0.0" sy="28.0" tx="51.0" ty="-28.0"/>
@@ -346,7 +341,6 @@ bed</y:EdgeLabel>
       </data>
     </edge>
     <edge id="e10" source="n9" target="n7">
-      <data key="d9"/>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="0.0" sy="28.0" tx="60.0" ty="-28.0">
@@ -362,7 +356,6 @@ bed</y:EdgeLabel>
       </data>
     </edge>
     <edge id="e11" source="n6" target="n7">
-      <data key="d9"/>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="0.0" sy="28.0" tx="-60.0" ty="-28.0"/>
@@ -373,7 +366,6 @@ bed</y:EdgeLabel>
       </data>
     </edge>
     <edge id="e12" source="n0" target="n6">
-      <data key="d9"/>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="0.0" sy="28.0" tx="-51.0" ty="-28.0">
@@ -387,7 +379,6 @@ bed</y:EdgeLabel>
       </data>
     </edge>
     <edge id="e13" source="n3" target="n11">
-      <data key="d9"/>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="85.375" sy="15.3447265625" tx="0.0" ty="0.0">
@@ -396,12 +387,11 @@ bed</y:EdgeLabel>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="112.017578125" x="119.5" y="246.26416015625">IGV script with ROIs</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="24.021484375" x="119.5" y="246.26416015625">bed</y:EdgeLabel>
         </y:QuadCurveEdge>
       </data>
     </edge>
     <edge id="e14" source="n7" target="n10">
-      <data key="d9"/>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="-68.625" sy="9.6435546875" tx="24.375" ty="0.54296875"/>
