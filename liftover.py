@@ -66,6 +66,12 @@ for gffeature in gff:
 
   # extract target info  from the attributes
   target_id, target_start, target_end, target_strand = gffeature.attrs['Target'].split()
+  
+  # sanity check, do not go on if coords are strange
+  if int(target_start) > int(target_end): 
+    print >> sys.stderr, "target coords weird (%d, %d)" % (int(target_start), int(target_end))
+    continue
+  
   # remove the leading #: if present (sim4db)
   target_id = rmnum.sub('', target_id)
   gffeature.chrom = rmnum.sub('', gffeature.chrom)
@@ -88,12 +94,45 @@ for gffeature in gff:
   invgff = pybedtools.create_interval_from_list(gflist)
   print str(invgff).strip()
 
-  # choose 
+  # look for annotations overlapping only exons (CDS are contained in exons) 
   if gffeature.fields[2] != 'exon': continue
   
-  # find any features (consider them exons) in the additional files
+  # find features (consider them exons) in the additional files
   # that intersect with current exon (merge the hits from all files)
   intersecting = itertools.chain.from_iterable([ff.all_hits(gffeature) for ff in featurefiles])
   
-  # for each intersecting feature create 
+  # for each intersecting feature create a clipped feature
   for feature in intersecting:
+    
+    fs, fe = feature.start, feature.end
+    
+    at = pybedtools.Attributes();
+    at['Name'] = feature.name
+    at['coords'] = gffeature.fields[1]
+    
+    # left clip
+    lclip = gffeature.start - feature.start
+    if lclip > 0:
+      at['leftClip'] = lclip
+      feature.start = int(target_start)
+    else:
+      feature.start = max(int(target_start) + lclip, 0)
+    
+    # right clip
+    rclip = feature.end - gffeature.end
+    if rclip > 0:
+      at['rightClip'] = rclip
+      feature.end = int(target_end)
+    else:
+      feature.end = min(int(target_start) + (feature.end - gffeature.start), int(target_end))
+    
+    # sanity check
+    #if feature.end > 100000:
+    #  print >> sys.stderr, str(feature).strip(), target_start, target_end, lclip, rclip, fs, fe
+    
+    # the start+1 is probably not correct, but otherwise we get errors in BED constructor
+    flist = [target_id, 'liftover', 'exon',
+      str(feature.start + 1), str(feature.end), str(feature.score), feature.strand,
+      '.', str(at)]
+    
+    print str(pybedtools.create_interval_from_list(flist)).strip()
