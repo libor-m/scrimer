@@ -110,13 +110,16 @@ for gffeature in gff:
     at['Name'] = feature.name
     at['coords'] = gffeature.fields[1]
     
+    # because of the igv feature merging, add some uniqness 
+    at['seqid'] = target_id
+    
     # left clip
     lclip = gffeature.start - feature.start
     if lclip > 0:
       at['leftClip'] = lclip
       feature.start = int(target_start)
     else:
-      feature.start = max(int(target_start) + lclip, 0)
+      feature.start = max(int(target_start) - lclip, 1)
     
     # right clip
     rclip = feature.end - gffeature.end
@@ -127,12 +130,12 @@ for gffeature in gff:
       feature.end = min(int(target_start) + (feature.end - gffeature.start), int(target_end))
     
     # sanity check
-    #if feature.end > 100000:
+    #if feature.start < 1:
     #  print >> sys.stderr, str(feature).strip(), target_start, target_end, lclip, rclip, fs, fe
     
     # the start+1 is probably not correct, but otherwise we get errors in BED constructor
     flist = [target_id, 'liftover', 'exon',
-      str(feature.start + 1), str(feature.end), str(feature.score), feature.strand,
+      str(feature.start), str(feature.end), str(gffeature.score), feature.strand,
       '.', str(at)]
     
     print str(pybedtools.create_interval_from_list(flist)).strip()

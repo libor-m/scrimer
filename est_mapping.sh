@@ -1,3 +1,6 @@
+#
+# obsolote code, just for reference, use the #-step.sh scripts
+#
 ######
 # use ssahaEST to perform the mapping to zebra finch genome
 ######

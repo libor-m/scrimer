@@ -171,8 +171,6 @@ intersectBed -wa -a /data/genomes/taeGut1/annot/xenoMrna_s.bed.gz -b 31-sim4db-t
 # using the new sim4db
 ./liftover.py 31-sim4db-tg/lu_master500_sim4db2_fix.gff > 32-liftover/sim4db_fixed.gff
 
-# using full fledged liftover
+# using fully fledged liftover
 ./liftover.py 31-sim4db-tg/lu_master500_sim4db2_fix.gff /data/genomes/taeGut1/annot/ensGene_s.bed.gz > 32-liftover/sim4db-ensGenes.gff
 ./liftover.py 30-gmap-to-tg/lu_master500.gff /data/genomes/taeGut1/annot/ensGene_s.bed.gz > 32-liftover/gmap-ensGenes.gff
-
-# problem for another week -- some coords of the Target attribute are swapped (gmap and sim4db)
