@@ -174,3 +174,10 @@ intersectBed -wa -a /data/genomes/taeGut1/annot/xenoMrna_s.bed.gz -b 31-sim4db-t
 # using fully fledged liftover
 ./liftover.py 31-sim4db-tg/lu_master500_sim4db2_fix.gff /data/genomes/taeGut1/annot/ensGene_s.bed.gz > 32-liftover/sim4db-ensGenes.gff
 ./liftover.py 30-gmap-to-tg/lu_master500.gff /data/genomes/taeGut1/annot/ensGene_s.bed.gz > 32-liftover/gmap-ensGenes.gff
+
+#TODO: virtual genome?
+# for each of the sequences harvest a list of candidate locations 
+# in the reference genome (probably for both used mappers)
+# and place the sequences to virtual chromosomes, if they have unique candidate location
+# otherwise to some chrUn 
+# later could be combined even with mapping to chicken/turkey genomes
