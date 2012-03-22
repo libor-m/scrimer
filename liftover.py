@@ -129,6 +129,10 @@ for gffeature in gff:
     else:
       feature.end = min(int(target_start) + (feature.end - gffeature.start), int(target_end))
     
+    #TODO: review the rebasing calculation, still produces start>end
+    # quick fix:
+    feature.start, feature.end = sorted([feature.start, feature.end])
+    
     # sanity check
     #if feature.start < 1:
     #  print >> sys.stderr, str(feature).strip(), target_start, target_end, lclip, rclip, fs, fe

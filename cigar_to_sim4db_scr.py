@@ -45,6 +45,7 @@ def addregion(regs, chr, start, end, reverse):
 # merging to overlapping regions on the same chromosome/strand
 def output_regions(num, regions):
   """
+  from documentation of sim4db:
   A. The input script file format
    
   [-f|-r] -e ESTidx -D GENidx GENlo GENhi
@@ -80,7 +81,7 @@ def output_regions(num, regions):
       for nidx in xrange(idx + 1, len(ranges)):
         (nstart, nend) = ranges[nidx]
         # if there is an overlap, try to extend current region
-        if nstart < end:
+        if nstart <= end:
           end = max(end, nend)
           # continue with merging after this element
           idx = nidx

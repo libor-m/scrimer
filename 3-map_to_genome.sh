@@ -175,4 +175,5 @@ intersectBed -wa -a /data/genomes/taeGut1/annot/xenoMrna_s.bed.gz -b 31-sim4db-t
 ./liftover.py 31-sim4db-tg/lu_master500_sim4db2_fix.gff /data/genomes/taeGut1/annot/ensGene_s.bed.gz > 32-liftover/sim4db-ensGenes.gff
 ./liftover.py 30-gmap-to-tg/lu_master500.gff /data/genomes/taeGut1/annot/ensGene_s.bed.gz > 32-liftover/gmap-ensGenes.gff
 
-#TODO: virtual genome?
+# construct a virtual genome (contigs joined in order of appearance on reference genome chromosomes)
+./virtual_genome.py 0a-jp-newbler-contigs/lu_master500.fasta 32-liftover/gmap-ensGenes.gff 32-liftover/sim4db-ensGenes.gff 33-virtual-genome/lx2.fasta 33-virtual-genome/lx2.gff
