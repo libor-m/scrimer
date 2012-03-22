@@ -3,23 +3,26 @@ CONTIGS=0a-jp-newbler-contigs/lu_master500.fasta
 OUTDIR=40-map-smalt
 
 # tools
-TOOLS=/opt/samtools-0.1.18:~/data/sw_testbed/IGVTools
+TOOLS=/opt/samtools-0.1.18:~/data/sw_testbed/IGVTools:
 export PATH=$TOOLS:$PATH
 
 ######
 # use smalt to map the reads to the contigs
 ######
 
-# build the index, recommended settings for 454 (step 4, k-mer size 13)
-smalt index -s 4 $OUTDIR/lu_master500/k13s4 $CONTIGS
+# build the index in the directory of the genome
+# recommended settings for 454 (step 4, k-mer size 13)
+mkdir -p ${CONTIGS%/*}/smalt
+smalt index -s 4 ${CONTIGS%/*}/smalt/k13s4 $CONTIGS
 
 # smalt seems to be a lot less effective when there is a lot of sequences in the 'genome'
 # probably redo the alignments with some coverage threshold, to avoid 200H 20M 300H matches
 # map the reads in a loop
+mkdir -p $OUTDIR
 for FQFILE in 14-cutadapt-2/*.fastq
 do
   SAMFILE=$OUTDIR/$( basename ${FQFILE%.*} ).sam
-  smalt map -n 8 -p -f sam -o $SAMFILE 40-map-smalt/lu_master500/k13s4 $FQFILE
+  smalt map -n 8 -p -f sam -o $SAMFILE ${CONTIGS%/*}/smalt/k13s4 $FQFILE
 done
 
 # all/mapped read counts

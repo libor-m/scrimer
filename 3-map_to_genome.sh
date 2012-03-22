@@ -177,3 +177,9 @@ intersectBed -wa -a /data/genomes/taeGut1/annot/xenoMrna_s.bed.gz -b 31-sim4db-t
 
 # construct a virtual genome (contigs joined in order of appearance on reference genome chromosomes)
 ./virtual_genome.py 0a-jp-newbler-contigs/lu_master500.fasta 32-liftover/gmap-ensGenes.gff 32-liftover/sim4db-ensGenes.gff 33-virtual-genome/lx2.fasta 33-virtual-genome/lx2.gff
+./virtual_genome.py 0a-jp-newbler-contigs/lu_master500.fasta 32-liftover/gmap-ensGenes.gff 32-liftover/sim4db-ensGenes.gff 33-virtual-genome/lx3.fasta 33-virtual-genome/lx3.gff3
+
+# it's quite vital to sort and index the file to use it in IGV
+sortBed -i 33-virtual-genome/lx3.gff3 > 33-virtual-genome/lx3.sorted.gff3
+bgzip 33-virtual-genome/lx3.sorted.gff3
+tabix -p gff 33-virtual-genome/lx3.sorted.gff3.gz

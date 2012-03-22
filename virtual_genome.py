@@ -184,11 +184,14 @@ def main():
 
   # try to resolve the ambiguity by exon coverage
   print >> sys.stderr, "trying to resolve %d ambiguities " % len(ambiguous),
-  amb_no_hope = set()
+  amb_resolved = set()
   for read_name in ambiguous:
     coverages = [(coverage, target) for target, coverage in coverage_by_target(pybedtools.Interval(read_name, 0, len(reads[read_name])), features[read_name]).iteritems()]
     coverages.sort(reverse=True)
 
+    # get an idea about the disambiguation process
+    # print "disamb:", read_name, coverages
+    
     # do the decisions only for decently covered contigs, leave others as amb
     if coverages[0][0] < 0.5: continue
     
@@ -201,12 +204,13 @@ def main():
     read_list = invmap.setdefault(coverages[0][1], [])
     read_list.append( (pos, read_name) )
     
-    amb_no_hope.add(read_name)
+    amb_resolved.add(read_name)
 
-  print >> sys.stderr, "%d not resolved" % len(amb_no_hope)
+  print >> sys.stderr, "%d resolved" % len(amb_resolved)
   
   # ambiguously assigned reads, assign position 0 to all
-  invmap['chrAmb'] = [(0, read_name) for read_name in amb_no_hope]
+  ambiguous -= amb_resolved
+  invmap['chrAmb'] = [(0, read_name) for read_name in ambiguous]
   chromosomes.append('chrAmb')
   
   # unassigned reads
@@ -243,7 +247,7 @@ def main():
       at = pybedtools.Attributes();
       at['ID'] = read_name
       flist = [chr, 'virtual_genome', 'mRNA',
-               str(feature_positions[index] + 1), str(feature_positions[index] + 1 + feature_lengths[index]),
+               str(feature_positions[index] + 1), str(feature_positions[index] + feature_lengths[index]),
                '1', '+', '.', str(at)]
       
       fo_gff.write(str(pybedtools.create_interval_from_list(flist)))
@@ -251,7 +255,7 @@ def main():
       # remap all the other features
       if read_name not in features: continue
       for feature in features[read_name]:
-        feature.attrs['Parent'] = read_name
+        # feature.attrs['Parent'] = read_name
         feature.chrom = chr
         feature.start += feature_positions[index]
         feature.end += feature_positions[index]
