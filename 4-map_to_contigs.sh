@@ -62,6 +62,10 @@ samtools view -S -t $CONTIGS.fai -H $SAMFILE > $OUTDIR/sequences.txt
 # description (DS) is used to identify the species
 # FIXME: this does not work when copy-pasting, 
 # because shell interprets the tab character (autocomplete)
+# 
+# the order matters for the vcf output,
+# the sample columns order is probably the order of first apperance in the @RG
+#
 cat > $OUTDIR/readgroups.txt <<'EOF'
 @RG	ID:G59B7NP01	SM:lu02	LB:G59B7NP01	PL:LS454	DS:ll
 @RG	ID:G60Z2EH01.RL9	SM:lu04	LB:G60Z2EH01	PL:LS454	DS:lm
@@ -77,10 +81,12 @@ cat > $OUTDIR/readgroups.txt <<'EOF'
 @RG	ID:GYAB93P02.RL2	SM:lu03	LB:GYAB93P02	PL:LS454	DS:lm
 EOF
 
-cat $OUTDIR/sequences.txt $OUTDIR/readgroups.txt > $OUTDIR/sam-header.txt
-
 # samtools merge requires sorted alignments, sort them in parallel
 parallel "samtools view -but $CONTIGS.fai {} | samtools sort - {.}" ::: $OUTDIR/*.sam
+
+# generate the sequence headers, using any .sam file
+samtools view -S -t $CONTIGS.fai -H $SAMFILE > $OUTDIR/sequences.txt
+cat $OUTDIR/sequences.txt readgroups.txt > $OUTDIR/sam-header.txt
 
 # merge all the alignments, not removing the dupes?
 # http://seqanswers.com/forums/showthread.php?t=6543
@@ -92,5 +98,8 @@ samtools index $OUTDIR/alldup.bam
 # final mapping statistics
 samtools idxstats $OUTDIR/alldup.bam|gawk '{map += $3; unmap += $4;} END {print  unmap/map;}'
 
-# count for the igv
-igvtools count -z 5 -w 25 -e 250 "${SAMFILE%.*}".bam  "${SAMFILE%.*}".bam.tdf ${CONTIGS%.*}.genome
+# coverage sums for IGV
+igvtools count -z 5 -w 25 -e 250 $OUTDIR/alldup.bam  $OUTDIR/alldup.bam.tdf ${CONTIGS%.*}.genome
+
+# header fix
+samtools reheader $OUTDIR/sam-header2.txt $OUTDIR/alldup.bam > $OUTDIR/alldup2.bam
