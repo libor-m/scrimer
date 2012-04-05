@@ -165,17 +165,14 @@ intersectBed -wa -a /data/genomes/taeGut1/annot/xenoMrna_s.bed.gz -b 31-sim4db-t
 # while the cDNA coordinates will refer to positions in the reverse complement of the sequence if the match orientation is indicated as 'complement'.
 #
 # --> this is unnecessary, because the orientation of the transcript can be deduced from the target chromosome strand ..?
-./liftover.py 31-sim4db-tg/lu_master500_scr_fix.gff > 32-liftover/sim4db.gff
-./liftover.py 30-gmap-to-tg/lu_master500.gff > 32-liftover/gmap.gff
+# --> patched in sim4db, patch on sourceforge
 
-# using the new sim4db
-./liftover.py 31-sim4db-tg/lu_master500_sim4db2_fix.gff > 32-liftover/sim4db_fixed.gff
-
-# using fully fledged liftover
+# use liftover to transfer the ensGenes exon annotations
 ./liftover.py 31-sim4db-tg/lu_master500_sim4db2_fix.gff /data/genomes/taeGut1/annot/ensGene_s.bed.gz > 32-liftover/sim4db-ensGenes.gff
 ./liftover.py 30-gmap-to-tg/lu_master500.gff /data/genomes/taeGut1/annot/ensGene_s.bed.gz > 32-liftover/gmap-ensGenes.gff
 
 # construct a virtual genome (contigs joined in order of appearance on reference genome chromosomes)
+# 'N' gaps should be larger than max read size to avoid the mapping of the reads across gaps
 ./virtual_genome.py 0a-jp-newbler-contigs/lu_master500.fasta 32-liftover/gmap-ensGenes.gff 32-liftover/sim4db-ensGenes.gff 33-virtual-genome/lx2.fasta 33-virtual-genome/lx2.gff
 ./virtual_genome.py 0a-jp-newbler-contigs/lu_master500.fasta 32-liftover/gmap-ensGenes.gff 32-liftover/sim4db-ensGenes.gff 33-virtual-genome/lx3.fasta 33-virtual-genome/lx3.gff3
 
