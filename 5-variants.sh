@@ -60,3 +60,5 @@ VCFOUTPUT=51-variants-parallel/lx3-variants-dps.vcf.gz
 vcf_filter.py --local-script pyvcf_filters.py --depth-per-sample 3 $VCFINPUT dps | bgzip | pv -s $( stat -c%s $VCFINPUT ) > $VCFOUTPUT
 tabix -p vcf $VCFOUTPUT
 
+# count reasonable variants
+zcat -d $VCFOUTPUT | grep -c PASS
