@@ -19,17 +19,14 @@
 # the fragments must be named like readname_number (like fasta_fragments.py does)
 # all the hits from one read must follow each other
 #
-# Libor Morkovsky, 2012
-# - version merging regions on the output, not region add (a bit more effective)
+# Author: Libor Morkovsky 2012
 
 import sys, re 
 
 # add a region
 def addregion(regs, chr, start, end, reverse):
   # find chromosome + direction combination
-  dir = "f"
-  if reverse:
-    dir = "r"
+  dir = "f" if not reverse else "r"
   
   key = chr + dir
   

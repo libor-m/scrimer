@@ -39,9 +39,13 @@ vcfutils.pl splitchr $CONTIGS.fai | xargs -i echo $OUTDIR/part-{}.bcf | xargs rm
 # (for convinient viewing in IGV)
 # - overall low coverage sites (less than 3 reads per sample - averaged, to avoid discarding
 #   an otherwise interesting information because of one bad sample)
-# - indels caused by 454 homopolymer problems - can be recognized by strand bias in DP4 INFO tag
+# - indels caused by 454 homopolymer problems 
+#   can be recognized by strand bias in DP4 INFO tag
 #   INFO=<ID=DP4,Number=4,Type=Integer,Description="# high-quality ref-forward bases, ref-reverse, alt-forward and alt-reverse bases">
 #   single base indels with strand bias
+#   ! but generally those should have low quality score from samtools, so just filter the low 
+#   ! quality variants
+
 
 # extract qualities, then check distribution in R (-> common power law distribution, peak at 999)
 zcat $VCFINPUT|grep -v '^#'|cut -f6 | R > $VCFINPUT.qual
@@ -57,8 +61,12 @@ tabix -p vcf $VCFOUTPUT
 # with progress meter (only adding flags to rows, suppose similar filesize)
 VCFINPUT=51-variants-parallel/lx3-variants-filt2.vcf.gz
 VCFOUTPUT=51-variants-parallel/lx3-variants-dps.vcf.gz
-vcf_filter.py --local-script pyvcf_filters.py --depth-per-sample 3 $VCFINPUT dps | bgzip | pv -s $( stat -c%s $VCFINPUT ) > $VCFOUTPUT
+pv -p $VCFINPUT | bgzip -d | vcf_filter.py --local-script pyvcf_filters.py - dps --depth-per-sample 3 | bgzip > $VCFOUTPUT
 tabix -p vcf $VCFOUTPUT
 
-# count reasonable variants
+VCFOUTPUT=51-variants-parallel/lx3-variants-selected.vcf.gz
+pv -p $VCFINPUT | bgzip -d | vcf_filter.py --local-script pyvcf_filters.py - dps --depth-per-sample 3 snp-only contrast-samples --sample-names ll-lu02 ll-lu05 ll-lu07 | bgzip > $VCFOUTPUT
+tabix -p vcf $VCFOUTPUT
+
+# count remaining variants
 zcat -d $VCFOUTPUT | grep -c PASS

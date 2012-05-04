@@ -2,7 +2,7 @@
 # implementation of vcf filters
 # for pyvcf vcf_filter.py
 #
-# Libor Morkovsky 2012
+# Author: Libor Morkovsky 2012
 #
 import vcf
 
@@ -14,7 +14,7 @@ class DepthPerSample(vcf.Filter):
   @classmethod
   def customize_parser(self, parser):
     parser.add_argument('--depth-per-sample', type=int, default=5,
-              help='Minimum required coverage in each sample [5]')
+              help='Minimum required coverage in each sample')
 
   def __init__(self, args):
     self.threshold = args.depth_per_sample
@@ -35,7 +35,7 @@ class AvgDepthPerSample(vcf.Filter):
   @classmethod
   def customize_parser(self, parser):
     parser.add_argument('--avg-depth-per-sample', type=int, default=3,
-              help='Minimum required average coverage per sample [3]')
+              help='Minimum required average coverage per sample')
 
   def __init__(self, args):
     self.threshold = args.avg_depth_per_sample
@@ -63,14 +63,16 @@ class DistinguishingVariants(vcf.Filter):
 
   @classmethod
   def customize_parser(self, parser):
-    parser.add_argument('--contrast-group', nargs='+', metavar='sample_id',
-              help='Names of samples to form the contrast group')
+    #TODO: argparse.add_mutually_exclusive_group
+    # for --sample-numbers
+    parser.add_argument('--sample-names', nargs='+', metavar='sample_id',
+              help='Names of samples in the group to contrast against the rest')
 
   def filter_name(self):
       return self.name
 
   def __init__(self, args):
-    self.group = set(args.contrast_group)
+    self.group = set(args.sample_names)
     import re
     self.splitter = re.compile('[/|]')
 
