@@ -43,46 +43,6 @@ class Primer3:
         str_kw = dict((key, str(val)) for key, val in kwargs.iteritems())
         self.default_params.update(str_kw)
 
-    def process_record(self, record):
-        """OBSOLETE, superseded by call()
-        Merge the record with default_params, the record taking precedence,
-        call the primer3 worker, 
-        parse the output and return a list of dictionaries 
-        {RIGHT:[], LEFT:[], PAIR:[], INTERNAL:[]} for each input record
-        """
-        
-        # merge the defaults with current query
-        full_record = dict(self.default_params.items() + record.items())
-        
-        # call primer3
-        import subprocess
-        self.child = subprocess.Popen([self.p3path, '-strict_tags'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = self.child.communicate(BoulderIO.deparse(full_record))
-        
-        #TODO: check for errors in stderr
-        
-        #TODO: process multiple BoulderIO records in the output
-        results = BoulderIO.parse(out)[0]
-        
-        # parse the results to {RIGHT:[], LEFT:[], PAIR:[], INTERNAL:[]}
-        sides = ['RIGHT', 'LEFT', 'PAIR', 'INTERNAL']
-        # add a separate list for each side, .fromkeys() adds a reference to single instance
-        primers = dict((side, []) for side in sides)
-        for side in sides:
-            nret_key = 'PRIMER_%s_NUM_RETURNED' % side
-            nret = int(results.get(nret_key, 0))
-            
-            # extract the values for each single primer and put those to 
-            # equivalent key
-            for num in xrange(nret):
-                template = 'PRIMER_%s_%d_' % (side, num)
-                primer_keys = filter(lambda k: template in k, results.iterkeys())
-                primer = dict((key[len(template):], results[key]) for key in primer_keys)
-                
-                primers[side].append(primer)
-
-        return primers
-
     def call(self, records):
         """Merge each of the records with default_params, the record taking precedence,
         call the primer3 worker, 
@@ -128,9 +88,11 @@ class Primer3:
                     primer = dict((key[len(template):], result[key]) for key in primer_keys)
                     
                     # extract the position, which itself has no extractible name in BoulderIO
-                    pos_key = template[:len(template)-1]
-                    primer['position'] = result.get(pos_key, "#error!")
-                    used_keys.append(pos_key)
+                    # only 'PRIMER_LEFT_0'
+                    if side != 'PAIR':
+                        pos_key = template[:len(template)-1]
+                        primer['position'] = result.get(pos_key, "#error!")
+                        used_keys.append(pos_key)
                     
                     # keep track of keys used in current record
                     used_keys.extend(primer_keys)
@@ -142,3 +104,86 @@ class Primer3:
             primers.append(res_primers)
         
         return primers
+
+if __name__ == "__main__":
+    print "Running tests"
+    
+    import textwrap
+    
+    record = BoulderIO.parse(textwrap.dedent(
+    """
+    SEQUENCE_ID=example
+    SEQUENCE_TEMPLATE=GTAGTCAGTAGACGATGACTACTGACGATGCAGACNACACACACACACACAGCACACAGGTATTAGTGGGCCATTCGATCCCGACCCAAATCGATAGCTACGATGACG
+    SEQUENCE_TARGET=37,21
+    PRIMER_PICK_INTERNAL_OLIGO=0
+    PRIMER_OPT_SIZE=18
+    PRIMER_MIN_SIZE=15
+    PRIMER_MAX_SIZE=21
+    PRIMER_MAX_NS_ACCEPTED=3
+    PRIMER_PRODUCT_SIZE_RANGE=50-100
+    """))
+
+    record_no_res = BoulderIO.parse(textwrap.dedent(
+    """
+    SEQUENCE_ID=example
+    SEQUENCE_TEMPLATE=GTAGTCAGTAGACNATGACNACTGACGATGCAGACNACACACACACACACAGCACACAGGTATTAGTGGGCCATTCGATCCCGACCCAAATCGATAGCTACGATGACG
+    SEQUENCE_TARGET=37,21
+    PRIMER_TASK=pick_detection_primers
+    PRIMER_PICK_LEFT_PRIMER=1
+    PRIMER_PICK_INTERNAL_OLIGO=1
+    PRIMER_PICK_RIGHT_PRIMER=1
+    PRIMER_OPT_SIZE=18
+    PRIMER_MIN_SIZE=15
+    PRIMER_MAX_SIZE=21
+    PRIMER_MAX_NS_ACCEPTED=1
+    PRIMER_PRODUCT_SIZE_RANGE=75-100
+    SEQUENCE_INTERNAL_EXCLUDED_REGION=37,21
+    """))
+
+    default_params = BoulderIO.parse(textwrap.dedent(
+    """
+    PRIMER_THERMODYNAMIC_PARAMETERS_PATH=/opt/primer3/bin/primer3_config/
+    PRIMER_MAX_NS_ACCEPTED=0
+    PRIMER_EXPLAIN_FLAG=1
+    """))[0]
+
+    print "Testing BoulderIO, single record:", 
+    record_dp = BoulderIO.deparse(record)
+    record_reparsed = BoulderIO.parse(record_dp)
+    if record == record_reparsed:
+        print "OK"
+    else:
+        print "Failed!"
+
+    print "Testing BoulderIO, two records:", 
+    two_records = record + record_no_res
+    
+    record_dp = BoulderIO.deparse(two_records)
+    record_reparsed = BoulderIO.parse(record_dp)
+    if two_records == record_reparsed:
+        print "OK"
+    else:
+        print "Failed!"
+    
+    print "Testing Primer3, single record:", 
+    p3 = Primer3(**default_params)
+
+    # test for single record
+    res = p3.call(record)
+    if res[0]['RIGHT'][0]['SEQUENCE'] == 'GTCGGGATCGAATGGCCC':
+        print "OK"
+    else:
+        print "Failed!"
+ 
+    # test for multiple records
+    print "Testing Primer3, two records:", 
+    res = p3.call(two_records)
+
+    # second record should produce no results
+    if len(res[1]['RIGHT']) == 0:
+        print "OK"
+    else:
+        print "Failed!"
+    
+    # if no exception occurs, the test should be OK
+    print "Tests ran OK"
