@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 # given the
-# - reference sequence (fasta/samtools fai index)
+# - reference sequence (fasta with samtools fai index)
 # - annotations (gff, has to contain mRNA and exon entries)
-# - filtered variants (vcf, variants with PASS are used for the primer design)
+# - filtered variants (vcf, primers are designed for variants with PASS)
 # produces 
 # - PCR primers selected using primer3 
 #   and genotyping primers checked by primer3 (gff)
@@ -15,61 +15,55 @@
 #   (minimal primer length of 20 form the edge of an exon)
 # - construct a PCR candidate sequence from the exon containing the current 
 #   variant of interest by substituting all variable sites with Ns
+# algorithm2
+# - there is only a few selected variants, so the least amount of work
+#   will be to do the work only for variants
+# - for each of the selected variants
+#   - request exons
+#   - apply the technical constraints 
+#     (minimal primer length of 20 form the edge of an exon)
+#   - 
 # Author: Libor Morkovsky 2012
+#
 
 import sys
+import itertools
 
 import pysam # FastaFile
 import vcf
 import pybedtools
 from primer3_connector import primer3
 
-record = primer3_connector.BoulderIO.parse(
-"""SEQUENCE_ID=example
-SEQUENCE_TEMPLATE=GTAGTCAGTAGACGATGACTACTGACGATGCAGACNACACACACACACACAGCACACAGGTATTAGTGGGCCATTCGATCCCGACCCAAATCGATAGCTACGATGACG
-SEQUENCE_TARGET=37,21
-PRIMER_PICK_INTERNAL_OLIGO=0
-PRIMER_OPT_SIZE=18
-PRIMER_MIN_SIZE=15
-PRIMER_MAX_SIZE=21
-PRIMER_MAX_NS_ACCEPTED=3
-PRIMER_PRODUCT_SIZE_RANGE=50-100
-""")
 
-record_no_res = primer3_connector.BoulderIO.parse(
-"""SEQUENCE_ID=example
-SEQUENCE_TEMPLATE=GTAGTCAGTAGACNATGACNACTGACGATGCAGACNACACACACACACACAGCACACAGGTATTAGTGGGCCATTCGATCCCGACCCAAATCGATAGCTACGATGACG
-SEQUENCE_TARGET=37,21
-PRIMER_TASK=pick_detection_primers
-PRIMER_PICK_LEFT_PRIMER=1
-PRIMER_PICK_INTERNAL_OLIGO=1
-PRIMER_PICK_RIGHT_PRIMER=1
-PRIMER_OPT_SIZE=18
-PRIMER_MIN_SIZE=15
-PRIMER_MAX_SIZE=21
-PRIMER_MAX_NS_ACCEPTED=1
-PRIMER_PRODUCT_SIZE_RANGE=75-100
-SEQUENCE_INTERNAL_EXCLUDED_REGION=37,21
-""")
+def main():
+    if len(sys.argv) < 2:
+        sys.exit('use: %s genome_fasta_with_fai mrna_gff_with_tbi variants_vcf_with_tbi' % sys.argv[0])
 
-default_params = primer3_connector.BoulderIO.parse(
-"""PRIMER_THERMODYNAMIC_PARAMETERS_PATH=/opt/primer3/bin/primer3_config/
-PRIMER_MAX_NS_ACCEPTED=0
-PRIMER_EXPLAIN_FLAG=1
-""")[0]
+    genome = pysam.Fastafile(sys.argv[1])
+    annotations = pybedtools.BedTool(sys.argv[2])
+    variants = vcf.Reader(filename=sys.argv[3])
 
-p3 = primer3_connector.Primer3(**default_params)
+    # use iterator filter, so the variants are streamed
+    for var in itertools.ifilter(lambda v: not v.FILTER, variants):
+        var_features = annotations.tabix_intervals(pybedtools.Interval(var.CHROM, var.POS, var.POS))
+        var_exons = [f for f in var_features if f.fields[2] == 'exon']
+        
+        # get a minimal predicted exon
+        # (trying to be conservative)
+        #FIXME:unfinished
+        
+    for gffeature in annotations:
+        # we're interested only in mRNA entries in the virtual genome
+        # (those represent the original assembled contigs)
+        if gffeature.fields[2] != 'mRNA': continue
+        
+        # get all exons for the mRNA
+        contig_features = annotations.tabix_intervals(gffeature)
+        exons = [f for f in contig_features if f.fields[2] == 'exon']
+        
+        
+        
 
-# test for single record
-p3.call(record)
-# test for multiple records
-p3.call(record * 2)
+if __name__ == "__main__": main()
 
-# old egglib version
-import egglib
-import pysam
-ff = pysam.Fastafile("33-virtual-genome/lx3.fasta")
-p3 = egglib.wrappers.Primer3(ff.fetch('chr1', 0, 200), SEQUENCE_TARGET='30,20', PRIMER_MAX_NS_ACCEPTED=0, PRIMER_THERMODYNAMIC_PARAMETERS_PATH='/opt/primer3/bin/primer3_config/')
-p3.find_primers()
 
-PRIMER_THERMODYNAMIC_PARAMETERS_PATH=/opt/primer3/bin/primer3_config/

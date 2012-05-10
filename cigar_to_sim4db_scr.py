@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 # script that parses cigar file 
-# produced by aligning fragments of contis to a genome (tested with smalt output)
+# produced by aligning fragments of contigs to a genome (tested with smalt output)
 # and outputs a 'script' for limiting the exon model regions of sim4db
 #
 # general strategy:

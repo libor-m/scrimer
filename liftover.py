@@ -72,11 +72,12 @@ for gffeature in gff:
     print >> sys.stderr, "target coords weird (%d, %d)" % (int(target_start), int(target_end))
     continue
   
-  # remove the leading #: if present (sim4db)
+  # remove the leading 'number:' if present (sim4db)
   target_id = rmnum.sub('', target_id)
   gffeature.chrom = rmnum.sub('', gffeature.chrom)
   
-  # we do not transfer the parent features now, so do not break the format
+  # we do not transfer the parent features now, 
+  # so do not break the format and remove the Parent entry
   if 'Parent' in gffeature.attrs: del gffeature.attrs['Parent']
   
   # use the .fields[] to avoid coordinate conversion to bed format (-1 for start)
@@ -110,8 +111,11 @@ for gffeature in gff:
     at['Name'] = feature.name
     at['coords'] = gffeature.fields[1]
     
+    # this is not necessary if the extension is .gff3 or there is a #version tag in the 
+    # beginning of the gff file
+    # -
     # because of the igv feature merging, add some uniqness 
-    at['seqid'] = target_id
+    #at['seqid'] = target_id
     
     # left clip
     lclip = gffeature.start - feature.start
@@ -137,7 +141,6 @@ for gffeature in gff:
     #if feature.start < 1:
     #  print >> sys.stderr, str(feature).strip(), target_start, target_end, lclip, rclip, fs, fe
     
-    # the start+1 is probably not correct, but otherwise we get errors in BED constructor
     flist = [target_id, 'liftover', 'exon',
       str(feature.start), str(feature.end), str(gffeature.score), feature.strand,
       '.', str(at)]
