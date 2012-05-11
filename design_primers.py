@@ -54,7 +54,7 @@ def patched_sequence(seq, seq_start, variants):
 # i.e. if the PCR primer on one side is very close to the 
 # variant site, but there is another variable site inside 
 # the only remaining possible genotyping primer
-# use the multiple records in single call to test different options
+# - use the multiple records in single call to test different options?
 def find_pcr_primers(pseq, target):
     """call primer3 executable, return the results
     """
@@ -106,6 +106,9 @@ def get_flanking(seq, pos, size):
 def reverse_complement(seq):
     """Return a DNA reverse complement
     """
+    compl = string.maketrans('ACGTNacgtn', 'TGCANtgcan')
+    return seq.translate(compl)[::-1]
+    
 def main():
     if len(sys.argv) < 2:
         sys.exit('use: %s genome_fasta_with_fai mrna_gff_with_tbi variants_vcf_with_tbi' % sys.argv[0])
@@ -149,7 +152,7 @@ def main():
         if all(map(lambda s: 'N' in s, gt_primers)): continue
         
         # call primer3 to design PCR primers
-        # mark only the variant of interest as a target
+        # mark only a single base - the variant of interest - as a target
         #TODO: call primer3 only once with multiple records?
         primers = find_pcr_primers(pseq, var.POS - 1 - min_exon.start)
         
