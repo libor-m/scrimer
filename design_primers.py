@@ -133,25 +133,39 @@ def check_gt_primers(pseq, left_primer, right_primer_rc, **kwargs):
     
     return p3.call([rec_params])
 
-#TODO: use some general score based on coverage, 
-# exon support etc in the gff score field
-def primer_to_gff(name, primer, tag, seq_name, seq_start, strand):
+def primer_to_gff(name, primer, tag, seq_name, seq_start, strand, **kwargs):
+    """Create a gff feature from 
+    partially parsed primer3 results.
+    """
     pos, len = map(int, primer['position'].split(','))
     
     # transfer the calculated values to attributes
     # skip the fields used elsewhere in gff
     at = pybedtools.Attributes()
     for k, v in primer.iteritems():
-        if k == 'PENALTY' or k == 'position': continue
-        at[k] = v
+        if k == 'position': continue
+        at[k] = v.replace(';', '%3B')
         
-    at['Name'] = name
+    at['ID'] = name
     
+    # pass all optional params to attributes
+    at.update(kwargs)
+    
+    # primer3 provides the coordinates of right primer with the 
+    # pos pointing to the last base
+    if strand == '-':
+        start = seq_start + pos - len + 2
+        end = seq_start + pos + 1
+    else:
+        start = seq_start + pos + 1
+        end = seq_start + pos + len
+
     gflist = [seq_name, 'design-primers', tag, 
-        str(seq_start + pos + 1), str(seq_start + pos + len),
+        str(start), str(end),
         primer['PENALTY'], strand, '.', str(at)]
-        
-    return pybedtools.create_interval_from_list(gflist)
+
+    # remove the pybedtools newline, that does not work well with print
+    return str(pybedtools.create_interval_from_list(gflist)).strip()
 
 def get_flanking(seq, pos, size):
     """Get sequence flanking given position
@@ -176,6 +190,8 @@ def main():
     variants = vcf.Reader(filename=sys.argv[3])
     # open the variants once more, so the ifilter is not broken by .fetch
     var_fetcher = vcf.Reader(filename=sys.argv[3])
+    
+    primer_names = dict()
 
     # use iterator filter, so the variants are streamed
     for var in itertools.ifilter(lambda v: not v.FILTER, variants):
@@ -183,7 +199,19 @@ def main():
         var_exons = [f for f in var_features if f.fields[2] == 'exon']
         
         def report_rejected_var(reason):
-            print '#', var, 'was rejected:', reason
+            """ Output a false feature holding the 
+            reason for rejection of selected variant in 
+            the design process.
+            """
+            at = pybedtools.Attributes()
+            at['Note'] = reason
+            at['color'] = "#bb0000"
+            
+            gflist = [var.CHROM, 'design-primers', 'rejected-var', 
+                str(var.POS - 25), str(var.POS + 25),
+                '0', '+', '.', str(at)]
+                
+            print str(pybedtools.create_interval_from_list(gflist)).strip()
 
         if len(var_exons) == 0: 
             report_rejected_var('no predicted exons')
@@ -243,16 +271,23 @@ def main():
             names = [e.attrs['Name'] for e in ex_predicted if 'Name' in e.attrs]
             primer_name = names[0] if len(names) else 'NAME-UNKNOWN'
         
+        name_ordinal = primer_names.setdefault(primer_name, 1)
+        primer_names[primer_name] += 1
+        
         # if something was found, output the first pair
         # (should be the best one)
         if len(primers[0]['PAIR']):
-            print primer_to_gff('LU-PCR-%s-F' % primer_name, primers[0]['LEFT'][0], 'primer-pcr', var.CHROM, min_exon.start, '+')
-            print primer_to_gff('LU-PCR-%s-R' % primer_name, primers[0]['RIGHT'][0], 'primer-pcr', var.CHROM, min_exon.start, '-')
+            prod_id = 'LU-%s-%d' % (primer_name, name_ordinal)
+            # build the whole-product position, so it complies with the LEFT/RIGHT entries and can be used by primer_to_gff
+            primers[0]['PAIR'][0]['position'] = primers[0]['LEFT'][0]['position'].split(',')[0] + ',' + primers[0]['PAIR'][0]['PRODUCT_SIZE']
+            print primer_to_gff(prod_id, primers[0]['PAIR'][0], 'pcr-product', var.CHROM, min_exon.start, '+')
+            print primer_to_gff('LU-PCR-%s-%dF' % (primer_name, name_ordinal), primers[0]['LEFT'][0],  'primer-pcr', var.CHROM, min_exon.start, '+', Parent=prod_id)
+            print primer_to_gff('LU-PCR-%s-%dR' % (primer_name, name_ordinal), primers[0]['RIGHT'][0], 'primer-pcr', var.CHROM, min_exon.start, '-', Parent=prod_id)
         else:
             report_rejected_var('no suitable PCR primers found')
             continue
         
-        #TODO: if we've got PCR primers, try to check the genotyping ones
+        # if we've got PCR primers, try to check the genotyping ones
         # BatchPrimer3 is checking 
         # - melting temperature - GC content - repeats - Ns
         # - self complementarity (by Smith-Waterman in perl)
@@ -261,9 +296,16 @@ def main():
         # pass sequences cut at the first N in the 25 bp input
         gt_primers = check_gt_primers(pseq, gt_primer_seqs[0][-max_gt_lens[0]:], reverse_complement(gt_primer_seqs[1][:max_gt_lens[1]]))
         
-        # this should always report some results, so output those to gff
-        print primer_to_gff('LU-GT-%s-F' % primer_name, gt_primers[0]['LEFT'][0], 'primer-gt', var.CHROM, min_exon.start, '+')
-        print primer_to_gff('LU-GT-%s-R' % primer_name, gt_primers[0]['LEFT'][0], 'primer-gt', var.CHROM, min_exon.start, '-')
+        #TODO: choose good genotyping primers first, then design PCR primers to include the whole
+        # genotyping region -- this will alleviate the problem of Tm too high for gt primer, and 
+        # the problem with gt primer overlapping the end of the transcript (! important)
+        
+        if len(gt_primers[0]['LEFT']):
+            color = '#bb0000' if 'PROBLEMS' in gt_primers[0]['LEFT'][0] else '#00bb00'
+            print primer_to_gff('LU-GT-%s-%dF' % (primer_name, name_ordinal), gt_primers[0]['LEFT'][0], 'primer-gt', var.CHROM, min_exon.start, '+', color=color, Parent=prod_id)
+        if len(gt_primers[0]['RIGHT']):
+            color = '#bb0000' if 'PROBLEMS' in gt_primers[0]['RIGHT'][0] else '#00bb00'
+            print primer_to_gff('LU-GT-%s-%dR' % (primer_name, name_ordinal), gt_primers[0]['RIGHT'][0], 'primer-gt', var.CHROM, min_exon.start, '-', color=color, Parent=prod_id)
         
         #TODO: here should be some kind of scoring for the primer ensemble
         # - number of other segregating polymorphisms in the same exon/?mRNA 
