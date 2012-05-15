@@ -121,18 +121,21 @@ def check_gt_primers(pseq, left_primer, right_primer_rc, **kwargs):
     rec_params = {
     'SEQUENCE_ID':'check_gt_primers_task',
     'SEQUENCE_TEMPLATE': pseq,
-    'SEQUENCE_PRIMER': left_primer,
-    'SEQUENCE_PRIMER_REVCOMP': right_primer_rc,
     'PRIMER_TASK':'check_primers',
     'PRIMER_MIN_TM':'50',
     'PRIMER_PRODUCT_SIZE_RANGE':'40-100',
     }
     
+    if len(left_primer):
+        rec_params['SEQUENCE_PRIMER'] = left_primer
+    if len(right_primer_rc):
+        rec_params['SEQUENCE_PRIMER_REVCOMP'] = right_primer_rc
+    
     return p3.call([rec_params])
 
 #TODO: use some general score based on coverage, 
 # exon support etc in the gff score field
-def primer_to_gff(name, primer, tag, seq_start, strand):
+def primer_to_gff(name, primer, tag, seq_name, seq_start, strand):
     pos, len = map(int, primer['position'].split(','))
     
     # transfer the calculated values to attributes
@@ -144,8 +147,8 @@ def primer_to_gff(name, primer, tag, seq_start, strand):
         
     at['Name'] = name
     
-    gflist = [var.CHROM, 'design-primers', tag, 
-        seq_start + pos, seq_start + pos + len,
+    gflist = [seq_name, 'design-primers', tag, 
+        str(seq_start + pos + 1), str(seq_start + pos + len),
         primer['PENALTY'], strand, '.', str(at)]
         
     return pybedtools.create_interval_from_list(gflist)
@@ -171,13 +174,20 @@ def main():
     genome = pysam.Fastafile(sys.argv[1])
     annotations = pybedtools.BedTool(sys.argv[2])
     variants = vcf.Reader(filename=sys.argv[3])
+    # open the variants once more, so the ifilter is not broken by .fetch
+    var_fetcher = vcf.Reader(filename=sys.argv[3])
 
     # use iterator filter, so the variants are streamed
     for var in itertools.ifilter(lambda v: not v.FILTER, variants):
         var_features = annotations.tabix_intervals(pybedtools.Interval(var.CHROM, var.POS, var.POS))
         var_exons = [f for f in var_features if f.fields[2] == 'exon']
         
-        if len(var_exons) == 0: continue
+        def report_rejected_var(reason):
+            print '#', var, 'was rejected:', reason
+
+        if len(var_exons) == 0: 
+            report_rejected_var('no predicted exons')
+            continue
         
         # get a minimal predicted exon
         # (trying to be conservative)
@@ -188,16 +198,20 @@ def main():
         min_exon = pybedtools.Interval(var.CHROM, ex_start, ex_end)
         
         # check if the exon has a sane size (> 70)
-        if min_exon.length < 70: continue
+        if min_exon.length < 70: 
+            report_rejected_var('minimal exon too short for PCR')
+            continue
 
         # check if the variant is in position that permits PCR amplification
         # (more than 20 bases from both ends)
         # this implies a check if the variant is still inside of the minimal exon
         distances = (var.POS - min_exon.start, min_exon.end - var.POS)
-        if min(distances) < 20: continue
+        if min(distances) < 20: 
+            report_rejected_var('variant too close to minimal exon boundary')
+            continue
         
         # get all variants for the minimal exon
-        exon_variants = variants.fetch(var.CHROM, min_exon.start, min_exon.end)
+        exon_variants = var_fetcher.fetch(var.CHROM, min_exon.start, min_exon.end)
         
         # get sequence for the minimal exon
         # and patch all the variants with Ns
@@ -210,7 +224,9 @@ def main():
         # attach 'N' to end of each primer, so we get the full len
         # instead of -1, when there is no N in the original primer
         max_gt_lens = [(s + 'N').find('N') for s in  [gt_primer_seqs[0][::-1], gt_primer_seqs[1]]]
-        if all(x < 20 for x in max_gt_lens): continue
+        if all(x < 20 for x in max_gt_lens): 
+            report_rejected_var('no possible genotyping primer longer than 20 bp')
+            continue
         
         # call primer3 to design PCR primers
         # mark only a single base - the variant of interest - as a target
@@ -224,14 +240,16 @@ def main():
         if len(ref_names) == 1:
             primer_name = ref_names.pop()
         else:
-            primer_name = ex_predicted[0].attrs['Name']
+            names = [e.attrs['Name'] for e in ex_predicted if 'Name' in e.attrs]
+            primer_name = names[0] if len(names) else 'NAME-UNKNOWN'
         
         # if something was found, output the first pair
         # (should be the best one)
         if len(primers[0]['PAIR']):
-            print primer_to_gff('LU-PCR-%s-F' % primer_name, primers[0]['LEFT'][0], 'primer-pcr', '+')
-            print primer_to_gff('LU-PCR-%s-R' % primer_name, primers[0]['RIGHT'][0], 'primer-pcr', '-')
+            print primer_to_gff('LU-PCR-%s-F' % primer_name, primers[0]['LEFT'][0], 'primer-pcr', var.CHROM, min_exon.start, '+')
+            print primer_to_gff('LU-PCR-%s-R' % primer_name, primers[0]['RIGHT'][0], 'primer-pcr', var.CHROM, min_exon.start, '-')
         else:
+            report_rejected_var('no suitable PCR primers found')
             continue
         
         #TODO: if we've got PCR primers, try to check the genotyping ones
@@ -240,11 +258,12 @@ def main():
         # - self complementarity (by Smith-Waterman in perl)
         # primer3 can be used to check GC, Tm, hairpins, self complementarity by thermodynamic approach
         # that seems superior to perl-based approach
+        # pass sequences cut at the first N in the 25 bp input
         gt_primers = check_gt_primers(pseq, gt_primer_seqs[0][-max_gt_lens[0]:], reverse_complement(gt_primer_seqs[1][:max_gt_lens[1]]))
         
         # this should always report some results, so output those to gff
-        print primer_to_gff('LU-GT-%s-F' % primer_name, gt_primers[0]['LEFT'][0], 'primer-gt', '+')
-        print primer_to_gff('LU-GT-%s-R' % primer_name, gt_primers[0]['LEFT'][0], 'primer-gt', '-')
+        print primer_to_gff('LU-GT-%s-F' % primer_name, gt_primers[0]['LEFT'][0], 'primer-gt', var.CHROM, min_exon.start, '+')
+        print primer_to_gff('LU-GT-%s-R' % primer_name, gt_primers[0]['LEFT'][0], 'primer-gt', var.CHROM, min_exon.start, '-')
         
         #TODO: here should be some kind of scoring for the primer ensemble
         # - number of other segregating polymorphisms in the same exon/?mRNA 
