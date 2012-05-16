@@ -6,9 +6,7 @@
 #
 # Author: Libor Morkovsky 2012
 #
-#TODO: process_records() taking a list of dicts, returning list of
-# dicts using a single call of primer3 (should be more effective
-# than to call primer3 for each record)
+
 class BoulderIO:
     @classmethod
     def parse(self, string):
