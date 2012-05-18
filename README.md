@@ -16,12 +16,10 @@ http://www.gnu.org/licenses/gpl-howto.html
 
 # TODO
 Choose a license, sign uni agreement?
-Clean up igv xmls - or move those to luscinia branch.
-Clean up old .sh
 Move docs to folder?
 Generate pdf of the workflow
 
 # Contact
-Libor Morkovsky
-Department of Zoology, Charles University in Prague
-morkovsk@natur.cuni.cz
+  Libor Morkovsky
+  Department of Zoology, Charles University in Prague
+  morkovsk@natur.cuni.cz
