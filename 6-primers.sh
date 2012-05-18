@@ -10,5 +10,25 @@ GFF=60-gff-primers/lx3-primers.gff3
 sortBed -i $GFF | bgzip > ${GFF%.*}.sorted.gff3.gz
 tabix -f -p gff ${GFF%.*}.sorted.gff3.gz
 
-# first, check primers with sole blat
-# the next step is to set up a gfServer and use gfPcr
+###
+# use blat and isPcr to map previously manually designed primers
+###
+
+# convert fa to 2bit
+faToTwoBit 33-virtual-genome/lx3.fasta 61-check-primers/lx3.2bit
+
+# use isPcr to check the products
+isPcr 61-check-primers/lx3.2bit 61-check-primers/manual_pcr.ispcr 61-check-primers/manual_pcr.ispcr.fa
+
+# isPcr with psl output to be easily loaded into IGV
+isPcr -out=psl 61-check-primers/lx3.2bit 61-check-primers/manual_pcr.ispcr 61-check-primers/manual_pcr.ispcr.psl
+
+# blat the manually designed primers againts the virtual genome
+# primer sequences are short, so the blat default parameters
+# have to be changed a bit
+blat -minScore=15 -tileSize=6 -maxIntron=0 61-check-primers/lx3.2bit 61-check-primers/manual_pcr.fa 61-check-primers/manual_pcr.psl
+
+# agrep is quite enough for simple checks on assemblies of this size
+SEQ=GCACATTTCATGGTCTCCAA
+agrep $SEQ 0a-jp-newbler-contigs/lu??_contigs.fasta|grep $SEQ
+

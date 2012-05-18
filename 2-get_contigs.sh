@@ -36,3 +36,7 @@ samtools index "${SAMFILE%%.*}.bam"
 gawk -F "\t" '(NF < 10 || (NF > 10 && $1 != $3))' $SAMFILE|samtools view -buS -|samtools sort - "${SAMFILE%%.*}_f"
 samtools index "${SAMFILE%%.*}_f.bam"
 
+# check the overlap of individual assemblies with the 'master' assembly
+# using blat and parallel
+parallel blat 61-check-primers/lx3.2bit {} 61-check-primers/{/.}.psl ::: 0a-jp-newbler-contigs/lu??_contigs.fasta
+
