@@ -5,6 +5,9 @@ distinguishing two species, using a distant reference genome to predict exons in
 
 # Status
 Early alpha. Use with care. Publication describing the pipeline is in preparation.
+Before using any parts of this pipeline please try to contact me. I can tell
+you whether the part you're willing to use is considered working or a dead end just 
+before deletoion from the code base.
 
 # License
 Probably will be licensed under Affero GPL.
@@ -17,3 +20,8 @@ Clean up igv xmls - or move those to luscinia branch.
 Clean up old .sh
 Move docs to folder?
 Generate pdf of the workflow
+
+# Contact
+Libor Morkovsky
+Department of Zoology, Charles University in Prague
+morkovsk@natur.cuni.cz
