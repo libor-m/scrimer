@@ -28,7 +28,7 @@ isPcr -out=psl 61-check-primers/lx3.2bit 61-check-primers/manual_pcr.ispcr 61-ch
 # have to be changed a bit
 blat -minScore=15 -tileSize=6 -maxIntron=0 61-check-primers/lx3.2bit 61-check-primers/manual_pcr.fa 61-check-primers/manual_pcr.psl
 
-# agrep is quite enough for simple checks on assemblies of this size
+# agrep is quite enough for simple checks on assemblies of this size (30 MB)
 SEQ=GCACATTTCATGGTCTCCAA
 agrep $SEQ 0a-jp-newbler-contigs/lu??_contigs.fasta|grep $SEQ
 

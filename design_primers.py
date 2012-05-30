@@ -2,11 +2,10 @@
 
 # given the
 # - reference sequence (fasta with samtools fai index)
-# - annotations (gff, has to contain mRNA and exon entries)
+# - annotations (gff3, has to contain exon entries)
 # - filtered variants (vcf, primers are designed for variants with PASS)
 # produces 
-# - PCR primers selected using primer3 
-#   and genotyping primers checked by primer3 (gff)
+# - PCR and genotyping primers selected using primer3 (gff3)
 # algorithm
 # - there is only a few selected variants, so the least amount of work
 #   will be to do the work only for variants
@@ -190,7 +189,7 @@ def reverse_complement(seq):
     
 def main():
     if len(sys.argv) < 2:
-        sys.exit('use: %s genome_fasta_with_fai mrna_gff_with_tbi variants_vcf_with_tbi' % sys.argv[0])
+        sys.exit('use: %s genome_fasta_with_fai gff_with_tbi variants_vcf_with_tbi' % sys.argv[0])
 
     genome = pysam.Fastafile(sys.argv[1])
     annotations = pybedtools.BedTool(sys.argv[2])
@@ -299,9 +298,10 @@ def main():
         # (should be the best one)
         if len(primers[0]['PAIR']):
             prod_id = 'LU-%s-%d' % (primer_name, name_ordinal)
-            # calculate the whole-product 'position', so it complies with the LEFT/RIGHT entries and can be used by primer_to_gff
+            # calculate the 'position' entry PAIR, so it is the same as in LEFT/RIGHT entries and can be used by primer_to_gff
+            # to represent the whole-product
             primers[0]['PAIR'][0]['position'] = primers[0]['LEFT'][0]['position'].split(',')[0] + ',' + primers[0]['PAIR'][0]['PRODUCT_SIZE']
-            print primer_to_gff(prod_id, primers[0]['PAIR'][0], 'pcr-product', var.CHROM, min_exon.start, '+')
+            print primer_to_gff(prod_id, primers[0]['PAIR'][0], 'pcr-product', var.CHROM, min_exon.start, '+', locus_name=primer_name)
             print primer_to_gff('LU-PCR-%s-%dF' % (primer_name, name_ordinal), primers[0]['LEFT'][0],  'primer-pcr', var.CHROM, min_exon.start, '+', Parent=prod_id)
             print primer_to_gff('LU-PCR-%s-%dR' % (primer_name, name_ordinal), primers[0]['RIGHT'][0], 'primer-pcr', var.CHROM, min_exon.start, '-', Parent=prod_id)
         else:
