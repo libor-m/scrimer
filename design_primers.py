@@ -110,35 +110,6 @@ def find_gt_primers(pseq, target):
     
     return p3.call([rec_params])
 
-def check_gt_primers(pseq, left_primer, right_primer_rc, **kwargs):
-    """call primer3 executable, return the results
-    """
-    def_params = {
-    'PRIMER_THERMODYNAMIC_PARAMETERS_PATH':'/opt/primer3/bin/primer3_config/',
-    'PRIMER_MAX_NS_ACCEPTED':'0',
-    'PRIMER_EXPLAIN_FLAG':'1', 
-    'PRIMER_PICK_ANYWAY':'1',
-    }
-    
-    def_params.update(kwargs)
-    
-    p3 = primer3_connector.Primer3(**def_params)
-
-    rec_params = {
-    'SEQUENCE_ID':'check_gt_primers_task',
-    'SEQUENCE_TEMPLATE': pseq,
-    'PRIMER_TASK':'check_primers',
-    'PRIMER_MIN_TM':'50',
-    'PRIMER_PRODUCT_SIZE_RANGE':'40-100',
-    }
-    
-    if len(left_primer):
-        rec_params['SEQUENCE_PRIMER'] = left_primer
-    if len(right_primer_rc):
-        rec_params['SEQUENCE_PRIMER_REVCOMP'] = right_primer_rc
-    
-    return p3.call([rec_params])
-
 def primer_to_gff(name, primer, tag, seq_name, seq_start, strand, **kwargs):
     """Create a gff feature from 
     partially parsed primer3 results.
@@ -188,7 +159,7 @@ def reverse_complement(seq):
     return seq.translate(compl)[::-1]
     
 def main():
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 4:
         sys.exit('use: %s genome_fasta_with_fai gff_with_tbi variants_vcf_with_tbi' % sys.argv[0])
 
     genome = pysam.Fastafile(sys.argv[1])
@@ -308,16 +279,18 @@ def main():
             report_rejected_var('no suitable PCR primers found')
             continue
         
+        # decorate all genotyping primers with basic statistics about the variant being genotyped
+        mindps = min(sam['DP'] for sam in var.samples)
+        dp4 = ','.join(var.INFO['DP4'])
+        
         if len(gt_primers[0]['LEFT']):
             color = '#bb0000' if 'PROBLEMS' in gt_primers[0]['LEFT'][0] else '#00bb00'
-            print primer_to_gff('LU-GT-%s-%dF' % (primer_name, name_ordinal), gt_primers[0]['LEFT'][0], 'primer-gt', var.CHROM, min_exon.start, '+', color=color, Parent=prod_id)
+            print primer_to_gff('LU-GT-%s-%dF' % (primer_name, name_ordinal), gt_primers[0]['LEFT'][0], 'primer-gt', var.CHROM, min_exon.start, '+', 
+                color=color, Parent=prod_id, VAR_mindps=mindps, VAR_dp4=dp4, VAR_fq=var.INFO['FQ'], VAR_mq=var.INFO['MQ'], ref_features='|'.join(ref_names))
         if len(gt_primers[0]['RIGHT']):
             color = '#bb0000' if 'PROBLEMS' in gt_primers[0]['RIGHT'][0] else '#00bb00'
-            print primer_to_gff('LU-GT-%s-%dR' % (primer_name, name_ordinal), gt_primers[0]['RIGHT'][0], 'primer-gt', var.CHROM, min_exon.start, '-', color=color, Parent=prod_id)
+            print primer_to_gff('LU-GT-%s-%dR' % (primer_name, name_ordinal), gt_primers[0]['RIGHT'][0], 'primer-gt', var.CHROM, min_exon.start, '-', 
+                color=color, Parent=prod_id, VAR_mindps=mindps, VAR_dp4=dp4, VAR_fq=var.INFO['FQ'], VAR_mq=var.INFO['MQ'], ref_features='|'.join(ref_names))
         
-        #TODO: here should be some kind of scoring for the primer ensemble
-        # - number of other segregating polymorphisms in the same exon/?mRNA 
-        # - variant overall coverage, minimal sample coverage - from vcf
-        # - 
 
 if __name__ == "__main__": main()
