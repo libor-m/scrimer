@@ -23,4 +23,5 @@ md5sum -c md5sum.txt
 cat *.md5|md5sum -c
 
 
+
 faToTwoBit taeGut1.fa twoBit/taeGut1.2bit
