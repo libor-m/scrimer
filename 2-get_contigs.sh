@@ -1,32 +1,51 @@
-# yasra requires single fasta file as input
-# fastx toolkit try -- didn't like quality of '0'
-cat 14-cutadapt-2/*.fastq | fastq_to_fasta -n > 24-yasra-zfmrna/allreads.fa
+#------------------------------------------------
+# Operation
+#------------------------------------------------
 
-# fastx failed, by-hand-solution
-cat 14-cutadapt-2/*.fastq | awk '(NR % 4) == 1 {sub(/^@/, ">", $1); print $1;} (NR % 4) == 2 { print; }' > 24-yasra-zfmrna/allreads.fa
+#  1. use newbler to assemble the files
+#  2. remove contigs that are similar to each other
 
-# run yasra -- the Makefile had to be edited to include [unmask] action, 
-# because mrna/est reference files are in lowercase
-cd 24-yasra-zfmrna && make single_step > Summary
+#  1. use newbler to assemble the files
+#------------------------------------------------
+OUT=20-jp-contigs
+SEQFILE=$OUT/lu_master500_v2.fna
 
-samtools faidx 24-yasra-zfmrna/Final_Assembly
-SAMFILE=24-yasra-zfmrna/alignments.sam
-samtools view -but 24-yasra-zfmrna/Final_Assembly.fai $SAMFILE|samtools sort - ${SAMFILE%%.*}.bam
-samtools index 24-yasra-zfmrna/alignments.bam
+#TODO: some decent command - assembly done by jpaces
 
-# IGV gui must be used to create a '.genome' via 'Import Genome ...'
-# http://www.broadinstitute.org/igv/LoadGenome
-~/data/sw_testbed/IGVTools/igvtools count -z 5 -w 25 -e 250 "${SAMFILE%%.*}".bam  "${SAMFILE%%.*}".bam.tdf taeGut1
 
-# check the self similarity of the contigs
-# using lastz
-SEQFILE=0a-jp-newbler-contigs/lu_master500.fasta
+
+# check the contig length distribution
+grep '>' $SEQFILE|awk '{ sub(/length=/,"",$3); print $3}' > $SEQFILE.lengths
+
+#  2. remove contigs that are similar to each other
+#------------------------------------------------
+# taken from lastz human-chimp example, should be report only highly similar hits
+# filter out self matches with awk
+# takes 8 minutes, finds 190K pairs
+lastz $SEQFILE[multiple] $SEQFILE \
+      --step=10 --seed=match12 --notransition --exact=20 --noytrim \
+      --match=1,5 --ambiguous=n \
+      --coverage=90 --identity=95 \
+      --format=general:name1,size1,start1,name2,size2,start2,strand2,identity,coverage \
+      | awk '($1 != $4)' > $SEQFILE.lastz-self
+
+# now create sets of 
+
+# spare parts
+# ---------------
+
 # using [multiple] breaks the --self, --nomirror, --rdotplot options
 lastz $SEQFILE[multiple] $SEQFILE --nomirror --gfextend --chain --gapped --entropy --format=sam --rdotplot=${SEQFILE%%.*}_self.tsv --progress> ${SEQFILE%%.*}_self.sam
 
 # better like this, --entropy to downscore polyA/T runs, softsam to keep the sequence context for general overview of the hit
 # or use CIGAR?
 lastz $SEQFILE[multiple] $SEQFILE --gfextend --chain --gapped --entropy --format=softsam --progress=1000> ${SEQFILE%%.*}_self.sam
+
+
+# IGV gui must be used to create a '.genome' via 'Import Genome ...'
+# http://www.broadinstitute.org/igv/LoadGenome
+~/data/sw_testbed/IGVTools/igvtools count -z 5 -w 25 -e 250 "${SAMFILE%%.*}".bam  "${SAMFILE%%.*}".bam.tdf taeGut1
+
 
 samtools view -buS $SAMFILE|samtools sort - "${SAMFILE%%.*}"
 samtools index "${SAMFILE%%.*}.bam"
