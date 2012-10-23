@@ -29,7 +29,16 @@ lastz $SEQFILE[multiple] $SEQFILE \
       --format=general:name1,size1,start1,name2,size2,start2,strand2,identity,coverage \
       | awk '($1 != $4)' > $SEQFILE.lastz-self
 
-# now create sets of 
+
+# find the redundant sequences
+tail -n +2 $SEQFILE.lastz-self|./find_redundant_sequences.py > $SEQFILE.redundant
+
+# add the short ones
+grep '>' $SEQFILE|awk '{ sub(/length=/,"",$3); sub(/^>/, "", $1); if($3 < 300) print $1;}' >> $SEQFILE.redundant
+
+# get rid of the redundant ones
+./seq_filter_by_id.py $SEQFILE.redundant 1 $SEQFILE fasta - $SEQFILE.filtered
+
 
 # spare parts
 # ---------------
