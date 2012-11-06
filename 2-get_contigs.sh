@@ -10,15 +10,13 @@
 OUT=20-jp-contigs
 SEQFILE=$OUT/lu_master500_v2.fna
 
-#TODO: some decent command - assembly done by jpaces
+#TODO: add some working newbler command 
+# - current assembly was done by jpaces
 
-
-
-# check the contig length distribution
-grep '>' $SEQFILE|awk '{ sub(/length=/,"",$3); print $3}' > $SEQFILE.lengths
 
 #  2. remove contigs that are similar to each other
 #------------------------------------------------
+
 # taken from lastz human-chimp example, should be report only highly similar hits
 # filter out self matches with awk
 # takes 8 minutes, finds 190K pairs
@@ -39,9 +37,19 @@ grep '>' $SEQFILE|awk '{ sub(/length=/,"",$3); sub(/^>/, "", $1); if($3 < 300) p
 # get rid of the redundant ones
 ./seq_filter_by_id.py $SEQFILE.redundant 1 $SEQFILE fasta - $SEQFILE.filtered
 
+#------------------------------------------------
+# Visualization
+#------------------------------------------------
 
+# check the contig length distribution
+grep '>' $SEQFILE|awk '{ sub(/length=/,"",$3); print $3}' > $SEQFILE.lengths
+
+# view how many contigs we got after filtering
+grep -c '>' $SEQFILE.filtered
+
+#------------------------------------------------
 # spare parts
-# ---------------
+#------------------------------------------------
 
 # using [multiple] breaks the --self, --nomirror, --rdotplot options
 lastz $SEQFILE[multiple] $SEQFILE --nomirror --gfextend --chain --gapped --entropy --format=sam --rdotplot=${SEQFILE%%.*}_self.tsv --progress> ${SEQFILE%%.*}_self.sam
@@ -63,4 +71,3 @@ samtools index "${SAMFILE%%.*}.bam"
 # it's necessary to remove those by hand
 gawk -F "\t" '(NF < 10 || (NF > 10 && $1 != $3))' $SAMFILE|samtools view -buS -|samtools sort - "${SAMFILE%%.*}_f"
 samtools index "${SAMFILE%%.*}_f.bam"
-

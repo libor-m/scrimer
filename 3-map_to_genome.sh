@@ -1,3 +1,114 @@
+#------------------------------------------------
+# Operation
+#------------------------------------------------
+
+#  1. map contigs to reference genome (gmap, sim4db, exonerate)
+#  2. transfer genome annotations to our contigs
+#  3. create 'transcript scaffold' using the annotations
+
+
+# 1. map contigs to reference genome (gmap, sim4db, exonerate)
+#------------------------------------------------ 
+
+#------------------------------------------------ gmap
+INFILE=20-jp-contigs/lu_master500_v2.fna.filtered
+OUT=30-tg-gmap
+OUTFILE=$OUT/lu_master300_v2.gmap.gff3
+GMAP_IDX_DIR=/data/genomes/taeGut1
+GMAP_IDX=gmap_taeGut1
+# map the jpaces contigs to the zebra finch genome
+gmap -D $GMAP_IDX_DIR -d $GMAP_IDX -f gff3_gene -B 3 -x 30 -t 8\
+    --cross-species $INFILE  > $OUTFILE
+
+#------------------------------------------------ sim4db
+OUT=31-tg-sim4db
+INFILE=20-jp-contigs/lu_master500_v2.fna.filtered
+GENOME=/data/genomes/taeGut1/taeGut1.fa
+SMALT_IDX=/data/genomes/taeGut1/smalt/taeGut1k13s4
+
+# these values are derived, it's not necessary to change them
+FRAGS=$OUT/${INFILE##*/}.frags
+SMALT_OUT=$FRAGS.cigar
+SIM4_SCR=${FRAGS%.*}.sim4scr
+OUT0=${FRAGS%.*}.tmp.gff3
+OUTFILE=${FRAGS%.*}.gff3
+
+# use a fast mapper to find all +-50 KB windows for predicting exon/gene models with sim4db
+# smalt with -d on shattered contigs could work reasonably well and fast
+
+# create fragments, using slightly modified fasta_fragments.py from lastz distribution
+cat $INFILE | ./fasta_fragments.py --step=80 > $FRAGS
+
+# map the fragments with smalt (takes only 6 minutes!), reporting all hits (-d -1) scoring over 60
+smalt map -n 8 -f cigar -o $SMALT_OUT -d -1 -m 60 $SMALT_IDX $FRAGS
+
+# construct the script for sim4db
+cat $SMALT_OUT|./cigar_to_sim4db_scr.py $GENOME.fai | sort --key=5n,5 > $SIM4_SCR
+
+# run sim4db using the script (takes several seconds for the whole genome !!)
+sim4db -genomic $GENOME -cdna $INFILE -script $SIM4_SCR -output $OUT0 -gff3 -interspecies -mincoverage 70 -minidentity 90 -minlength 60 -alignments -threads 7
+
+# fix chromosome names 
+sed s/^[0-9][0-9]*:chr/chr/ $OUT0 > $OUTFILE
+
+#------------------------------------------------ exonerate
+# TODO: try exonerate, when we get to methods for comparison of generated mappings
+
+# 2. transfer genome annotations to our contigs
+#------------------------------------------------ 
+# liftover using the exon mapper coordinates
+#
+# sim4db manual (http://sourceforge.net/apps/mediawiki/kmer/index.php?title=Getting_Started_with_Sim4db)
+# Exon coordinates are nucleotide based, starting from 1. Genomic coordinates are always in the original sequence, 
+# while the cDNA coordinates will refer to positions in the reverse complement of the sequence if the match orientation is indicated as 'complement'.
+#
+# --> this is unnecessary, because the orientation of the transcript can be deduced from the target chromosome strand ..?
+# --> patched in sim4db, patch on sourceforge
+# TODO: add source to github?
+
+# use liftover to transfer the ensGenes exon annotations
+# do not trust the mappings per se, they can contain introns 
+# - only trust ensGenes or even RefSeq if we need strict conditions
+# each contig mapping to genome creates different coordinate system
+OUT=32-liftover
+mkdir $OUT
+# multiple coordinate systems if needed (one system per mapping)
+COORDS="30-tg-gmap 31-tg-sim4db"
+# multiple annotations if needed, they're all merged to single gff
+ANNOTS=/data/genomes/taeGut1/annot/ensGene_s.bed.gz
+
+for C in $COORDS
+do
+  ./liftover.py "$C" $ANNOTS > $OUT/${C##*/}-lo.gff3
+done  
+
+
+# 3. create 'transcript scaffold' using the annotations
+#------------------------------------------------ 
+# construct a 'transcript scaffold' (contigs joined in order of appearance on reference genome chromosomes)
+# 'N' gaps should be larger than max read size to avoid the mapping of the reads across gaps
+INFILE=20-jp-contigs/lu_master500_v2.fna.filtered
+ANNOTS=$OUT/*-lo.gff3
+OUT=33-scaffold
+mkdir $OUT
+GNAME=lx4
+./scaffold.py $INFILE $ANNOTS $OUT/$GNAME.fasta $OUT/$GNAME.gff3
+
+
+#------------------------------------------------
+# Visualization
+#------------------------------------------------
+
+# it's important to sort and index annotation file to use it in IGV
+INFILE=$OUT/$GNAME.gff3
+OUTFILE=${INFILE%.*}.sorted.gff3
+sortBed -i $INFILE > $OUTFILE
+bgzip $OUTFILE
+tabix -p gff $OUTFILE.gz
+
+#------------------------------------------------
+# spare parts
+#------------------------------------------------
 # gmap on tophat_test_data
 gmap_build -d test_ref -D . -k 12 test_ref.fa
 gmap -D . -d test_ref -f samse reads_1.fq reads_2.fq > gmap.sam
@@ -15,14 +126,12 @@ sim4db -genomic test_ref.fa -cdna test_mrna.fa -output sim4db.gff -gff3
 samtools view -but test_ref.fa.fai gmap.sam|samtools sort -o - tmp|tee gmap.bam|samtools view -h -> gmap_s.sam
 samtool index gmap.bam
 
-# build gmap index for zebra finch
-gmap_build -d gmap_taeGut1 -D /data/genomes/taeGut1 /data/genomes/taeGut1/taeGut1.fa
+#------------------------------------------------
 
-# map the jpaces contigs to the zebra finch genome
-gmap -D /data/genomes/taeGut1 -d gmap_taeGut1 -f samse -B 3 -x 30 -t 6 --cross-species --read-group-id=lu_master500 0a-jp-newbler-contigs/lu_master500.fasta  > 30-gmap-to-tg/lu_master500.sam
+gmap -D /data/genomes/taeGut1 -d gmap_taeGut1 -f gff3_gene -B 3 -x 30 -t 6\
+    --cross-species $INFILE  > $SAMFILE
 
-SAMFILE=30-gmap-to-tg/lu_master500.sam
-
+#------------------------------------------------
 samtools view -but /data/genomes/taeGut1/taeGut1.fa.fai $SAMFILE|samtools sort - "${SAMFILE%%.*}"
 samtools index "${SAMFILE%%.*}.bam"
 ~/data/sw_testbed/IGVTools/igvtools count -z 5 -w 25 -e 250 "${SAMFILE%%.*}".bam  "${SAMFILE%%.*}".bam.tdf taeGut1
@@ -80,51 +189,14 @@ SAMFILE=${SAMFILE%%.*}_f.sam
 
 # the complement to above -- extracting the offending lines
 sed 's/^.*$/-e &p/' $SAMFILE.badlines | xargs sed -n $SAMFILE > ${SAMFILE%%.*}_badlines.sam
+#------------------------------------------------
 
-# map again, using gff3_gene as output for interoperability with sim4db
-# takes 25 mins, better than trying to convert sam to gff
-gmap -D /data/genomes/taeGut1 -d gmap_taeGut1 -f gff3_gene -B 3 -x 30 -t 8 --cross-species 0a-jp-newbler-contigs/lu_master500.fasta  > 30-gmap-to-tg/lu_master500.gff
-
-####
-# sim4db
-####
 # run sim4db with parameters -minXX to report multiple matches to find paralogous genes
 # this one is pretty slow -- probably the first process worth parallelization
 # or rather prescreening with a fast mapper and using a 'script'
 sim4db -genomic /data/genomes/taeGut1/taeGut1.fa -cdna 0a-jp-newbler-contigs/lu_master500.fasta -output 31-sim4db-tg/lu_master500.gff -gff3 -interspecies -mincoverage 70 -minidentity 90 -minlength 60 -alignments -threads 7
 
-# use a fast mapper to find all +-50 KB windows for predicting exon/gene models with sim4db
-# smalt with -d on shattered contigs could work reasonably well and fast
-
-# create fragments, using slightly modified fasta_fragments.py from lastz distribution
-cat 0a-jp-newbler-contigs/lu_master500.fasta | ./fasta_fragments.py --step=80 > 31-sim4db-tg/lu_master500_frags.fasta
-
-# map the fragments with smalt (takes only 6 minutes!), reporting all hits (-d -1) scoring over 60
-smalt map -n 8 -f cigar -o 31-sim4db-tg/lu_master500_frags.cigar -d -1 -m 60 /data/genomes/taeGut1/smalt/taeGut1k13s4 31-sim4db-tg/lu_master500_frags.fasta
-
-# construct the script for sim4db
-# this could be probably achieved also by pipeline of bedtools (slopBed|mergeBed|sed/awk) -- should be done for publication?
-# (maybe the python script is more comprehensible)
-cat 31-sim4db-tg/lu_master500_frags.cigar|./cigar_to_sim4db_scr.py /data/genomes/taeGut1/taeGut1.fa.fai | sort --key=5 -n > 31-sim4db-tg/lu_master500.sim4scr
-
-# run sim4db using the script (takes several seconds for the whole genome !!)
-sim4db -genomic /data/genomes/taeGut1/taeGut1.fa -cdna 0a-jp-newbler-contigs/lu_master500.fasta -script 31-sim4db-tg/lu_master500.sim4scr -output 31-sim4db-tg/lu_master500_scr.gff -gff3 -interspecies -mincoverage 70 -minidentity 90 -minlength 60 -alignments -threads 7
-
-# extract chromosome 10 for comparison with the non-seeded method
-grep chr10 31-sim4db-tg/lu_master500_scr.gff|sed s/0:chr/chr/ > 31-sim4db-tg/test_chr10_scr.gff
-
-# compare the annotations 
-# to be done programaticaly
-
-# fix chromosome names for the whole gff
-cat 31-sim4db-tg/lu_master500_scr.gff|sed s/^[0-9][0-9]*:chr/chr/ > 31-sim4db-tg/lu_master500_scr_fix.gff
-
-# run the fixed sim4db again
-sim4db -genomic /data/genomes/taeGut1/taeGut1.fa -cdna 0a-jp-newbler-contigs/lu_master500.fasta -script 31-sim4db-tg/lu_master500.sim4scr -output 31-sim4db-tg/lu_master500_sim4db2.gff -gff3 -interspecies -mincoverage 70 -minidentity 90 -minlength 60 -alignments -threads 7
-
-# fix chromosome names 
-sed s/^[0-9][0-9]*:chr/chr/ 31-sim4db-tg/lu_master500_sim4db2.gff > 31-sim4db-tg/lu_master500_sim4db2_fix.gff
-
+#------------------------------------------------
 ####
 # exonerate
 ####
@@ -142,41 +214,3 @@ I frequently use exonerate to align ESTs to a genome using exonerate server. For
 
  The main limitation I find with exonerate is that it's not multi threaded so you have to write your own wrapper to split a large input set of EST and distribute them across threads / nodes.
 QUOTE
-
-####
-# transfer the annotation
-####
-
-# select features in EnsGene file 
-# probably a dead end, the information will be transferred during liftover
-intersectBed -wa -a /data/genomes/taeGut1/annot/ensGene_s.bed.gz -b 31-sim4db-tg/lu_master500_scr_fix.gff | uniq > 32-extracted-annotation/ensGene_sim4.bed
-intersectBed -wa -a /data/genomes/taeGut1/annot/ensGene_s.bed.gz -b 30-gmap-to-tg/lu_master500.gff | uniq > 32-extracted-annotation/ensGene_gmap.bed
-cat 32-extracted-annotation/ensGene_*.bed|sortBed -i stdin|uniq > 32-extracted-annotation/ensGene.bed
-
-intersectBed -wa -a /data/genomes/taeGut1/annot/xenoMrna_s.bed.gz -b 30-gmap-to-tg/lu_master500.gff | uniq > 32-extracted-annotation/xenoMrna_gmap.bed
-intersectBed -wa -a /data/genomes/taeGut1/annot/xenoMrna_s.bed.gz -b 31-sim4db-tg/lu_master500_scr_fix.gff | uniq > 32-extracted-annotation/xenoMrna_sim4.bed
-
-# liftover using the exon mapper coordinates
-#TODO: one of the mappers inverts the 'Target' coordinates when target and strand are both -
-# have a look at gff spec and find the solution
-#
-# sim4db manual (http://sourceforge.net/apps/mediawiki/kmer/index.php?title=Getting_Started_with_Sim4db)
-# Exon coordinates are nucleotide based, starting from 1. Genomic coordinates are always in the original sequence, 
-# while the cDNA coordinates will refer to positions in the reverse complement of the sequence if the match orientation is indicated as 'complement'.
-#
-# --> this is unnecessary, because the orientation of the transcript can be deduced from the target chromosome strand ..?
-# --> patched in sim4db, patch on sourceforge
-
-# use liftover to transfer the ensGenes exon annotations
-./liftover.py 31-sim4db-tg/lu_master500_sim4db2_fix.gff /data/genomes/taeGut1/annot/ensGene_s.bed.gz > 32-liftover/sim4db-ensGenes.gff
-./liftover.py 30-gmap-to-tg/lu_master500.gff /data/genomes/taeGut1/annot/ensGene_s.bed.gz > 32-liftover/gmap-ensGenes.gff
-
-# construct a virtual genome (contigs joined in order of appearance on reference genome chromosomes)
-# 'N' gaps should be larger than max read size to avoid the mapping of the reads across gaps
-./virtual_genome.py 0a-jp-newbler-contigs/lu_master500.fasta 32-liftover/gmap-ensGenes.gff 32-liftover/sim4db-ensGenes.gff 33-virtual-genome/lx2.fasta 33-virtual-genome/lx2.gff
-./virtual_genome.py 0a-jp-newbler-contigs/lu_master500.fasta 32-liftover/gmap-ensGenes.gff 32-liftover/sim4db-ensGenes.gff 33-virtual-genome/lx3.fasta 33-virtual-genome/lx3.gff3
-
-# it's quite vital to sort and index the file to use it in IGV
-sortBed -i 33-virtual-genome/lx3.gff3 > 33-virtual-genome/lx3.sorted.gff3
-bgzip 33-virtual-genome/lx3.sorted.gff3
-tabix -p gff 33-virtual-genome/lx3.sorted.gff3.gz

@@ -42,7 +42,16 @@ tabix -p bed $ANNOT/ensGene.sorted.bed.gz
 # 
 # 3. indexes
 #------------------------------------------------
-# to be done
+#TODO: more commands
+
+# index chromosome positions in the genome file for samtools
+samtools faidx /data/genomes/taeGut1/taeGut1.fa
+
+# build gmap index for zebra finch
+gmap_build -d gmap_taeGut1 -D /data/genomes/taeGut1 /data/genomes/taeGut1/taeGut1.fa
+
+# create concatenated chicken genome, use Heng Li's sort-alt
+find chromFa -type f|sort-alt -N|xargs cat > galGal3.fa
 
 # 4. quality check
 #------------------------------------------------
