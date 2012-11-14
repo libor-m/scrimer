@@ -22,6 +22,7 @@ gmap -D $GMAP_IDX_DIR -d $GMAP_IDX -f gff3_gene -B 3 -x 30 -t 8\
 
 #------------------------------------------------ sim4db
 OUT=31-tg-sim4db
+mkdir $OUT
 INFILE=20-jp-contigs/lu_master500_v2.fna.filtered
 GENOME=/data/genomes/taeGut1/taeGut1.fa
 SMALT_IDX=/data/genomes/taeGut1/smalt/taeGut1k13s4
