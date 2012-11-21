@@ -222,7 +222,7 @@ def main():
 
   # for the sorted list of chromosomes sort the positions and output the reads
   print >> sys.stderr, "writing output to %s and %s" % (sys.argv[-2], sys.argv[-1])
-  splitlen = 50
+  splitlen = 150
   splitter = splitlen * 'N'
 
   fo_gff = open(sys.argv[-1], "w")

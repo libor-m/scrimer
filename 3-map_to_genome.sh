@@ -40,7 +40,7 @@ OUTFILE=${FRAGS%.*}.gff3
 # create fragments, using slightly modified fasta_fragments.py from lastz distribution
 cat $INFILE | ./fasta_fragments.py --step=80 > $FRAGS
 
-# map the fragments with smalt (takes only 6 minutes!), reporting all hits (-d -1) scoring over 60
+# map the fragments with smalt (takes few minutes), reporting all hits (-d -1) scoring over 60
 smalt map -n 8 -f cigar -o $SMALT_OUT -d -1 -m 60 $SMALT_IDX $FRAGS
 
 # construct the script for sim4db
@@ -71,10 +71,13 @@ sed s/^[0-9][0-9]*:chr/chr/ $OUT0 > $OUTFILE
 # do not trust the mappings per se, they can contain introns 
 # - only trust ensGenes or even RefSeq if we need strict conditions
 # each contig mapping to genome creates different coordinate system
+
+# add bedtools and samtools to path
+export PATH=/opt/bedtools/bin:/opt/samtools-0.1.18:$PATH
 OUT=32-liftover
 mkdir $OUT
 # multiple coordinate systems if needed (one system per mapping)
-COORDS="30-tg-gmap 31-tg-sim4db"
+COORDS="30-tg-gmap/lu_master300_v2.gmap.gff3 31-tg-sim4db/lu_master500_v2.fna.filtered.gff3"
 # multiple annotations if needed, they're all merged to single gff
 ANNOTS=/data/genomes/taeGut1/annot/ensGene_s.bed.gz
 
@@ -89,7 +92,7 @@ done
 # construct a 'transcript scaffold' (contigs joined in order of appearance on reference genome chromosomes)
 # 'N' gaps should be larger than max read size to avoid the mapping of the reads across gaps
 INFILE=20-jp-contigs/lu_master500_v2.fna.filtered
-ANNOTS=$OUT/*-lo.gff3
+ANNOTS=32-liftover/*-lo.gff3
 OUT=33-scaffold
 mkdir $OUT
 GNAME=lx4
@@ -101,6 +104,7 @@ GNAME=lx4
 #------------------------------------------------
 
 # it's important to sort and index annotation file to use it in IGV
+export PATH=/opt/tabix:$PATH
 INFILE=$OUT/$GNAME.gff3
 OUTFILE=${INFILE%.*}.sorted.gff3
 sortBed -i $INFILE > $OUTFILE

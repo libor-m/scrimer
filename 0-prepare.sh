@@ -29,6 +29,10 @@ cat *.md5|md5sum -c
 # some are in single .fa, some are split by chromosomes
 tar xvzf chromFa.tar.gz
 
+# create concatenated chicken genome, use Heng Li's sort-alt
+# to get common ordering of chromosomes
+find chromFa -type f|sort-alt -N|xargs cat > galGal3.fa
+
 # 2. annotataions
 #------------------------------------------------
 # annotation data is best obtained in UCSC table browser
@@ -50,8 +54,12 @@ samtools faidx /data/genomes/taeGut1/taeGut1.fa
 # build gmap index for zebra finch
 gmap_build -d gmap_taeGut1 -D /data/genomes/taeGut1 /data/genomes/taeGut1/taeGut1.fa
 
-# create concatenated chicken genome, use Heng Li's sort-alt
-find chromFa -type f|sort-alt -N|xargs cat > galGal3.fa
+
+# smalt index
+# recommended settings for 454 (step 4, k-mer size 13)
+/data/genomes/taeGut1/smalt/taeGut1k13s4
+mkdir -p smalt
+smalt index -s 4 smalt/${GENOME}k13s4 $GENOME.fa
 
 # 4. quality check
 #------------------------------------------------
