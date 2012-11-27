@@ -6,6 +6,7 @@
 #  2. transfer genome annotations to our contigs
 #  3. create 'transcript scaffold' using the annotations
 
+# tools used: samtools, bedtools, tabix, gmap, sim4db, 
 
 # 1. map contigs to reference genome (gmap, sim4db, exonerate)
 #------------------------------------------------ 

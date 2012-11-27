@@ -1,38 +1,37 @@
-TOOLS=samtools:tabix:sort-alt:parallel
+#------------------------------------------------
+# Operation
+#------------------------------------------------
 
-# do the genotype likelihood computations
-# takes about three hours on Intel Xeon E5620, produces about 4 GB of data (I shouldn't have used the -u)
-samtools mpileup -D -S -u -L 10000 -f 33-virtual-genome/lx3.fasta 41-vg-map-smalt/alldup.bam > 50-variants/lx3-mpileup.bcf
+# tools used: samtools, tabix, sort-alt, parallel
 
-# call the genotypes
-bcftools view -bvcg 50-variants/lx3-mpileup.bcf > 50-variants/lx3-variants-raw.bcf  
+#  1. call variants
+#  2. filter variants
 
-# filter and output vcf
-bcftools view 50-variants/lx3-variants-raw.bcf | vcfutils.pl varFilter > 50-variants/lx3-variants-filtered.vcf
+TOOLS=/opt/samtools-0.1.18:/opt/tabix:sort-alt:parallel
+export PATH=$TOOLS:$PATH
 
-# index with tabix to use in igv
-bgzip 50-variants/lx3-variants-filtered.vcf
-tabix -p vcf 50-variants/lx3-variants-filtered.vcf.gz
+# 1. call variants
+#------------------------------------------------
 
-#
-# parallel workflow (less than one hour)
-#
-CONTIGS=33-virtual-genome/lx3.fasta
-ALIGNS=41-vg-map-smalt/alldup2.bam
-OUTDIR=51-variants-parallel
-vcfutils.pl splitchr $CONTIGS.fai | parallel "samtools mpileup -DSu -L 10000 -f $CONTIGS -r {} $ALIGNS | bcftools view -bvcg - > $OUTDIR/part-{}.bcf"
+CONTIGS=33-scaffold/lx4.fasta
+ALIGNS=40-map-smalt/alldup.bam
+OUT=50-variants
+VARIANTS=$OUT/lx4-variants
+mkdir -p $OUT
+vcfutils.pl splitchr $CONTIGS.fai | parallel "samtools mpileup -DSu -L 10000 -f $CONTIGS -r {} $ALIGNS | bcftools view -bvcg - > $OUT/part-{}.bcf"
 
 # merge the intermediate results
 # this generates the correct ordering of the parts, according to the .fai
 # max command line size probably should not be a limit since linux 2.6.23 (http://www.in-ulm.de/~mascheck/various/argmax/)
-vcfutils.pl splitchr $CONTIGS.fai | xargs -i echo $OUTDIR/part-{}.bcf | xargs -x bcftools cat > $OUTDIR/lx3-variants-raw.bcf
-bcftools index $OUTDIR/lx3-variants-raw.bcf
+vcfutils.pl splitchr $CONTIGS.fai | xargs -i echo $OUT/part-{}.bcf | xargs -x bcftools cat > $VARIANTS-raw.bcf
+bcftools index $VARIANTS-raw.bcf
 
-bcftools view $OUTDIR/lx3-variants-raw.bcf | vcfutils.pl varFilter | bgzip > $OUTDIR/lx3-variants-filtered.vcf.gz
-tabix -p vcf $OUTDIR/lx3-variants-filtered.vcf.gz
+#TODO: check varFilter options a bit more
+bcftools view $VARIANTS-raw.bcf | vcfutils.pl varFilter | bgzip > $VARIANTS-filtered.vcf.gz
+tabix -p vcf $VARIANTS-filtered.vcf.gz
 
 # remove the intermediate results, if the merge was ok
-vcfutils.pl splitchr $CONTIGS.fai | xargs -i echo $OUTDIR/part-{}.bcf | xargs rm
+vcfutils.pl splitchr $CONTIGS.fai | xargs -i echo $OUT/part-{}.bcf | xargs rm
 
 # filter the variants
 # first completely remove the really uninteresting information
@@ -47,8 +46,8 @@ vcfutils.pl splitchr $CONTIGS.fai | xargs -i echo $OUTDIR/part-{}.bcf | xargs rm
 #   ! quality variants
 
 
-# extract qualities, then check distribution in R (-> common power law distribution, peak at 999)
-zcat $VCFINPUT|grep -v '^#'|cut -f6 | R > $VCFINPUT.qual
+# 2. filter variants
+#------------------------------------------------
 
 # filter on average read depth and site quality
 # progress meter
@@ -70,3 +69,30 @@ tabix -p vcf $VCFOUTPUT
 
 # count remaining variants
 zcat -d $VCFOUTPUT | grep -c PASS
+
+#------------------------------------------------
+# Visualization
+#------------------------------------------------
+
+# extract qualities, then check distribution in R (-> common power law distribution, peak at 999)
+zcat $VCFINPUT|grep -v '^#'|cut -f6 | R > $VCFINPUT.qual
+
+#------------------------------------------------
+# spare parts
+#------------------------------------------------
+
+# single file workflow
+#------------------------------------------------
+# do the genotype likelihood computations
+# takes about three hours on Intel Xeon E5620, produces about 4 GB of data (I shouldn't have used the -u)
+samtools mpileup -D -S -u -L 10000 -f 33-virtual-genome/lx3.fasta 41-vg-map-smalt/alldup.bam > 50-variants/lx3-mpileup.bcf
+
+# call the genotypes
+bcftools view -bvcg 50-variants/lx3-mpileup.bcf > 50-variants/lx3-variants-raw.bcf  
+
+# filter and output vcf
+bcftools view 50-variants/lx3-variants-raw.bcf | vcfutils.pl varFilter > 50-variants/lx3-variants-filtered.vcf
+
+# index with tabix to use in igv
+bgzip 50-variants/lx3-variants-filtered.vcf
+tabix -p vcf 50-variants/lx3-variants-filtered.vcf.gz

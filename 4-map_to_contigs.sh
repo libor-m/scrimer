@@ -5,7 +5,7 @@
 #  1. map contigs to scaffold
 #  2. merge mapping output to a single file
 
-# tools
+# tools used: samtools, igvtools, smalt
 TOOLS=/opt/samtools-0.1.18:~/data/sw_testbed/IGVTools:~/data/sw_testbed/smalt-0.7.0.1
 export PATH=$TOOLS:$PATH
 

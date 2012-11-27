@@ -6,11 +6,13 @@
 #  2. remove cDNA synthesis primers with cutadapt
 #  3. check the results
 
+# tools used: sffile, cutadapt, parallel, agrep, tre-agrep
+
 #  1. split the files according to MIDs with SFFile
 #------------------------------------------------
 
 #
-# sff format is necessary for this and we don't have any
+# sff format is necessary to use SFFile tool and we got the data as .fastq
 #
 
 #  2. remove cDNA synthesis primers with cutadapt

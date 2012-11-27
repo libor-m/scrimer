@@ -7,6 +7,8 @@
 #  3. and build genome indexes for all programs used in the pipeline
 #  4. quality check of the input data
 
+# tools used: bedtools, tabix, sort-alt, gmap, samtools, smalt, fastqc
+
 # 1. reference genome
 #------------------------------------------------
 
