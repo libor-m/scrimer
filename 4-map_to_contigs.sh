@@ -14,8 +14,10 @@ export PATH=$TOOLS:$PATH
 #------------------------------------------------ 
 
 #------------------------------------------------ smalt
-SCAFFOLD=33-scaffold/lx4.fasta 
+# data from previous steps
+SCAFFOLD=33-scaffold/lx4.fasta
 INFILES=12-cutadapt/*.fastq
+
 OUT=40-map-smalt
 SMALT_IDX=${SCAFFOLD%/*}/smalt/k13s4
 

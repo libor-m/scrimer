@@ -25,7 +25,9 @@
 # AAGCAGTGGTATCAACGCAGAGTTTTTGTTTTTTTCTTTTTTTTTTVN
 ###
 
+# data from previous steps
 IN=10-mid-split
+
 OUT=12-cutadapt
 NERR=5
 mkdir $OUT
@@ -91,3 +93,18 @@ agrep -c -$NERR "^AAGCAGTGGTATCAACGCAGAGT" $FQFILE && agrep -c -$NERR "AAGCAGTGG
 # 5 errors: 16366 17566
 # 6 errors: 17146 23858
 # 7 errors: 18041 67844
+
+# read count statistics
+# @ can be in the beginning of quality string, so filter the rows in order
+
+# count of sequences
+gawk '((NR%4)  == 1)' $FQFILE | wc -l
+
+# count of sequenced bases
+gawk '((NR%4)  == 2)' $FQFILE | wc -m
+
+# parallel, IO bound task, so run one process a time
+OUT=12-cutadapt
+echo "read_count base_count filename"
+parallel -j 1 'echo $( gawk "((NR%4)  == 1)" {} | wc -l ) $( gawk "((NR%4)  == 2)" {} | wc -m ) {}' ::: $OUT/*.fastq
+

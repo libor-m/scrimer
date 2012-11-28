@@ -9,8 +9,11 @@
 
 #  1. use newbler to assemble the files
 #------------------------------------------------
-OUT=20-jp-contigs
+
+# data from previous steps
 SEQFILE=$OUT/lu_master500_v2.fna
+
+OUT=20-jp-contigs
 
 #TODO: add some working newbler command 
 # - current assembly was done by jpaces
