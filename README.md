@@ -1,25 +1,20 @@
 # Scrimer: 454 transcriptome data to SNaPShot primers
-This project is a pipeline of bash commands driving custom python scripts and 'industry standard' 
-bioinformatics applications to design PCR and genotyping primers to read variable SNP sites
-distinguishing two species, using a distant reference genome to predict exons in the transcripts.
+This project is a pipeline of bash commands driving custom Python scripts and 'industry standard' 
+bioinformatics applications. After finding variable sites in the data, 
+scrimer uses a (distant) reference genome to predict exons in the transcripts.
+Predicted exons are used to find sequences suitable as PCR products that do not cross 
+exon intron boundaries and contain some variable site. PCR and genotyping primers for 
+SNaPshot screening of such site are created.
 
 # Status
-Early alpha. Use with care. Publication describing the pipeline is in preparation.
-Before using any parts of this pipeline please try to contact me. I can tell
-you whether the part you're willing to use is considered working or a dead end just 
-before deletoion from the code base.
+Publication ready. Working on documentation. Publication is in review.
 
 # License
-Probably will be licensed under Affero GPL.
-If you use any part of the pipeline, please cite the appropriate publication (in prep now).
-http://www.gnu.org/licenses/gpl-howto.html
+Scrimer is licensed under GNU Affero General Public License.
 
-# TODO
-Choose a license, sign uni agreement?
-Move docs to folder?
-Generate pdf of the workflow
+If you use any part of the pipeline, please cite the appropriate publication (in prep now).
 
 # Contact
-  Libor Morkovsky
-  Department of Zoology, Charles University in Prague
-  morkovsk@natur.cuni.cz
+    Libor Morkovsky
+    Department of Zoology, Charles University in Prague
+    morkovsk@natur.cuni.cz

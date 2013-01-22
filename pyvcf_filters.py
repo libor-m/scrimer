@@ -3,6 +3,11 @@ Implementation of vcf filters for pyvcf `vcf_filter.py`.
 
 Author: Libor Morkovsky 2012
 """
+
+# This file is a part of Scrimer.
+# See LICENSE.txt for details on licensing.
+#    Copyright (C) 2012, 2013 Libor Morkovsky
+
 import vcf
 
 class DepthPerSample(vcf.Filter):

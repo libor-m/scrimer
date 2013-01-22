@@ -5,6 +5,10 @@ Find the most common letter in first n bases of reads in FASTQ file.
 Useful for finding and recognizing primer sequences in the reads.
 """
 
+# This file is a part of Scrimer.
+# See LICENSE.txt for details on licensing.
+#    Copyright (C) 2012, 2013 Libor Morkovsky
+
 from Bio import SeqIO
 import sys
 
