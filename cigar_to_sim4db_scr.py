@@ -5,16 +5,20 @@ produced by aligning fragments of contigs to a genome (tested with smalt output)
 and outputs a 'script' for limiting the exon model regions of sim4db.
 
 Input
+
 - output of some read mapper in CIGAR format
+
  - all the fragments must be reported by the aligner
  - the fragment names have to be in the same order as the master sequences
  - the fragments must be named like readname_number (like fasta_fragments.py does)
  - all the hits from one read must follow each other
  
 Output
+
 - sim4db 'script'
 
 Algorithm
+
 - load chromosome definition file
 - parse the hits:
   - extract read name
