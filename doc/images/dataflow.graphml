@@ -17,10 +17,11 @@
     <node id="n0">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="56.0" width="140.0" x="155.875" y="245.0517578125"/>
+          <y:Geometry height="56.0" width="140.0" x="153.0" y="287.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="112.041015625" x="13.9794921875" y="18.6494140625">all sample assembly<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="custom" textColor="#000000" visible="true" width="91.380859375" x="24.3095703125" y="11.298828125">create reference
+assembly<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -34,11 +35,11 @@
     <node id="n1">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="56.0" width="255.0" x="240.875" y="469.4541015625"/>
+          <y:Geometry height="56.0" width="255.0" x="238.0" y="438.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="custom" textColor="#000000" visible="true" width="214.796875" x="20.1015625" y="11.298828125">map contigs to genome
-predict exons, transfer annotated exons<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="custom" textColor="#000000" visible="true" width="182.76953125" x="36.115234375" y="11.298828125">map contigs to reference genome
+remap genome annotations<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -52,7 +53,7 @@ predict exons, transfer annotated exons<y:LabelModel>
     <node id="n2">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="56.0" width="143.0" x="42.875" y="364.7529296875"/>
+          <y:Geometry height="56.0" width="143.0" x="40.0" y="438.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="custom" textColor="#000000" visible="true" width="128.0546875" x="7.47265625" y="11.298828125">map reads to assembly
@@ -70,7 +71,7 @@ call variants<y:LabelModel>
     <node id="n3">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="56.0" width="245.0" x="245.875" y="589.1552734375"/>
+          <y:Geometry height="56.0" width="245.0" x="238.0" y="725.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="223.451171875" x="10.7744140625" y="18.6494140625">choose regions suitable for primer design<y:LabelModel>
@@ -87,7 +88,7 @@ call variants<y:LabelModel>
     <node id="n4">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="56.0" width="193.0" x="17.875" y="469.4541015625"/>
+          <y:Geometry height="56.0" width="193.0" x="15.0" y="574.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="146.74609375" x="23.126953125" y="18.6494140625">choose interesting variants<y:LabelModel>
@@ -104,7 +105,7 @@ call variants<y:LabelModel>
     <node id="n5">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="56.0" width="193.0" x="85.0" y="125.3505859375"/>
+          <y:Geometry height="56.0" width="193.0" x="51.5" y="136.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="175.375" x="8.8125" y="18.6494140625">remove cDNA synthesis primers<y:LabelModel>
@@ -121,41 +122,7 @@ call variants<y:LabelModel>
     <node id="n6">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="56.0" width="204.0" x="215.375" y="699.505859375"/>
-          <y:Fill color="#FFCC00" transparent="false"/>
-          <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="82.697265625" x="60.6513671875" y="18.6494140625">design primers<y:LabelModel>
-              <y:SmartNodeLabelModel distance="4.0"/>
-            </y:LabelModel>
-            <y:ModelParameter>
-              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
-            </y:ModelParameter>
-          </y:NodeLabel>
-          <y:Shape type="roundrectangle"/>
-        </y:ShapeNode>
-      </data>
-    </node>
-    <node id="n7">
-      <data key="d6">
-        <y:ShapeNode>
-          <y:Geometry height="56.0" width="240.0" x="257.375" y="809.8564453125"/>
-          <y:Fill color="#FFCC00" transparent="false"/>
-          <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="238.796875" x="0.6015625" y="18.6494140625">check uniqeness of primers against genome<y:LabelModel>
-              <y:SmartNodeLabelModel distance="4.0"/>
-            </y:LabelModel>
-            <y:ModelParameter>
-              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
-            </y:ModelParameter>
-          </y:NodeLabel>
-          <y:Shape type="roundrectangle"/>
-        </y:ShapeNode>
-      </data>
-    </node>
-    <node id="n8">
-      <data key="d6">
-        <y:ShapeNode>
-          <y:Geometry height="56.0" width="260.0" x="51.5" y="0.0"/>
+          <y:Geometry height="56.0" width="260.0" x="18.0" y="0.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="64.029296875" x="97.9853515625" y="18.6494140625">short reads<y:LabelModel>
@@ -169,13 +136,13 @@ call variants<y:LabelModel>
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n9">
+    <node id="n7">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="56.0" width="260.0" x="341.5" y="0.0"/>
+          <y:Geometry height="56.0" width="260.0" x="308.0" y="0.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="87.390625" x="86.3046875" y="18.6494140625">related genome<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="101.39453125" x="79.302734375" y="18.6494140625">reference genome<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -186,10 +153,45 @@ call variants<y:LabelModel>
         </y:ShapeNode>
       </data>
     </node>
+    <node id="n8">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="56.0" width="204.0" x="166.9471698113207" y="861.0"/>
+          <y:Fill color="#FFCC00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="82.697265625" x="60.6513671875" y="18.6494140625">design primers<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="roundrectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n9">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="56.0" width="240.0" x="322.9471698113207" y="1012.0"/>
+          <y:Fill color="#FFCC00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="custom" textColor="#000000" visible="true" width="150.068359375" x="44.9658203125" y="11.298828125">check uniqeness of primers
+in reference genome<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="roundrectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <node id="n10">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="56.0" width="223.75" x="172.5" y="920.20703125"/>
+          <y:Geometry height="56.0" width="223.75" x="331.0721698113207" y="1148.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="44.001953125" x="89.8740234375" y="18.6494140625">primers<y:LabelModel>
@@ -206,10 +208,10 @@ call variants<y:LabelModel>
     <node id="n11">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="56.0" width="240.0" x="451.25" y="920.20703125"/>
+          <y:Geometry height="56.0" width="240.0" x="52.94716981132069" y="1148.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="153.40234375" x="43.298828125" y="18.6494140625">locations of chosen primers <y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="180.77734375" x="29.611328125" y="18.6494140625">detailed info on designed primers<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -224,12 +226,12 @@ call variants<y:LabelModel>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="0.0" sy="28.0" tx="0.0" ty="-28.0">
-            <y:Point x="181.5" y="196.3505859375"/>
-            <y:Point x="225.875" y="196.3505859375"/>
+            <y:Point x="148.0" y="272.0"/>
+            <y:Point x="223.0" y="272.0"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="30.015625" x="7.1796875" y="17.0">fastq</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="side_slider" preferredPlacement="right" ratio="0.9612850082372323" textColor="#000000" visible="true" width="30.015625" x="43.984375" y="59.298828125">fastq</y:EdgeLabel>
         </y:QuadCurveEdge>
       </data>
     </edge>
@@ -237,37 +239,35 @@ call variants<y:LabelModel>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="0.0" sy="28.0" tx="-63.75" ty="-28.0">
-            <y:Point x="225.875" y="316.0517578125"/>
-            <y:Point x="304.625" y="316.0517578125"/>
+            <y:Point x="223.0" y="423.0"/>
+            <y:Point x="301.75" y="423.0"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="thead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="30.015625" x="46.734375" y="139.576171875">fasta</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="side_slider" preferredPlacement="right" ratio="0.962218649517685" textColor="#000000" visible="true" width="30.015625" x="47.734375" y="59.298828125">fasta</y:EdgeLabel>
         </y:QuadCurveEdge>
       </data>
     </edge>
-    <edge id="e2" source="n9" target="n1">
+    <edge id="e2" source="n7" target="n1">
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="0.0" sy="28.0" tx="63.75" ty="-28.0">
-            <y:Point x="471.5" y="86.0"/>
-            <y:Point x="432.125" y="86.0"/>
+            <y:Point x="438.0" y="149.0"/>
+            <y:Point x="429.25" y="149.0"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="30.015625" x="-37.375" y="355.2255859375">fasta
-gff
-bed</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="side_slider" preferredPlacement="right" ratio="1.0" textColor="#000000" visible="true" width="76.71484375" x="-87.46484375" y="353.173828125">fasta, gff, bed</y:EdgeLabel>
         </y:QuadCurveEdge>
       </data>
     </edge>
-    <edge id="e3" source="n8" target="n5">
+    <edge id="e3" source="n6" target="n5">
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="0.0" sy="28.0" tx="0.0" ty="-28.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="thead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="30.015625" x="-32.015625" y="40.5244140625">fastq</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="side_slider" preferredPlacement="right" ratio="1.0" textColor="#000000" visible="true" width="30.015625" x="-32.015625" y="51.173828125">fastq</y:EdgeLabel>
         </y:QuadCurveEdge>
       </data>
     </edge>
@@ -275,12 +275,12 @@ bed</y:EdgeLabel>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="0.0" sy="28.0" tx="35.75" ty="-28.0">
-            <y:Point x="225.875" y="316.0517578125"/>
-            <y:Point x="150.125" y="316.0517578125"/>
+            <y:Point x="223.0" y="423.0"/>
+            <y:Point x="147.25" y="423.0"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="30.015625" x="-73.75" y="34.875">fasta</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="side_slider" preferredPlacement="right" ratio="0.9614754098360656" textColor="#000000" visible="true" width="30.015625" x="-74.75" y="59.298828125">fasta</y:EdgeLabel>
         </y:QuadCurveEdge>
       </data>
     </edge>
@@ -290,114 +290,116 @@ bed</y:EdgeLabel>
           <y:Path sx="0.0" sy="28.0" tx="0.0" ty="-28.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="thead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="19.333984375" x="-21.333984375" y="19.875">vcf</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="side_slider" preferredPlacement="right" ratio="1.0" textColor="#000000" visible="true" width="19.333984375" x="-21.333984375" y="51.173828125">vcf</y:EdgeLabel>
         </y:QuadCurveEdge>
       </data>
     </edge>
-    <edge id="e6" source="n1" target="n3">
+    <edge id="e6" source="n5" target="n2">
+      <data key="d10">
+        <y:QuadCurveEdge straightness="0.1">
+          <y:Path sx="0.0" sy="28.0" tx="-35.75" ty="-28.0">
+            <y:Point x="148.0" y="272.0"/>
+            <y:Point x="75.75" y="272.0"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="side_slider" preferredPlacement="right" ratio="1.0" textColor="#000000" visible="true" width="30.015625" x="-104.265625" y="217.173828125">fastq</y:EdgeLabel>
+        </y:QuadCurveEdge>
+      </data>
+    </edge>
+    <edge id="e7" source="n4" target="n3">
+      <data key="d10">
+        <y:QuadCurveEdge straightness="0.1">
+          <y:Path sx="0.0" sy="28.0" tx="-72.00283018867924" ty="-10.128301886792428">
+            <y:Point x="111.5" y="645.0"/>
+            <y:Point x="288.49716981132076" y="645.0"/>
+            <y:Point x="288.49716981132076" y="698.6594339622642"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="side_slider" preferredPlacement="target_right" ratio="0.932154648067457" textColor="#000000" visible="true" width="19.333984375" x="155.66318543632076" y="67.91663104363215">vcf</y:EdgeLabel>
+        </y:QuadCurveEdge>
+      </data>
+    </edge>
+    <edge id="e8" source="n7" target="n9">
+      <data key="d10">
+        <y:QuadCurveEdge straightness="0.1">
+          <y:Path sx="0.0" sy="28.0" tx="60.0" ty="-28.0">
+            <y:Point x="438.0" y="149.0"/>
+            <y:Point x="508.0" y="149.0"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="side_slider" preferredPlacement="target_right" ratio="1.0" textColor="#000000" visible="true" width="30.015625" x="67.11594588487117" y="927.173828125">fasta</y:EdgeLabel>
+        </y:QuadCurveEdge>
+      </data>
+    </edge>
+    <edge id="e9" source="n8" target="n9">
+      <data key="d10">
+        <y:QuadCurveEdge straightness="0.1">
+          <y:Path sx="0.0" sy="28.0" tx="-60.0" ty="-28.0">
+            <y:Point x="268.9471698113207" y="997.0"/>
+            <y:Point x="382.9471698113207" y="997.0"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="side_slider" preferredPlacement="right" ratio="0.9692005242463958" textColor="#000000" visible="true" width="30.015625" x="115.99999573905507" y="73.5869140625">fasta</y:EdgeLabel>
+        </y:QuadCurveEdge>
+      </data>
+    </edge>
+    <edge id="e10" source="n0" target="n8">
+      <data key="d10">
+        <y:QuadCurveEdge straightness="0.1">
+          <y:Path sx="0.0" sy="28.0" tx="-51.0" ty="-28.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="side_slider" preferredPlacement="right" ratio="1.0" textColor="#000000" visible="true" width="33.349609375" x="-40.30367526703765" y="489.173828125"> fasta</y:EdgeLabel>
+        </y:QuadCurveEdge>
+      </data>
+    </edge>
+    <edge id="e11" source="n9" target="n10">
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
           <y:Path sx="0.0" sy="28.0" tx="0.0" ty="-28.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="shead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="17.341796875" x="-19.341796875" y="10.125">gff</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="side_slider" preferredPlacement="right" ratio="1.0" textColor="#000000" visible="true" width="30.015625" x="-32.015629260944934" y="51.173828125">fasta</y:EdgeLabel>
         </y:QuadCurveEdge>
       </data>
     </edge>
-    <edge id="e7" source="n5" target="n2">
+    <edge id="e12" source="n8" target="n11">
+      <data key="d9"/>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
-          <y:Path sx="0.0" sy="28.0" tx="-35.75" ty="-28.0">
-            <y:Point x="181.5" y="196.3505859375"/>
-            <y:Point x="78.625" y="196.3505859375"/>
+          <y:Path sx="0.0" sy="28.0" tx="0.0" ty="-28.0">
+            <y:Point x="268.9471698113207" y="997.0"/>
+            <y:Point x="172.9471698113207" y="997.0"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="thead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="30.015625" x="-134.890625" y="154.576171875">fastq</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="thead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="17.341796875" x="-115.34180113594493" y="202.173828125">gff</y:EdgeLabel>
         </y:QuadCurveEdge>
       </data>
     </edge>
-    <edge id="e8" source="n4" target="n3">
+    <edge id="e13" source="n1" target="n3">
+      <data key="d9"/>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
-          <y:Path sx="0.0" sy="28.0" tx="-78.875" ty="-6.1552734375">
-            <y:Point x="114.375" y="574.1552734375"/>
-            <y:Point x="298.375" y="568.1552734375"/>
-          </y:Path>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="free" modelPosition="anywhere" preferredPlacement="target" ratio="0.5" textColor="#000000" visible="true" width="46.017578125" x="185.75158981606" y="43.900390625">vcf, gff?</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="17.341796875" x="-1.522326107224501" y="202.1815185546875">gff</y:EdgeLabel>
         </y:QuadCurveEdge>
       </data>
     </edge>
-    <edge id="e9" source="n3" target="n6">
+    <edge id="e14" source="n3" target="n8">
+      <data key="d9"/>
       <data key="d10">
         <y:QuadCurveEdge straightness="0.1">
-          <y:Path sx="0.0" sy="28.0" tx="51.0" ty="-28.0"/>
+          <y:Path sx="-91.55283018867931" sy="27.994644536164742" tx="0.0" ty="-28.017578125"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="17.341796875" x="2.0" y="25.5244140625">gff</y:EdgeLabel>
-        </y:QuadCurveEdge>
-      </data>
-    </edge>
-    <edge id="e10" source="n9" target="n7">
-      <data key="d10">
-        <y:QuadCurveEdge straightness="0.1">
-          <y:Path sx="0.0" sy="28.0" tx="60.0" ty="-28.0">
-            <y:Point x="471.5" y="86.0"/>
-            <y:Point x="510.875" y="86.0"/>
-            <y:Point x="510.875" y="794.8564453125"/>
-            <y:Point x="437.375" y="794.8564453125"/>
-          </y:Path>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="free" modelPosition="anywhere" preferredPlacement="target" ratio="0.5" textColor="#000000" visible="true" width="30.015625" x="-31.640625000000057" y="719.1552734375001">fasta</y:EdgeLabel>
-        </y:QuadCurveEdge>
-      </data>
-    </edge>
-    <edge id="e11" source="n6" target="n7">
-      <data key="d10">
-        <y:QuadCurveEdge straightness="0.1">
-          <y:Path sx="0.0" sy="28.0" tx="-60.0" ty="-28.0"/>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="thead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="30.015625" x="-32.015625" y="25.5244140625">fasta</y:EdgeLabel>
-        </y:QuadCurveEdge>
-      </data>
-    </edge>
-    <edge id="e12" source="n0" target="n6">
-      <data key="d10">
-        <y:QuadCurveEdge straightness="0.1">
-          <y:Path sx="0.0" sy="28.0" tx="-51.0" ty="-28.0">
-            <y:Point x="225.875" y="684.505859375"/>
-            <y:Point x="266.375" y="684.505859375"/>
-          </y:Path>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="33.349609375" x="42.5" y="377.041015625"> fasta</y:EdgeLabel>
-        </y:QuadCurveEdge>
-      </data>
-    </edge>
-    <edge id="e13" source="n3" target="n11">
-      <data key="d10">
-        <y:QuadCurveEdge straightness="0.1">
-          <y:Path sx="85.375" sy="15.3447265625" tx="0.0" ty="0.0">
-            <y:Point x="453.75" y="722.5"/>
-            <y:Point x="571.25" y="722.5"/>
-          </y:Path>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="24.021484375" x="119.5" y="246.26416015625">bed</y:EdgeLabel>
-        </y:QuadCurveEdge>
-      </data>
-    </edge>
-    <edge id="e14" source="n7" target="n10">
-      <data key="d10">
-        <y:QuadCurveEdge straightness="0.1">
-          <y:Path sx="-68.625" sy="9.6435546875" tx="24.375" ty="0.54296875"/>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="thead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="30.015625" x="-32.015625" y="25.5391845703125">fasta</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="17.341796875" x="1.9999957390550662" y="51.14013671875">gff</y:EdgeLabel>
         </y:QuadCurveEdge>
       </data>
     </edge>
