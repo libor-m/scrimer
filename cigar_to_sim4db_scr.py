@@ -1,25 +1,30 @@
 #! /usr/bin/env python
 
-# script that parses cigar file 
-# produced by aligning fragments of contigs to a genome (tested with smalt output)
-# and outputs a 'script' for limiting the exon model regions of sim4db
-#
-# general strategy:
-# load chromosome definition file
-# parse the hits -
-#  extract read name
-#  check if hit is in known chromosome (report error otherwise)
-#  for each hit create +-50 KB region clipped to chromosome ends
-#  when a read name different from the previous one is encountered, merge all the regions
-#  output each contiguos region as a script line
-#
-# input requirements:
-# all the fragments must be reported by the aligner
-# the fragment names have to be in the same order as the master sequences
-# the fragments must be named like readname_number (like fasta_fragments.py does)
-# all the hits from one read must follow each other
-#
-# Author: Libor Morkovsky 2012
+"""Script that parses cigar file 
+produced by aligning fragments of contigs to a genome (tested with smalt output)
+and outputs a 'script' for limiting the exon model regions of sim4db.
+
+Input
+- output of some read mapper in CIGAR format
+ - all the fragments must be reported by the aligner
+ - the fragment names have to be in the same order as the master sequences
+ - the fragments must be named like readname_number (like fasta_fragments.py does)
+ - all the hits from one read must follow each other
+ 
+Output
+- sim4db 'script'
+
+Algorithm
+- load chromosome definition file
+- parse the hits:
+  - extract read name
+  - check if hit is in known chromosome (report error otherwise)
+  - for each hit create +-50 KB region clipped to chromosome ends
+  - when a read name different from the previous one is encountered, merge all the regions
+  - output each contiguos region as a script line
+
+Author: Libor Morkovsky 2012
+"""
 
 import sys, re 
 
@@ -94,69 +99,72 @@ def output_regions(num, regions):
       if end > chromosomes[seq][1]: end = chromosomes[seq][1]
       print "-%s -e %d -D %d %d %d" % (dir, num, chromosomes[seq][0], start, end)
 
-if len(sys.argv) != 2:
-  exit("use: %s samtools_fai_of_the_genome \n reads cigar from stdin, writes sim4db script to stdout" % sys.argv[0])
+def main():
+    if len(sys.argv) != 2:
+      exit("use: %s samtools_fai_of_the_genome \n reads cigar from stdin, writes sim4db script to stdout" % sys.argv[0])
 
-# number of bases to extend on both sides of the hit
-margin = 50000
+    # number of bases to extend on both sides of the hit
+    margin = 50000
 
-# read the fasta index
-fai = open(sys.argv[1])
-chromosomes = dict()
-for num, line in enumerate(fai):
-  fields = line.split("\t")
-  chromosomes[fields[0]] = (num, int(fields[1]))
+    # read the fasta index
+    fai = open(sys.argv[1])
+    chromosomes = dict()
+    for num, line in enumerate(fai):
+      fields = line.split("\t")
+      chromosomes[fields[0]] = (num, int(fields[1]))
 
-fai.close()
+    fai.close()
 
-print >> sys.stderr, len(chromosomes), "sequences loaded from faidx"
+    print >> sys.stderr, len(chromosomes), "sequences loaded from faidx"
 
-"""
- CIGAR format from ssaha2 doc
+    """
+     CIGAR format from ssaha2 doc
 
-[0] in smalt 'cigar' output is preceded by column like 'cigar:S:56'
+    [0] in smalt 'cigar' output is preceded by column like 'cigar:S:56'
 
-[1] query_name  Name of the query sequence from the input file. 
-[2] query_start  Start of the alignment in the query. 
-[3] query_end  End of the alignment in the query. 
-[4] query_strand  Query orientation (+/-). 
-[5] subject_name  Name of the subject sequence from the input file. 
-[6] subject_start Start of the alignment in the subject. 
-[7] subject_end  End of the alignment in the subject. 
-[8] subject_strand  Subject orientation (always + for SSAHA2). 
-[9] score  Smith-Waterman score obtained from the cross_match alignment.
-[10:] series of <operation, length> pairs where operation is one of match, insertion or deletion
-"""
-old_seqname = ""
-seqnum = 0
-regions = dict()
-# loop through the input
-for nline, line in enumerate(sys.stdin):
-  fields = line.split()
-  seqname = re.sub("_[0-9]+$", "", fields[1])
-  
-  # if new query sequence encountered, output the regions
-  if seqname != old_seqname and nline != 0:
-    if len(regions):
+    [1] query_name  Name of the query sequence from the input file. 
+    [2] query_start  Start of the alignment in the query. 
+    [3] query_end  End of the alignment in the query. 
+    [4] query_strand  Query orientation (+/-). 
+    [5] subject_name  Name of the subject sequence from the input file. 
+    [6] subject_start Start of the alignment in the subject. 
+    [7] subject_end  End of the alignment in the subject. 
+    [8] subject_strand  Subject orientation (always + for SSAHA2). 
+    [9] score  Smith-Waterman score obtained from the cross_match alignment.
+    [10:] series of <operation, length> pairs where operation is one of match, insertion or deletion
+    """
+    old_seqname = ""
+    seqnum = 0
+    regions = dict()
+    # loop through the input
+    for nline, line in enumerate(sys.stdin):
+      fields = line.split()
+      seqname = re.sub("_[0-9]+$", "", fields[1])
+      
+      # if new query sequence encountered, output the regions
+      if seqname != old_seqname and nline != 0:
+        if len(regions):
+          output_regions(seqnum, regions)
+          regions = dict()
+
+        seqnum += 1
+      
+      # store the seqname for next loop
+      old_seqname = seqname
+      
+      # sanity check -- if we're matching against the correct genome
+      if fields[5] not in chromosomes:
+        # a special case for 'no hit'
+        if fields[5] != '*':
+          print >> sys.stderr, "hit %d was matched to sequence not in faidx/genome (%s)" % (nline, fields[5])
+        continue
+      
+      # create a region for current hit
+      # subj_name, start, end, reverse?
+      addregion(regions, fields[5], int(fields[6]) - margin, int(fields[7]) + margin, fields[4] != fields[8])
+
+    # output the ranges for last sequence
+    else:
       output_regions(seqnum, regions)
-      regions = dict()
 
-    seqnum += 1
-  
-  # store the seqname for next loop
-  old_seqname = seqname
-  
-  # sanity check -- if we're matching against the correct genome
-  if fields[5] not in chromosomes:
-    # a special case for 'no hit'
-    if fields[5] != '*':
-      print >> sys.stderr, "hit %d was matched to sequence not in faidx/genome (%s)" % (nline, fields[5])
-    continue
-  
-  # create a region for current hit
-  # subj_name, start, end, reverse?
-  addregion(regions, fields[5], int(fields[6]) - margin, int(fields[7]) + margin, fields[4] != fields[8])
-
-# output the ranges for last sequence
-else:
-  output_regions(seqnum, regions)
+if __name__ == '__main__': main()

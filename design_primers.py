@@ -1,24 +1,31 @@
 #!/usr/bin/env python
 
-# given the
-# - reference sequence (fasta with samtools fai index)
-# - annotations (gff3, has to contain exon entries)
-# - filtered variants (vcf, primers are designed for variants with PASS)
-# produces 
-# - PCR and genotyping primers selected using primer3 (gff3)
-# algorithm
-# - there is only a few selected variants, so the least amount of work
-#   will be to do the work only for variants
-# - for each of the selected variants
-#   - request exons
-#   - apply the technical constraints 
-#     (minimal primer length of 20 form the edge of an exon)
-#   - patch exon sequence to mark positions of known variants
-#   - find suitable genotyping primers
-#   - design PCR primers to flank the (usable) genotyping primers
-#
-# Author: Libor Morkovsky, 2012
-#
+"""
+Input
+
+- reference sequence (fasta with samtools fai index)
+- annotations (gff3, has to contain exon entries)
+- filtered variants (vcf, primers are designed for variants with PASS)
+
+Output
+
+- PCR and genotyping primers selected using primer3 (gff3)
+
+Algorithm
+
+- there is only a few selected variants, so the least amount of work
+  will be to do the work only for variants
+- for each of the selected variants
+
+  - request exons
+  - apply the technical constraints 
+    (minimal primer length of 20 form the edge of an exon)
+  - patch exon sequence to mark positions of known variants
+  - find suitable genotyping primers
+  - design PCR primers to flank the (usable) genotyping primers
+
+Author: Libor Morkovsky, 2012
+"""
 
 import sys
 import os

@@ -1,27 +1,30 @@
+"""
+A Python interface to the primer3_core executable.
 
-# A connector to the primer3_core executable.
-# (it is not possible to keep a persistent primer3 process
-#  using subprocess module - communicate() terminates the input
-#  stream and waits for the process to finish)
-#
-# Author: Libor Morkovsky 2012
-#
+    TODO: it is not possible to keep a persistent primer3 process
+     using subprocess module - communicate() terminates the input
+     stream and waits for the process to finish
+
+Author: Libor Morkovsky 2012
+"""
 
 class BoulderIO:
+    """Provides Python interface for ``BoulderIO`` format used by Primer3.
+    """
+
     @classmethod
     def parse(self, string):
-        """parse a BoulderIO string (KEY=VAL\n)
+        r"""Parse a BoulderIO string (KEY=VAL\\n)
         return a list of records, where each record is a dictionary
-        end of the string implies a single '=\n' (record separator)
+        end of the string implies a single '=\\n' (record separator).
         """
         record_strings = string.split("=\n")
         return [dict(tuple(line.split("=", 1)) for line in record.split("\n") if len(line) > 3) for record in record_strings if len(record) > 3]
 
     @classmethod
     def deparse(self, records):
-        """accept a dict or a list of dicts
-        produce a BoulderIO string (KEY=VAL\n)
-        with records separated by '=\n' when the input was a list
+        r"""Accepts a dict or a list of dicts, produces a BoulderIO string (KEY=VAL\\n)
+        with records separated by '=\\n'.
         """
         
         # unify the input, create a list with single element
@@ -32,6 +35,9 @@ class BoulderIO:
 
 
 class Primer3:
+    """Wraps Primer3 executable. Can be instantiated with default params, that are 
+    always used when calling the external program.
+    """
     def __init__(self, p3path="primer3_core", **kwargs):
         # store path to primer3
         self.p3path = p3path

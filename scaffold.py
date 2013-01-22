@@ -1,27 +1,33 @@
 #! /usr/bin/env python
 
-# input
-#  fasta file with the original sequences
-#  set of gff files with exon features having the Target attribute 
-#   (product of liftover.py)
-#  other gff/bed files to remap to the genome
-#
-# output 
-#  fasta with the input sequences pasted with 50 Ns
-#   - unambiguos sequences assigned to 'chromosomes' in the order 
-#   of the template genome (that was used to generate the Target exon mappings)
-#   - ambiguos (having more than one possible chromosome) assigned to chrAmb
-#   - unmapped sequences assigned to chrUnmapped (to distinguish from chrUn in target genome)
-#  gff file with the locations of the input sequences (gene)
-#   and remapped contents of the input gff files
-# 
-# algorithm
-#  go through the input gff files, construct a dictionary {read_name -> {chr -> location}}
-#  add the lowest coordinate found on a given chromosome (overwriting previous values)
-#  sort the list with single candidate locations with 'chromocompare'
-# 
-# Author: Libor Morkovsky 2012
-#
+"""
+Input
+
+- fasta file with the original sequences
+- set of gff files with exon features having the Target attribute 
+  (product of liftover.py)
+- other gff/bed files to remap to the genome
+
+Output 
+
+- fasta with the input sequences pasted with 50 Ns
+
+  - unambiguos sequences assigned to 'chromosomes' in the order 
+    of the template genome (that was used to generate the Target exon mappings)
+  - ambiguos (having more than one possible chromosome) assigned to **chrAmb**
+  - unmapped sequences assigned to **chrUnmapped** (to distinguish from chrUn in target genome)
+
+- gff file with the locations of the input sequences (gene)
+  and remapped contents of the input gff files
+
+Algorithm
+
+- go through the input gff files, construct a dictionary {read_name -> {chr -> location}}
+- add the lowest coordinate found on a given chromosome (overwriting previous values)
+- sort the list with single candidate locations with 'chromocompare'
+
+Author: Libor Morkovsky 2012
+"""
 
 import sys
 import pybedtools

@@ -1,15 +1,19 @@
 #!/usr/bin/env python
 
-"""
-Given pairs of 'almost same' sequences create clusters of sequences.
-From each cluster select the longest one and mark all others
-for deletion from the data.
+"""Given pairs of 'almost identical' sequences create clusters of sequences.
+From each cluster select the longest sequence. Output names of all other 
+sequences (for example to remove them from the data afterwards).
 
-input
-    custom formated output from lastz on stdin
-    --format=general:name1,size1,start1,name2,size2,start2,strand2,identity,coverage
-output 
-    names of sequences that were selected as reduntant
+Uses disjoint sets forest to store the clusters so it should scale to millions of sequences.
+
+Input
+
+- custom formated (``--format=general:name1,size1,start1,name2,size2,start2,strand2,identity,coverage``)
+  output from ``lastz`` on stdin
+
+Output 
+
+- names of sequences that were selected as reduntant
 """
 
 

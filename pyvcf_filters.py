@@ -1,9 +1,8 @@
-#
-# implementation of vcf filters
-# for pyvcf vcf_filter.py
-#
-# Author: Libor Morkovsky 2012
-#
+"""
+Implementation of vcf filters for pyvcf `vcf_filter.py`.
+
+Author: Libor Morkovsky 2012
+"""
 import vcf
 
 class DepthPerSample(vcf.Filter):

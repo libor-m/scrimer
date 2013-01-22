@@ -1,27 +1,38 @@
 #!/usr/bin/env python
 
-# given a fastq file and a list of sequence indices to remove
-# outputs the file without the given sequences (index starts at 0)
-#
-# this could probably be simple sed, if it didn't hit the command line size limit
+"""
+Input
+
+- FASTQ file 
+- list of indices (0 based)
+ 
+Output
+
+- FASTQ file without the given sequences 
+
+Author: Libor Morkovsky, 2012
+"""
 
 import sys
 
-# read the kill list
-fkill = open(sys.argv[1])
-killlines = fkill.readlines()
-killseq = frozenset([int(line) for line in killlines])
-fkill.close()
+def main():
+    # read the kill list
+    fkill = open(sys.argv[1])
+    killlines = fkill.readlines()
+    killseq = frozenset([int(line) for line in killlines])
+    fkill.close()
 
-# go through the input, avoid outputting the 4 line blocks 
-# with given indices
-fseq = open(sys.argv[2])
-linenum = 0
-for line in fseq:
-    seqnum = linenum / 4
-    linenum += 1  
-    if seqnum in killseq:
-        continue
-    print line.strip()
+    # go through the input, avoid outputting the 4 line blocks 
+    # with given indices
+    fseq = open(sys.argv[2])
+    linenum = 0
+    for line in fseq:
+        seqnum = linenum / 4
+        linenum += 1  
+        if seqnum in killseq:
+            continue
+        print line.strip()
 
-fseq.close()
+    fseq.close()
+
+if __name__ == "__main__": main()

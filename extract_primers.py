@@ -1,21 +1,28 @@
 #!/usr/bin/env python
 
-# given the
-#  gff file containing primers
-#  optional output format
-# produces 
-#  fa/isPcr file with the primer sequences
-# algorithm
-# go through the gff
-# - fa output
-#  if current line has a SEQUENCE attribute, output it
-# - ispcr output
-#  only pcr primers are of interest, and in equivalent pairs
-#  on encountering gt-xx put it to dict by the Parent
-#  if there are both entries output and remove from dict
-#
-# Author: Libor Morkovsky, 2012
-#
+"""
+Input
+
+- gff file containing primers
+- optional output format
+
+Output
+
+- fa/isPcr file with the primer sequences
+
+Algorithm
+
+- for each line in gff
+
+ - **fa output**:
+   if current line has a ``SEQUENCE`` attribute, output it
+ - **ispcr output**:
+   only pcr primers are of interest, and in equivalent pairs
+   on encountering gt-xx put it to dict keyed by ``Parent``
+   if there are both entries output and remove from dict
+
+Author: Libor Morkovsky, 2012
+"""
 
 import sys
 import os
