@@ -16,8 +16,8 @@ File: ``scaffold.py``
 
 .. automodule:: scaffold
 
-Design primers
---------------
+Design primers using sequences, annotations and selected variants
+-----------------------------------------------------------------
 File: ``design_primers.py``
 
 .. automodule:: design_primers
@@ -32,6 +32,18 @@ File: ``extract_primers.py``
 Tools for FASTA/FASTQ manipulation
 ==================================
 
+Given pairs of matching sequences, find the longest one
+-------------------------------------------------------
+File: ``find_redundant_sequences.py``
+
+.. automodule:: find_redundant_sequences
+
+Filter sequences in FASTQ file based on their order in the file
+---------------------------------------------------------------
+File: ``fastq_kill_lines.py``
+
+.. automodule:: fastq_kill_lines
+
 Filter sequences in FASTQ, FASTA based on their order in the file
 -----------------------------------------------------------------
 File: ``seq_filter_by_id.py``
@@ -39,12 +51,6 @@ File: ``seq_filter_by_id.py``
 Taken from [BioPython]_. FASTA and FASTQ readers are pasted in the file.
 
 .. automodule:: seq_filter_by_id
-
-Filter sequences in FASTQ file based on their order in the file
----------------------------------------------------------------
-File: ``fastq_kill_lines.py``
-
-.. automodule:: fastq_kill_lines
 
 Break sequences in FASTA file into fragments
 --------------------------------------------
@@ -54,15 +60,15 @@ Taken from [lastz]_.
 
 .. automodule:: fasta_fragments
 
-Given pairs of matching sequences, find the longest one
--------------------------------------------------------
-File: ``find_redundant_sequences.py``
-
-.. automodule:: find_redundant_sequences
-
-
 Other tools
 ===========
+
+Primer3 wrapper
+---------------
+File: ``primer3_connector.py``
+
+.. automodule:: primer3_connector
+   :members:
 
 Convert CIGAR matches to sim4db 'script'
 ----------------------------------------
@@ -75,13 +81,6 @@ Count different bases in 5' end of reads in FASTQ
 File: ``5prime_stats.py``
 
 .. automodule:: 5prime_stats
-
-Primer3 wrapper
----------------
-File: ``primer3_connector.py``
-
-.. automodule:: primer3_connector
-   :members:
 
 Variant filters for PyVCF vcf_filter.py
 ---------------------------------------

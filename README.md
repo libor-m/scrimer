@@ -6,8 +6,14 @@ Predicted exons are used to find sequences suitable as PCR products that do not 
 exon intron boundaries and contain some variable site. PCR and genotyping primers for 
 SNaPshot screening of such site are created.
 
+# Documentation
+http://scrimer.rtfd.org
+
+Documentation in sphinx format is in the ``doc`` directory.
+
 # Status
 Publication ready. Working on documentation. Publication is in review.
+
 
 # License
 Scrimer is licensed under GNU Affero General Public License.
