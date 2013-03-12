@@ -21,9 +21,10 @@ Author: Libor Morkovsky, 2012
 #    Copyright (C) 2012, 2013 Libor Morkovsky
 
 import sys
-import pybedtools
 import itertools
 import re
+
+import pybedtools
 
 def main():
     if len(sys.argv) < 2:

@@ -1,16 +1,16 @@
 #! /usr/bin/env python
 
-"""Script that parses cigar file 
-produced by aligning fragments of contigs to a genome (tested with smalt output)
-and outputs a 'script' for limiting the exon model regions of sim4db.
+"""Script that parses ``CIGAR`` file 
+produced by aligning fragments of contigs to a genome (tested with ``smalt`` output)
+and outputs a 'script' for limiting the exon model regions of ``sim4db``.
 
 Input
 
-- output of some read mapper in CIGAR format
+- output of some read mapper in ``CIGAR`` format
 
  - all the fragments must be reported by the aligner
  - the fragment names have to be in the same order as the master sequences
- - the fragments must be named like readname_number (like fasta_fragments.py does)
+ - the fragments must be named like readname_number (like ``fasta_fragments.py`` does)
  - all the hits from one read must follow each other
  
 Output
@@ -27,14 +27,15 @@ Algorithm
   - when a read name different from the previous one is encountered, merge all the regions
   - output each contiguos region as a script line
 
-Author: Libor Morkovsky 2012
+Author: Libor Morkovsky, 2012
 """
 
 # This file is a part of Scrimer.
 # See LICENSE.txt for details on licensing.
 #    Copyright (C) 2012, 2013 Libor Morkovsky
 
-import sys, re 
+import sys
+import re 
 
 # add a region
 def addregion(regs, chr, start, end, reverse):

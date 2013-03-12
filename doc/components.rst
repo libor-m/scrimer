@@ -1,5 +1,5 @@
-Component documentation
-#######################
+Components of scrimer pipeline
+##############################
 
 Components bound to the pipeline
 ================================
@@ -32,36 +32,38 @@ File: ``extract_primers.py``
 Tools for FASTA/FASTQ manipulation
 ==================================
 
-Given pairs of matching sequences, find the longest one
--------------------------------------------------------
+Given pairs of matching sequences, create clusters and find the longest representative
+--------------------------------------------------------------------------------------
 File: ``find_redundant_sequences.py``
 
 .. automodule:: find_redundant_sequences
 
-Filter sequences in FASTQ file based on their order in the file
----------------------------------------------------------------
+Filter sequences in FASTQ file based on their position in the file
+------------------------------------------------------------------
 File: ``fastq_kill_lines.py``
 
 .. automodule:: fastq_kill_lines
 
-Filter sequences in FASTQ, FASTA based on their order in the file
------------------------------------------------------------------
+Filter sequences in FASTQ, FASTA based on their identifier
+----------------------------------------------------------
 File: ``seq_filter_by_id.py``
 
-Taken from [BioPython]_. FASTA and FASTQ readers are pasted in the file.
+Taken from [BioPython]_. FASTA and FASTQ readers are pasted in the file,
+so the program is standalone.
 
 .. automodule:: seq_filter_by_id
 
 Break sequences in FASTA file into fragments
 --------------------------------------------
-File: ``fastq_kill_lines.py``
+File: ``fasta_fragments.py``
 
-Taken from [lastz]_.
+Taken from [lastz]_. Break sequences in fasta file to fragments, so 
+some kind of short read aligner can be used for further processing.
 
-.. automodule:: fasta_fragments
+. .. automodule:: fasta_fragments
 
-Other tools
-===========
+General purpose tools
+=====================
 
 Primer3 wrapper
 ---------------

@@ -5,7 +5,7 @@
 #  1. use newbler to assemble the files
 #  2. remove contigs that are similar to each other
 
-# tools used: lastz
+# tools used: newbler, lastz
 
 #  1. use newbler to assemble the files
 #------------------------------------------------

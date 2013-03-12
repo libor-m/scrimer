@@ -5,12 +5,12 @@ Input
 
 - fasta file with the original sequences
 - set of gff files with exon features having the Target attribute 
-  (product of liftover.py)
+  (product of ``liftover.py``)
 - other gff/bed files to remap to the genome
 
 Output 
 
-- fasta with the input sequences pasted with 50 Ns
+- fasta with the input sequences pasted with 100 Ns
 
   - unambiguos sequences assigned to 'chromosomes' in the order 
     of the template genome (that was used to generate the Target exon mappings)
@@ -26,7 +26,7 @@ Algorithm
 - add the lowest coordinate found on a given chromosome (overwriting previous values)
 - sort the list with single candidate locations with 'chromocompare'
 
-Author: Libor Morkovsky 2012
+Author: Libor Morkovsky, 2012
 """
 
 # This file is a part of Scrimer.

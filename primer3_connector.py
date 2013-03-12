@@ -18,17 +18,17 @@ class BoulderIO:
 
     @classmethod
     def parse(self, string):
-        r"""Parse a BoulderIO string (KEY=VAL\\n)
+        r"""Parse a BoulderIO string ``(KEY=VAL\n)``
         return a list of records, where each record is a dictionary
-        end of the string implies a single '=\\n' (record separator).
+        end of the string implies a single ``'=\n'`` (record separator).
         """
         record_strings = string.split("=\n")
         return [dict(tuple(line.split("=", 1)) for line in record.split("\n") if len(line) > 3) for record in record_strings if len(record) > 3]
 
     @classmethod
     def deparse(self, records):
-        r"""Accepts a dict or a list of dicts, produces a BoulderIO string (KEY=VAL\\n)
-        with records separated by '=\\n'.
+        r"""Accepts a dict or a list of dicts, produces a BoulderIO string ``(KEY=VAL\n)``
+        with records separated by ``'=\n'``.
         """
         
         # unify the input, create a list with single element
@@ -39,8 +39,8 @@ class BoulderIO:
 
 
 class Primer3:
-    """Wraps Primer3 executable. Can be instantiated with default params, that are 
-    always used when calling the external program.
+    """Wraps Primer3 executable. `kwargs` are converted to strings and used as default parameters
+    for each call of primer3 binary.
     """
     def __init__(self, p3path="primer3_core", **kwargs):
         # store path to primer3
@@ -52,12 +52,12 @@ class Primer3:
         self.default_params.update(str_kw)
 
     def call(self, records):
-        """Merge each of the records with default_params, the record taking precedence,
-        call the primer3 worker, 
+        """Merge each of the records with `default_params`, the record taking precedence,
+        call the ``primer3`` binary, 
         parse the output and return a list of dictionaries,
-        {RIGHT:[], LEFT:[], PAIR:[], INTERNAL:[]} for each input record
+        ``{RIGHT:[], LEFT:[], PAIR:[], INTERNAL:[]}`` for each input record
         uppercase keys (in the result) are the original names from BoulderIO format,
-        lowercase keys have no direct equivalent (position, other-keys)
+        lowercase keys have no direct equivalent in primer3 output (``position``, ``other-keys``)
         """
 
         # merge the defaults with current query

@@ -9,7 +9,7 @@ Uses disjoint sets forest to store the clusters so it should scale to millions o
 Input
 
 - custom formated (``--format=general:name1,size1,start1,name2,size2,start2,strand2,identity,coverage``)
-  output from ``lastz`` on stdin
+  output from ``lastz`` on standard input
 
 Output 
 
