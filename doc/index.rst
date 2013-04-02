@@ -69,9 +69,11 @@ Component documentation
 Dataflow
 --------
 
-Dataflow diagram of the pipeline. Inputs are in green, processing steps in yellow and results in red.
+Dataflow diagram of the pipeline.
 
 .. figure:: images/dataflow.png
+   
+   Inputs are in green, processing steps in yellow and results in red.
 
 License
 -------
@@ -101,4 +103,4 @@ Software used
 .. [samtools] http://samtools.sourceforge.net/
 .. [smalt] http://www.sanger.ac.uk/resources/software/smalt/
 .. [fastqc] http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
-
+.. [pyvcf] https://github.com/jamescasbon/PyVCF
