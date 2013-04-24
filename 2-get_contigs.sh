@@ -18,6 +18,17 @@ OUT=20-jp-contigs
 #TODO: add some working newbler command 
 # - current assembly was done by jpaces
 
+# get one exclusive zewura, interactive from screen at skirit
+qsub -q q_2d@wagap.cerit-sc.cz -l mem=400gb -l nodes=1:ppn=80:nodecpus80:cl_zewura#excl -I
+
+# add newbler to path
+export PATH=~/brno3/newbler-2.6/bin:$PATH
+
+# run test assembly 
+runAssembly -o 21-newbler-test -cdna -cpu 19 12-cutadapt/GSVZDOM01.RL1.fastq
+
+# run full assembly 
+runAssembly -o 22-newbler -cdna -cpu 19 -m 12-cutadapt/*.fastq
 
 #  2. remove contigs that are similar to each other
 #------------------------------------------------
