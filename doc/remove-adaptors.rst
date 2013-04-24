@@ -3,6 +3,8 @@ Remove cDNA synthesis adaptors
 
 Quality check of the raw data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Results of the quality check of the raw data can be used as a reference point
+to check the improvments done by this step.
 ::
 
     OUT=10-fastqc
@@ -11,55 +13,79 @@ Quality check of the raw data
 
 Split the files according to MIDs with SFFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+If you used multiplexing via MID adaptors during library preparation, you have to split the 
+reads according to the information stored in the sequences.
 TODO:
 sff format is necessary to use SFFile tool and we got the data as .fastq
 
 Remove cDNA synthesis primers with cutadapt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Another source of noise in the data is the primers that were used for reverse transcription
+of mRNA and for following PCR amplification of cDNA. We remove them by ``cutadapt``.
 
-# data from previous steps
-IN=10-mid-split
-OUT=12-cutadapt
-mkdir $OUT
+::
+    
+    # data from previous steps
+    IN=10-mid-split
+    OUT=12-cutadapt
+    mkdir $OUT
 
-# cut out the evrogen sequences using GNU parallel and cutadapt
-# cutadapt supports only 'N' wildcards, no ambiguity codes
-parallel cutadapt --anywhere=AAGCAGTGGTATCAACGCAGAGTTTTTGTTTTTTTCTTTTTTTTTTNN --anywhere=AAGCAGTGGTATCAACGCAGAGTACGCGGG --anywhere=AAGCAGTGGTATCAACGCAGAGT \
-  --error-rate=0.2 --overlap=15 --minimum-length=40 \
-  --output=$OUT/{/.}.fastq --rest-file=$OUT/{/.}.rest {} ::: $IN/*.fastq > $OUT/cutadapt.log
+    # cut out the evrogen sequences using GNU parallel and cutadapt
+    # cutadapt supports only 'N' wildcards, no ambiguity codes
+    parallel cutadapt --anywhere=$PRIMER1 --anywhere=$PRIMER2 --anywhere=$PRIMER3 \
+      --error-rate=0.2 --overlap=15 --minimum-length=40 \
+      --output=$OUT/{/.}.fastq --rest-file=$OUT/{/.}.rest {} ::: $IN/*.fastq > $OUT/cutadapt.log
 
 Check the results
 ^^^^^^^^^^^^^^^^^
+It is necessary to check the results of adaptor cutting. 
 
-# check the number of remaining hits (using the /dev/null trick to get the filenames and filtering it out by grep)
-NERR=5
-parallel agrep -c -$NERR "AAGCAGTGGTATCAACGCAGAGT" {} /dev/null ::: $OUT/*.fastq|grep -v /dev
+First we can check how many of the primers were missed by cutadapt. ``agrep`` uses a different 
+matching algorithm than cutadapt, so some remaining hits are usually found.
+``/dev/null`` is used as second input to ``agrep`` so the filenames are output.
 
-# look at the log, check the sanity of output
-grep -A5 Processed $OUT/cutadapt.log | less
-# results for 454 Titanium data from Smart kit synthesized cDNA, luscinia: 
-#  ~70% trimmed reads
-#  ~10% trimmed basepairs
-#  ~10% too short reads
+::
 
-less $OUT/cutadapt.log
-# length of the removed sequence should be equal to length of the adapter (31 in this case):
+    NERR=5
+    parallel agrep -c -$NERR "$PRIMER3" {} /dev/null ::: $OUT/*.fastq|grep -v /dev
 
-# Lengths of removed sequences (5')
-# length  count   expected
-# 5       350     264.7
-# 6       146     66.2
-# ...
-# 30      6414    0.0
-# 31      63398   0.0
-# 32      6656    0.0
-# ...
+Next thing to check is logs produced by ``cutadapt``.
+Results for our data - 454 Titanium data from Smart kit synthesized cDNA: 
+- ~70% trimmed reads
+- ~10% trimmed basepairs
+- ~10% too short reads
 
-ls -l $OUT
-# size of the .rest files is 1/500 of the .fastq (should be 1/250 for .fasta)
+::
 
-# now the fastqc checks should be +- ok
-fastqc --outdir=13-fastqc --noextract --threads=8 $OUT/*.fastq
+    grep -A5 Processed $OUT/cutadapt.log | less
+
+Length of the removed sequence should be close to length of the adapter (31 in this case):
+
+::
+
+    less $OUT/cutadapt.log
+
+::
+
+    # Lengths of removed sequences (5')
+    # length  count   expected
+    # 5       350     264.7
+    # 6       146     66.2
+    # ...
+    # 30      6414    0.0
+    # 31      63398   0.0
+    # 32      6656    0.0
+    # ...
+
+Size of the ``.rest`` files is 1/500 of the ``.fastq`` (should be 1/250 for ``.fasta``)
+::
+
+    ls -l $OUT
+
+The ``fastqc`` checks should be +- ok.
+::
+
+    fastqc --outdir=13-fastqc --noextract --threads=8 $OUT/*.fastq
 
 #------------------------------------------------
 # Visualization
