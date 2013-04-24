@@ -4,14 +4,17 @@ Set up project dependent settings
 All commands in scrimer scripts and manual suppose that you will set some environment 
 variables that define your project and that you put the required tools into your path. 
 
-NOTE: The way of organizing your data presented here is just our suggestion.
+.. note::
+
+    The way of organizing your data presented here is just our suggestion. Python scripts 
+    doing most of the work are not dependent on any directory structure.
 
 Project directory
 -----------------
-To start a new project, create a new direcotry. For now, scrimer is working with ``.fastq`` 
+To start a new project, create a new direcotry. Scrimer is working with ``.fastq`` 
 data. Put your ``.fastq`` data in a subdirecotry called ``00-raw``. 
 
-Project.sh
+project.sh
 ----------
 Create a file called ``project.sh`` in your project directory. It will consist of ``KEY=VALUE``
 lines that will define your project specific settings, and each time you want to use scrimer

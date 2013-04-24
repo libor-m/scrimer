@@ -25,7 +25,7 @@ some are in single .fa, some are split by chromosomes ::
     
     tar xvzf chromFa.tar.gz
 
-Create concatenated genome, use Heng Li's sort-alt
+Create concatenated genome, use Heng Li's :ref:`sort-alt <sortalt>`
 to get common ordering of chromosomes::
 
     find chromFa -type f|sort-alt -N|xargs cat > $GENOME.fa
@@ -34,7 +34,7 @@ Downlaod all needed annotations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Annotation data is best obtained in UCSC table browser
-in BED format and then sorted and indexed by BEDtools
+in BED format and then sorted and indexed by :ref:`BEDtools <bedtools>`
 
 For example: http://genome.ucsc.edu/cgi-bin/hgTables?db=taeGut1::
 
