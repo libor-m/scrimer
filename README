@@ -1,17 +1,22 @@
-# Scrimer: from 454 transcriptome data to SNaPShot primers
+Scrimer: from 454 transcriptome data to SNaPShot primers
+########################################################
+
 Scrimer is a GNU/Linux pipeline for designing PCR and genotyping primers from 454 transcriptomic data. 
 
-# Documentation
+Documentation
+-------------
 http://scrimer.rtfd.org
 
 Documentation in sphinx format is in the ``doc`` directory.
 
-# License
+License
+-------
 Scrimer is licensed under GNU Affero General Public License.
 
 If you use any part of the pipeline, please cite the appropriate publication (in preparation now).
 
-# Contact
-    Libor Morkovsky
-    Department of Zoology, Charles University in Prague
-    morkovsk@natur.cuni.cz
+Contact
+-------
+|    Libor Morkovsky
+|    Department of Zoology, Charles University in Prague
+|    morkovsk@natur.cuni.cz

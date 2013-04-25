@@ -1,4 +1,6 @@
 # ignore waterfall data directories
 ??-*/
+dist/
+build/
 *.pyc
-
+MANIFEST
