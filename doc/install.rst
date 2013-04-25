@@ -2,15 +2,21 @@ Scrimer installation
 ====================
 
 You need a default installation of **Python 2.7** [#Python]_ with **pysam** [#pysam]_, **pybedtools** [#pybedtools]_ and **PyVCF** [#PyVCF]_. We recommend
-to use **virtualenv** [#virtualenv]_ to use and manage different versions of Python packages in your Python installation. 
-We provide the ``requirements.txt`` file to ease your installation. It's basically used as::
+to use **virtualenv** [#virtualenv]_ to use different versions of Python packages in your Python installation. 
+::
   
     # create and activate new python virtual environment for scrimer
+    # in home directory of current user
     virtualenv ~/scrimer-env
     . ~/scrimer-env/activate
     
-    # install required python modules
-    pip install -r requirements.txt
+    # install cython in advance because of pybedtools
+    # and distribute because of pyvcf
+    pip install cython distribute
+    
+    # now install scrimer from pypi
+    # with it's additional dependencies (pyvcf, pysam, pybedtools)
+    pip install scrimer
 
 Apart from the python modules, the scrimer pipeline relies on some other tools that should be installed 
 in your PATH. Default installations - following the instructions supplied with package are sufficient.
@@ -36,6 +42,25 @@ Additional tools can be installed to provide some more options.
 - **BioPython** [#BioPython]_ and **NumPy** [#numpy]_ are required for running ``5prime_stats.py``
 
 .. _software:
+
+Add installed tools to your PATH
+--------------------------------
+To easily manage locations of your tools that you're using with Scrimer pipeline, create a text file
+containing paths to directories, where binaries of your tools are located, for example::
+
+  /opt/bedtools/bin
+  /opt/samtools-0.1.18
+  /opt/lastz/bin
+  /opt/tabix
+  /opt/gmap/bin
+  /data/samba/liborm/sw_testbed/smalt-0.7.4
+  /data/samba/liborm/sw_testbed/FastQC
+  /data/samba/liborm/sw_testbed/kmer/sim4db
+
+Save this file to your virtual environment directory, e. g. ``~/scrimer-env/paths``
+and run::
+
+  export PATH=$( cat ~/scrimer-env/paths | tr "\n" ":" ):$PATH
 
 References
 ----------

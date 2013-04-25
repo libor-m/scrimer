@@ -6,6 +6,9 @@ http://scrimer.rtfd.org
 
 Documentation in sphinx format is in the ``doc`` directory.
 
+# Source code and bug reports
+https://github.com/libor-m/scrimer
+
 # License
 Scrimer is licensed under GNU Affero General Public License.
 
