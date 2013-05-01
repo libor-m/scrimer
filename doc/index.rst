@@ -7,15 +7,16 @@ Scrimer is a GNU/Linux pipeline for designing PCR and genotyping primers from 45
 
     We present scrimer as an *end-to-end solution*, from raw reads to usable primers. This is intended to help
     novice users, so they can see the whole picture. But it has an important downside as well. The whole pipeline 
-    is a series of steps that are considered to be problematic on their own (contig assembly, read mapping, variant calling etc.).
+    is a series of steps that are considered to be complex on their own (contig assembly, read mapping, variant calling etc.).
     
     Our approach was to choose the most common solution for given step, use some reasonable default settings, and give the user 
-    option to choose another program by using standart formats for input and output.
+    an option to choose another program - we're using standart formats for input and output. The fine tuning of each step is up
+    to the users.
 
 Installation
 ------------
-Scrimer itself is a set of Python scripts that work with genome/annotation/variant data from other programs.
-It is supplemented by shell (bash) commands to run the basic set of programs producing the required data.
+Scrimer itself is a set of Python scripts that work with genome/annotation/variant data produced by other programs.
+These scripts are supplemented by shell (bash) commands to run the basic set of programs producing the required data.
 
 A detailed description how to install Scrimer can be found here:
 
@@ -49,11 +50,11 @@ we made and suggest ways how to check validity of the intermediate results.
 Scrimer dataflow
 ----------------
 
-Dataflow diagram of the pipeline.
+Dataflow diagram of the pipeline. Inputs are in green, processing steps in yellow and results in red. 
+Edges are labelled with data format.
 
 .. figure:: images/dataflow.png
    
-   Inputs are in green, processing steps in yellow and results in red.
 
 Scrimer components
 ------------------
@@ -62,6 +63,10 @@ Scrimer components
    :maxdepth: 2
 
    components
+
+Source code and reporting bugs
+------------------------------
+Source code and a bugtracker can be found at https://github.com/libor-m/scrimer.
 
 License
 -------

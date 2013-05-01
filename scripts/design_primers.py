@@ -19,7 +19,7 @@ Algorithm
 
   - request exons
   - apply the technical constraints 
-    (minimal primer length of 20 form the edge of an exon)
+    (minimal primer length of 20 from the edge of an exon)
   - patch exon sequence to mark positions of known variants
   - find suitable genotyping primers
   - design PCR primers to flank the (usable) genotyping primers

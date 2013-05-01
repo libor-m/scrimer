@@ -31,6 +31,15 @@ Example ``project.sh`` ::
   
   # reference genome used
   GENOME=taeGut1
+  GENOMEDIR=$GENOMES/$GENOME
+  GENOMEFA=$GENOMEDIR/$GENOME.fa
+
+  # gmap index location
+  GMAP_IDX_DIR=$GENOMEDIR
+  GMAP_IDX=gmap_${GENOME}
+  
+  # smalt index
+  SMALT_IDX=$GENOMEDIR/smalt/${GENOME}k13s4
 
   # primers used to synthetize cDNA
   # (sequences were found in .pdf report from the company that did the normalization)
@@ -40,11 +49,10 @@ Example ``project.sh`` ::
   
 Adding the tools to your PATH
 -----------------------------
-To add a tool to your ``PATH``, you need to know in which directory the executable resides.
-Say ``tabix`` is located in ``/opt/tabix/bin``. Then you add ``tabix`` to your ``PATH``
-by::
+For each scrimer session, you need to have all used executables in ``PATH``.
+Using the file with paths according to your system you created during installation,
+you can set up your ``PATH`` easily by::
 
-    export PATH=/opt/tabix/bin:$PATH
+    export PATH=$( cat ~/scrimer-env/paths | tr "\n" ":" ):$PATH
     
-Such line, containing paths to all of the tools used by scrimer in your system can be at 
-the end of your ``project.sh`` file, so everythig is set up at once when you source the file.
+Such line can be at the end of your ``project.sh`` file, so everythig is set up at once.

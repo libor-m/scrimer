@@ -51,14 +51,13 @@ Some programs need a preprocessed form of the genome, to speed up their operatio
 ::
 
     # index chromosome positions in the genome file for samtools
-    samtools faidx $GENOMES/$GENOME/$GENOME.fa
+    samtools faidx $GENOMEFA
 
     # build gmap index for zebra finch
-    gmap_build -d gmap_taeGut1 -D $GENOMES/$GENOME $GENOMES/$GENOME/$GENOME.fa
-
+    gmap_build -d $GMAP_IDX -D $GMAP_IDX_DIR $GENOMEFA
 
     # smalt index
     # recommended settings for 454 (step 4, k-mer size 13)
     mkdir smalt
-    smalt index -s 4 smalt/${GENOME}k13s4 $GENOME.fa
+    smalt index -s 4 $SMALT_IDX $GENOMEFA
     

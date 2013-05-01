@@ -5,18 +5,19 @@ Quality check of the raw data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Results of the quality check of the raw data can be used as a reference point
 to check the improvments done by this step.
+
 ::
 
+    IN=00-raw
     OUT=10-fastqc
     mkdir $OUT
-    fastqc --outdir=$OUT --noextract --threads=8 00-raw/*.fastq
+    fastqc --outdir=$OUT --noextract --threads=8 $IN/*.fastq
 
 Split the files according to MIDs with SFFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 If you used multiplexing via MID adaptors during library preparation, you have to split the 
-reads according to the information stored in the sequences.
-TODO:
-sff format is necessary to use SFFile tool and we got the data as .fastq
+reads according to the information stored in the sequences. This is done by ``sfffile``, and you 
+have to convert resulting sff files to fastq format.
 
 Remove cDNA synthesis primers with cutadapt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -87,41 +88,49 @@ The ``fastqc`` checks should be +- ok.
 
     fastqc --outdir=13-fastqc --noextract --threads=8 $OUT/*.fastq
 
-#------------------------------------------------
-# Visualization
-#------------------------------------------------
+Visual debugging
+^^^^^^^^^^^^^^^^
+If something in the previous checks looks weird, look directly at the data. Substitute filenames below with 
+names of your files. 
 
-# if something went wrong, look at the data directly
-FQFILE=$IN/G3UKN3Q01.fasta
+Look where the primers are in the sequence. ``tre-agrep`` is used to color the output of ``agrep``, because
+``agrep`` throughput is ~ 42 MB/s while ``tre-agrep`` throughput is ~ 2 MB/s.
+::
 
-# check the results, use the fast agrep for searching, (really) slow tre-agrep 
-# for coloring of the approximate matches
-# use -n to assess how often does a tag occur
-agrep -n -$NERR "AAGCAGTGGTATCAACGCAGAGT" $FQFILE |tre-agrep -$NERR "AAGCAGTGGTATCAACGCAGAGT" --color|less -S -R
+    FQFILE=$IN/G3UKN3Q01.fasta
+    NERR=5
+    agrep -n -$NERR "$PRIMER3" $FQFILE |tre-agrep -$NERR "$PRIMER3" --color|less -S -R
 
-# finding an 'elbow' in error tolerace - difference between count of ^TAG and TAG matches
-# until the numbers are close, the number of allowed errors is ok
-# this exploits the fact that most of the real tags is in the beginning of the sequences
-# beware, this does not work for systematic error in the files, like other 4 bases prepended 
-# in to the seqnece for NERR=5 (it fits into the tolerance)
-agrep -c -$NERR "^AAGCAGTGGTATCAACGCAGAGT" $FQFILE && agrep -c -$NERR "AAGCAGTGGTATCAACGCAGAGT" $FQFILE
-# numbers for tag-cleaned G59B..
-# 4 errors: 11971 12767
-# 5 errors: 16366 17566
-# 6 errors: 17146 23858
-# 7 errors: 18041 67844
+Try to find ``NERR`` where the primer sequence starts to appear randomly in the data. This 
+techique requires a primer, that is expected to be in the beginning of many reads::
 
-# read count statistics
-# @ can be in the beginning of quality string, so filter the rows in order
+    agrep -c -$NERR "^$PRIMER3" $FQFILE && agrep -c -$NERR "$PRIMER3" $FQFILE
 
-# count of sequences
-gawk '((NR%4)  == 1)' $FQFILE | wc -l
+    # numbers for tag-cleaned G59B..
+    # 4 errors: 11971 12767
+    # 5 errors: 16366 17566
+    # 6 errors: 17146 23858
+    # 7 errors: 18041 67844
 
-# count of sequenced bases
-gawk '((NR%4)  == 2)' $FQFILE | wc -m
+In sample results, numbers start to diverge for ``NERR`` > 5, so 5 is a good choice.
 
-# parallel, IO bound task, so run one process a time
-OUT=12-cutadapt
-echo "read_count base_count filename"
-parallel -j 1 'echo $( gawk "((NR%4)  == 1)" {} | wc -l ) $( gawk "((NR%4)  == 2)" {} | wc -m ) {}' ::: $OUT/*.fastq
+Read count statistics
+^^^^^^^^^^^^^^^^^^^^^
 
+For single file:: 
+
+    # read count statistics
+    # @ can be in the beginning of quality string, so filter the rows in order
+
+    # count of sequences
+    gawk '((NR%4)  == 1)' $FQFILE | wc -l
+
+    # count of sequenced bases
+    gawk '((NR%4)  == 2)' $FQFILE | wc -m
+
+For all files in ``OUT``::
+
+    # parallel, IO bound task, so run one process a time
+    OUT=12-cutadapt
+    echo "read_count base_count filename"
+    parallel -j 1 'echo $( gawk "((NR%4)  == 1)" {} | wc -l ) $( gawk "((NR%4)  == 2)" {} | wc -m ) {}' ::: $OUT/*.fastq
