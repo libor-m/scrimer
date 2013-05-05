@@ -25,6 +25,9 @@ you'll start by::
 
 Example ``project.sh`` ::
 
+  # number of cores you want to use for parallel calculations
+  CPUS=8
+
   # location of genome data in your system
   # you need write access to add a new reference genome to that location
   GENOMES=/data/genomes
