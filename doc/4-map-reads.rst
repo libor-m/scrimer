@@ -83,9 +83,12 @@ in the output directory::
 
 Merge it
 ^^^^^^^^
-Merge all the alignments, not removing the duplcates (http://seqanswers.com/forums/showthread.php?t=6543, 
-http://seqanswers.com/forums/showthread.php?t=5424). 
-# using /[GH]*.bam to avoid generated files (like alldup.bam) in the expansion
+Merge all the alignments. Do not remove duplcates because the duplicate
+detection algorithm is based on read properties of genomic DNA ([#]_, [#]_). 
+
+``/[GH]*.bam`` avoids generated files like ``alldup.bam`` in glob expansion.
+
+::
 
     samtools merge -ru -h $OUT/sam-header.txt - $OUT/[GH]*.bam | samtools sort - $OUT/alldup
     samtools index $OUT/alldup.bam
@@ -104,3 +107,5 @@ Visualization
     # coverage sums for IGV
     igvtools count -z 5 -w 25 -e 250 $OUT/alldup.bam  $OUT/alldup.bam.tdf ${CONTIGS%.*}.genome
 
+.. [#] http://seqanswers.com/forums/showthread.php?t=6543 
+.. [#] http://seqanswers.com/forums/showthread.php?t=5424
