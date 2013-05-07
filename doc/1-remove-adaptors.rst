@@ -2,7 +2,7 @@ Remove cDNA synthesis adaptors
 ==============================
 
 Quality check of the raw data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------
 Results of the quality check of the raw data can be used as a reference point
 to check the improvments done by this step.
 
@@ -14,13 +14,13 @@ to check the improvments done by this step.
     fastqc --outdir=$OUT --noextract --threads=8 $IN/*.fastq
 
 Split the files according to MIDs with SFFile
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------------------------
 If you used multiplexing via MID adaptors during library preparation, you have to split the 
 reads according to the information stored in the sequences. This is done by ``sfffile``, and you 
 have to convert resulting sff files to fastq format.
 
 Remove cDNA synthesis primers with cutadapt
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------------------
 Another source of noise in the data is the primers that were used for reverse transcription
 of mRNA and for following PCR amplification of cDNA. We remove them by ``cutadapt``.
 
@@ -38,7 +38,7 @@ of mRNA and for following PCR amplification of cDNA. We remove them by ``cutadap
       --output=$OUT/{/.}.fastq --rest-file=$OUT/{/.}.rest {} ::: $IN/*.fastq > $OUT/cutadapt.log
 
 Check the results
-^^^^^^^^^^^^^^^^^
+-----------------
 It is necessary to check the results of adaptor cutting. 
 
 First we can check how many of the primers were missed by cutadapt. ``agrep`` uses a different 
@@ -91,7 +91,7 @@ The ``fastqc`` checks should be +- ok.
     fastqc --outdir=13-fastqc --noextract --threads=8 $OUT/*.fastq
 
 Visual debugging
-^^^^^^^^^^^^^^^^
+----------------
 If something in the previous checks looks weird, look directly at the data. Substitute filenames below with 
 names of your files. 
 
@@ -120,7 +120,7 @@ techique requires a primer, that is expected to be in the beginning of many read
 In sample results, numbers start to diverge for ``NERR`` > 5, so 5 is a good choice.
 
 Read count statistics
-^^^^^^^^^^^^^^^^^^^^^
+---------------------
 
 For single file:
 

@@ -1,5 +1,5 @@
 """
-Implementation of vcf filters for :ref:`pyvcf <software>` `vcf_filter.py`.
+Implementation of vcf filters for :ref:`pyvcf <PyVCF>` `vcf_filter.py`.
 
 Author: Libor Morkovsky 2012
 """

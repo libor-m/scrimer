@@ -40,6 +40,9 @@ Example ``project.sh`` :
   GENOME=taeGut1
   GENOMEDIR=$GENOMES/$GENOME
   GENOMEFA=$GENOMEDIR/$GENOME.fa
+  
+  # genome in blat format
+  GENOME2BIT=$GENOMEDIR/twoBit/$GENOME.2bit
 
   # gmap index location
   GMAP_IDX_DIR=$GENOMEDIR

@@ -35,6 +35,8 @@ that are supposed to be executed one by one by pasting them into the console.
 Following pages describe these steps in detail, provide some explanations for the choices
 we made and suggest ways how to check validity of the intermediate results.
 
+It takes about a day to push your data through the pipeline, if everything goes well.
+
 .. toctree::
    :maxdepth: 1
    

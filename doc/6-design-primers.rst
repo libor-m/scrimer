@@ -11,72 +11,77 @@ Set inputs and outputs for this step:
 .. code-block:: bash
 
     VARIANTS=50-variants/lx4-variants-selected.vcf.gz
-    CONTIGS=33-scaffold/lx4.fasta
+    SCAFFOLD=33-scaffold/lx4.fasta
     ANNOTS=33-scaffold/lx4.sorted.gff3.gz 
 
-    # other inputs/outputs
     GFFILE=lx4-primers.gff3
     OUT=60-gff-primers
+    
     GFF=$OUT/$GFFILE
+    PRIMERS=${GFF%.*}.sorted.gff3.gz
     mkdir -p $OUT
 
     # for all selected variants design pcr and genotyping primers
     # takes about a minute for 1000 selected variants, 5 MB gzipped vcf, 26 MB uncompressed genome, 5 MB gzipped gff
-    design_primers.py $CONTIGS $ANNOTS $VARIANTS > $GFF
+    design_primers.py $SCAFFOLD $ANNOTS $VARIANTS > $GFF
 
 Sort and index the annotation before using it in IGV:
 
 .. code-block:: bash
 
-    sortBed -i $GFF | bgzip > ${GFF%.*}.sorted.gff3.gz
-    tabix -f -p gff ${GFF%.*}.sorted.gff3.gz
+    sortBed -i $GFF | bgzip > $PRIMERS
+    tabix -f -p gff $PRIMERS
 
+Convert scaffold to blat format
+-------------------------------
+
+.. code-block:: bash
+
+    SCAFFOLD2BIT=$OUT/${SCAFFOLD##*/}.2bit
+    faToTwoBit $SCAFFOLD $SCAFFOLD2BIT
+    
 Validate primers with blat/isPcr
 --------------------------------
 
 Recomended parameters for PCR primers in blat [#]_: ``-tileSize=11``, ``-stepSize=5``
 
 Get the primes sequences, in both formats:
-
+    
 .. code-block:: bash
 
-    extract_primers.py 60-gff-primers/lx3-primers2.sorted.gff3.gz isPcr > 61-check-primers/lx3-primers2.isPcr
-    extract_primers.py 60-gff-primers/lx3-primers2.sorted.gff3.gz > 61-check-primers/lx3-primers2.fa
+    PRIMERS_BASE=${PRIMERS%%.*}
+    extract_primers.py $PRIMERS isPcr > $PRIMERS_BASE.isPcr
+    extract_primers.py $PRIMERS > $PRIMERS_BASE.fa
 
-Convert scaffold to blat format:
+Check against transcriptome data and reference genome:
 
 .. code-block:: bash
     
-    faToTwoBit 33-virtual-genome/lx3.fasta 61-check-primers/lx3.2bit
+    # select one of those a time:
+    TARGET=$SCAFFOLD2BIT
+    TARGET=$GENOME2BIT
 
-Check against transcriptome data:
+    TARGET_TAG=$( basename ${TARGET%%.*} )
+    isPcr -out=psl $TARGET $PRIMERS_BASE.isPcr $PRIMERS_BASE.isPcr.$TARGET_TAG.psl
+    blat -minScore=15 -tileSize=11 -stepSize=5 -maxIntron=0 $TARGET $PRIMERS_BASE.fa $PRIMERS_BASE.$TARGET_TAG.psl
 
-.. code-block:: bash
+Check the results
+-----------------
 
-    isPcr -out=psl 61-check-primers/lx3.2bit 61-check-primers/lx3-primers2.isPcr 61-check-primers/lx3-primers2.isPcr.lx3.psl
-    blat -minScore=15 -tileSize=11 -stepSize=5 -maxIntron=0 61-check-primers/lx3.2bit 61-check-primers/lx3-primers2.fa 61-check-primers/lx3-primers2.lx3.psl
-
-Check against reference genome:
-
-.. code-block:: bash
-
-    isPcr -out=psl /data/genomes/taeGut1/twoBit/taeGut1.2bit 61-check-primers/lx3-primers2.isPcr 61-check-primers/lx3-primers2.isPcr.taeGut1.psl
-    blat -minScore=15 -tileSize=11 -stepSize=5 -maxIntron=0 /data/genomes/taeGut1/twoBit/taeGut1.2bit 61-check-primers/lx3-primers2.fa 61-check-primers/lx3-primers2.taeGut1.psl
-
-Visualization
--------------
 See all places where ``primer3`` reported problems:
 
 .. code-block:: bash
 
     grep primer-gt $GFF | grep -v -c 'PROBLEMS='
 
-Use agrep to find similar sequences in transcript scaffold:
+Use agrep to find similar sequences in transcript scaffold, to check if the 
+settings of blat are ok. Line wrapping in ``fasta`` can lead to false negatives,
+but at least some sequences should be found:
 
 .. code-block:: bash
 
     # agrep is quite enough for simple checks on assemblies of this size (30 MB)
     SEQ=GCACATTTCATGGTCTCCAA
-    agrep $SEQ 0a-jp-newbler-contigs/lu??_contigs.fasta|grep $SEQ
+    agrep $SEQ $SCAFFOLD|grep $SEQ
 
 .. [#] http://genomewiki.ucsc.edu/index.php/Blat-FAQ

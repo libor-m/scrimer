@@ -1,5 +1,5 @@
-Map reads to reference assembly and detect variants
-===================================================
+Map reads to reference assembly
+===============================
 
 Map contigs to scaffold
 -----------------------
@@ -20,7 +20,15 @@ Set up variables:
     CPUS=8
 
 Create index for the scaffold and map the reads.
-Mapping 3 GB of reads (fastq format) takes ~5 hours in 8 threads on Intel Xeon E5620.
+Mapping 3 GB of reads (fastq format) takes ~5 hours in 8 threads on Intel Xeon E5620, 0.5 GB memory
+per each mapping. 
+This step is probably worth some parallelization on multiple machines.
+
+.. note::
+
+    we used smalt-0.7.0.1, because smalt-0.7.4 was crashing with 
+    
+    $ [0] rmap.c:1448 ERROR: assertion failed
 
 .. code-block:: bash
 
@@ -36,8 +44,8 @@ Mapping 3 GB of reads (fastq format) takes ~5 hours in 8 threads on Intel Xeon E
       smalt map -n $CPUS -p -f sam -o $SAMFILE $SMALT_IDX $FQFILE
     done
 
-Merge mapping output to a single file 
-------------------------------------- 
+Merge mapping output to single file 
+-----------------------------------
 
 Create a fasta index for the scaffold:
 
@@ -101,8 +109,9 @@ detection algorithm is based on read properties of genomic DNA ([#]_, [#]_).
     samtools index $OUT/alldup.bam
 
 
-Visualization
--------------
+Check the results
+-----------------
+
 Unmapped read counts.
 
 .. code-block:: bash

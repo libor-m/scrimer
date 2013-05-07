@@ -2,7 +2,7 @@ Create reference assembly
 =========================
 
 Use newbler to assemble the reads
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------------
 Here **newbler** is used to assemble the contigs. For 3 GB of read data the assembly took 25 CPU hours and 15 GB RAM.
 
 .. code-block:: bash
@@ -16,7 +16,7 @@ Here **newbler** is used to assemble the contigs. For 3 GB of read data the asse
 
 
 Remove contigs that are similar to each other
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------------------------
 We'd like to get one transcript per locus, preferably the longest one. Otherwise the read mapping
 process would be faced with many ambiguous locations. We achieve this by:
 
@@ -55,7 +55,7 @@ process would be faced with many ambiguous locations. We achieve this by:
 
 
 Check the results
-^^^^^^^^^^^^^^^^^
+-----------------
 
 .. code-block:: bash
 

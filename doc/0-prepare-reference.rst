@@ -11,9 +11,9 @@ Downlaod and prepare the reference genome
 .. code-block:: bash
 
     # location of genome data that can be shared among users
-    cd $GENOMES
-    mkdir $GENOME
-    cd $GENOME
+    mkdir -p $GENOMEDIR
+    cd $GENOMEDIR
+    
     rsync -avzP rsync://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/bigZips/ .
 
     # check downloaded data integrity
@@ -66,4 +66,7 @@ Some programs need a preprocessed form of the genome, to speed up their operatio
     # recommended settings for 454 (step 4, k-mer size 13)
     mkdir smalt
     smalt index -s 4 $SMALT_IDX $GENOMEFA
+    
+    # convert to blat format
+    faToTwoBit $GENOMEFA $GENOME2BIT
     
