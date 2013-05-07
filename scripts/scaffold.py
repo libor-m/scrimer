@@ -254,7 +254,7 @@ def main():
     feature_positions = map(lambda x: sum(feature_lengths[:x]) + splitlen * x, xrange(0, len(feature_lengths)))
     for (index, (pos, read_name)) in enumerate(invmap[chr]):
       
-      at = pybedtools.Attributes();
+      at = pybedtools.Attributes(' ');
       at['ID'] = read_name
       flist = [chr, 'virtual_genome', 'mRNA',
                str(feature_positions[index] + 1), str(feature_positions[index] + feature_lengths[index]),

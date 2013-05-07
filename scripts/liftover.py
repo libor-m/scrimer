@@ -116,8 +116,11 @@ def main():
       for feature in intersecting:
         
         fs, fe = feature.start, feature.end
+
+        #FIXME: remove the ' ' arg, temporary fix for pybedtools
+        at = pybedtools.Attributes(' ');
         
-        at = pybedtools.Attributes();
+        
         at['Name'] = feature.name
         at['coords'] = gffeature.fields[1]
         
@@ -130,7 +133,7 @@ def main():
         # left clip
         lclip = gffeature.start - feature.start
         if lclip > 0:
-          at['leftClip'] = lclip
+          at['leftClip'] = str(lclip)
           feature.start = int(target_start)
         else:
           feature.start = max(int(target_start) - lclip, 1)
@@ -138,7 +141,7 @@ def main():
         # right clip
         rclip = feature.end - gffeature.end
         if rclip > 0:
-          at['rightClip'] = rclip
+          at['rightClip'] = str(rclip)
           feature.end = int(target_end)
         else:
           feature.end = min(int(target_start) + (feature.end - gffeature.start), int(target_end))
@@ -148,7 +151,7 @@ def main():
         feature.start, feature.end = sorted([feature.start, feature.end])
         
         # sanity check
-        #if feature.start < 1:
+        # if feature.start < 1:
         #  print >> sys.stderr, str(feature).strip(), target_start, target_end, lclip, rclip, fs, fe
         
         flist = [target_id, 'liftover', 'exon',

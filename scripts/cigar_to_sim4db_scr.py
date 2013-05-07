@@ -54,7 +54,7 @@ def addregion(regs, chr, start, end, reverse):
     
 # clip to chromosome length and output the regions  
 # merging to overlapping regions on the same chromosome/strand
-def output_regions(num, regions):
+def output_regions(chromosomes, num, regions):
   """
   from documentation of sim4db:
   A. The input script file format
@@ -153,8 +153,8 @@ def main():
       # if new query sequence encountered, output the regions
       if seqname != old_seqname and nline != 0:
         if len(regions):
-          output_regions(seqnum, regions)
-          regions = dict()
+            output_regions(chromosomes, seqnum, regions)
+            regions = dict()
 
         seqnum += 1
       
@@ -165,7 +165,7 @@ def main():
       if fields[5] not in chromosomes:
         # a special case for 'no hit'
         if fields[5] != '*':
-          print >> sys.stderr, "hit %d was matched to sequence not in faidx/genome (%s)" % (nline, fields[5])
+            print >> sys.stderr, "hit %d was matched to sequence not in faidx/genome (%s)" % (nline, fields[5])
         continue
       
       # create a region for current hit
@@ -173,7 +173,6 @@ def main():
       addregion(regions, fields[5], int(fields[6]) - margin, int(fields[7]) + margin, fields[4] != fields[8])
 
     # output the ranges for last sequence
-    else:
-      output_regions(seqnum, regions)
+    output_regions(chromosomes, seqnum, regions)
 
 if __name__ == '__main__': main()
