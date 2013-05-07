@@ -6,7 +6,7 @@ Quality check of the raw data
 Results of the quality check of the raw data can be used as a reference point
 to check the improvments done by this step.
 
-::
+.. code-block:: bash
 
     IN=00-raw
     OUT=10-fastqc
@@ -24,7 +24,7 @@ Remove cDNA synthesis primers with cutadapt
 Another source of noise in the data is the primers that were used for reverse transcription
 of mRNA and for following PCR amplification of cDNA. We remove them by ``cutadapt``.
 
-::
+.. code-block:: bash
     
     # data from previous steps
     IN=10-mid-split
@@ -45,7 +45,7 @@ First we can check how many of the primers were missed by cutadapt. ``agrep`` us
 matching algorithm than cutadapt, so some remaining hits are usually found.
 ``/dev/null`` is used as second input to ``agrep`` so the filenames are output.
 
-::
+.. code-block:: bash
 
     NERR=5
     parallel agrep -c -$NERR "$PRIMER3" {} /dev/null ::: $OUT/*.fastq|grep -v /dev
@@ -56,17 +56,17 @@ Results for our data - 454 Titanium data from Smart kit synthesized cDNA:
 - ~10% trimmed basepairs
 - ~10% too short reads
 
-::
+.. code-block:: bash
 
     grep -A5 Processed $OUT/cutadapt.log | less
 
 Length of the removed sequence should be close to length of the adapter (31 in this case):
 
-::
+.. code-block:: bash
 
     less $OUT/cutadapt.log
 
-::
+.. code-block:: bash
 
     # Lengths of removed sequences (5')
     # length  count   expected
@@ -79,12 +79,14 @@ Length of the removed sequence should be close to length of the adapter (31 in t
     # ...
 
 Size of the ``.rest`` files is 1/500 of the ``.fastq`` (should be 1/250 for ``.fasta``)
-::
+
+.. code-block:: bash
 
     ls -l $OUT
 
 The ``fastqc`` checks should be +- ok.
-::
+
+.. code-block:: bash
 
     fastqc --outdir=13-fastqc --noextract --threads=8 $OUT/*.fastq
 
@@ -95,14 +97,17 @@ names of your files.
 
 Look where the primers are in the sequence. ``tre-agrep`` is used to color the output of ``agrep``, because
 ``agrep`` throughput is ~ 42 MB/s while ``tre-agrep`` throughput is ~ 2 MB/s.
-::
+
+.. code-block:: bash
 
     FQFILE=$IN/G3UKN3Q01.fasta
     NERR=5
     agrep -n -$NERR "$PRIMER3" $FQFILE |tre-agrep -$NERR "$PRIMER3" --color|less -S -R
 
 Try to find ``NERR`` where the primer sequence starts to appear randomly in the data. This 
-techique requires a primer, that is expected to be in the beginning of many reads::
+techique requires a primer, that is expected to be in the beginning of many reads:
+
+.. code-block:: bash
 
     agrep -c -$NERR "^$PRIMER3" $FQFILE && agrep -c -$NERR "$PRIMER3" $FQFILE
 
@@ -117,7 +122,9 @@ In sample results, numbers start to diverge for ``NERR`` > 5, so 5 is a good cho
 Read count statistics
 ^^^^^^^^^^^^^^^^^^^^^
 
-For single file:: 
+For single file:
+
+.. code-block:: bash
 
     # read count statistics
     # @ can be in the beginning of quality string, so filter the rows in order
@@ -128,7 +135,9 @@ For single file::
     # count of sequenced bases
     gawk '((NR%4)  == 2)' $FQFILE | wc -m
 
-For all files in ``OUT``::
+For all files in ``OUT``:
+
+.. code-block:: bash
 
     # parallel, IO bound task, so run one process a time
     OUT=12-cutadapt

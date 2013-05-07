@@ -5,7 +5,7 @@ Use newbler to assemble the reads
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Here **newbler** is used to assemble the contigs. For 3 GB of read data the assembly took 25 CPU hours and 15 GB RAM.
 
-::
+.. code-block:: bash
 
     IN=12-cutadapt
     OUT=22-newbler
@@ -25,7 +25,7 @@ process would be faced with many ambiguous locations. We achieve this by:
   (disjoint sets forest graph algorithm is used)
 - and selecting only the longest contig for each group
 
-::
+.. code-block:: bash
 
     IN=22-newbler
     OUT=$IN
@@ -57,7 +57,7 @@ process would be faced with many ambiguous locations. We achieve this by:
 Check the results
 ^^^^^^^^^^^^^^^^^
 
-:: 
+.. code-block:: bash
 
     # check the input contig length distribution
     grep '>' $SEQFILE | awk '{ sub(/length=/,"",$3); print $3}' > $SEQFILE.lengths

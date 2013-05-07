@@ -18,12 +18,16 @@ project.sh
 ----------
 Create a file called ``project.sh`` in your project directory. It will consist of ``KEY=VALUE``
 lines that will define your project specific settings, and each time you want to use scrimer
-you'll start by::
+you'll start by:
+
+.. code-block:: bash
 
     cd my/project/directory
     . project.sh
 
-Example ``project.sh`` ::
+Example ``project.sh`` :
+
+.. code-block:: bash
 
   # number of cores you want to use for parallel calculations
   CPUS=8
@@ -54,7 +58,9 @@ Adding the tools to your PATH
 -----------------------------
 For each scrimer session, you need to have all used executables in ``PATH``.
 Using the file with paths according to your system you created during installation,
-you can set up your ``PATH`` easily by::
+you can set up your ``PATH`` easily by:
+
+.. code-block:: bash
 
     export PATH=$( cat ~/scrimer-env/paths | tr "\n" ":" ):$PATH
     

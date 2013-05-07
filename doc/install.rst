@@ -5,7 +5,7 @@ You need a default installation of **Python 2.7** [#Python]_ with **virtualenv**
 If you're in an environment where you're not able to install virtualenv, we recommend to use 
 the technique described at http://eli.thegreenplace.net/2013/04/20/bootstrapping-virtualenv/.
 
-::
+.. code-block:: bash
   
     # create and activate new python virtual environment for scrimer
     # in home directory of current user
@@ -69,7 +69,9 @@ The format is one path per line, for example::
   /data/samba/liborm/sw_testbed/kmer/sim4db
 
 Put this file to your virtual environment directory, e.g. ``~/scrimer-env/paths``.
-You can run the following snippet when starting your work session::
+You can run the following snippet when starting your work session:
+
+.. code-block:: bash
 
   export PATH=$( cat ~/scrimer-env/paths | tr "\n" ":" ):$PATH
 

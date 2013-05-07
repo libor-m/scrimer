@@ -7,17 +7,21 @@ Map contigs to scaffold
 Map all the reads using smalt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Set up variables ::
+Set up variables:
+
+.. code-block:: bash
 
     # data from previous steps
     SCAFFOLD=33-scaffold/lx4.fasta
     INFILES=12-cutadapt/*.fastq
 
     OUT=40-map-smalt
-    SMALT_IDX=${SCAFFOLD%/*}/smalt/k13s4
+    SMALT_IDX=${SCAFFOLD%/*}/smalt/${SCAFFOLD##*/}-k13s4
     CPUS=8
 
-Create index for the scaffold and map the reads::
+Create index for the scaffold and map the reads:
+
+.. code-block:: bash
 
     # create smalt index
     mkdir -p ${SMALT_IDX%/*}
@@ -34,7 +38,9 @@ Create index for the scaffold and map the reads::
 Merge mapping output to a single file 
 ------------------------------------- 
 
-Create a fasta index for the scaffold::
+Create a fasta index for the scaffold:
+
+.. code-block:: bash
 
     samtools faidx $SCAFFOLD
 
@@ -52,32 +58,32 @@ description (DS) is used to identify the species
 
 .. note::
 
-    Copy-paste does not work when copy-pasting to ``bash``, 
-    because shell interprets the tab character as autocomplete. Use ``cat`` 
-    or escape characters instead.
-
-.. note::
-
     The order of the rows matters for the vcf output,
     the sample columns order is probably the order of first apperance in the @RG.
 
-
 Following code generates most of the ``readgroups.txt`` file, you 
-have to reorder lines and fill the places marked with '??'::
+have to reorder lines and fill the places marked with '??':
 
+.. code-block:: bash
+
+    OUT=40-map-smalt
     DIR=12-cutadapt
     find $DIR -name '*.fastq'|xargs -n1 basename|sed s/.fastq//|gawk '{OFS="\t";print "@RG", "ID:" $0, "SM:??", "LB:" gensub(/\..*$/,"",$0), "PL:LS454", "DS:??";}' > $OUT/readgroups.txt
 
 Prepate the sam files
 ^^^^^^^^^^^^^^^^^^^^^
-Extract the sequence headers, from first ``.sam`` file (the rest of files should be identical)::
+Extract the sequence headers, from first ``.sam`` file (the rest of files should be identical):
+
+.. code-block:: bash
 
     export SAMFILE=$( echo $OUT/*.sam|gawk '{print $1;}' )
     samtools view -S -t $SCAFFOLD.fai -H $SAMFILE > $OUT/sequences.txt
     cat $OUT/sequences.txt $OUT/readgroups.txt > $OUT/sam-header.txt
 
 ``samtools merge`` requires sorted alignments, sort them in parallel. This creates ``.bam`` files 
-in the output directory::
+in the output directory:
+
+.. code-block:: bash
 
     parallel "samtools view -but $SCAFFOLD.fai {} | samtools sort - {.}" ::: $OUT/*.sam
 
@@ -88,7 +94,7 @@ detection algorithm is based on read properties of genomic DNA ([#]_, [#]_).
 
 ``/[GH]*.bam`` avoids generated files like ``alldup.bam`` in glob expansion.
 
-::
+.. code-block:: bash
 
     samtools merge -ru -h $OUT/sam-header.txt - $OUT/[GH]*.bam | samtools sort - $OUT/alldup
     samtools index $OUT/alldup.bam
@@ -96,15 +102,22 @@ detection algorithm is based on read properties of genomic DNA ([#]_, [#]_).
 
 Visualization
 -------------
-::
+Unmapped read counts.
 
-    # unmapped read counts
+.. code-block:: bash
+
     parallel 'echo $( cut -f2 {}|grep -c "^4$" ) {}' ::: $OUT/*.sam
 
-    # mapping statistics
+Mapping statistics
+
+.. code-block:: bash
+
     samtools idxstats $OUT/alldup.bam|gawk '{map += $3; unmap += $4;} END {print  unmap/map;}'
 
-    # coverage sums for IGV
+Coverage sums for IGV
+
+.. code-block:: bash
+
     igvtools count -z 5 -w 25 -e 250 $OUT/alldup.bam  $OUT/alldup.bam.tdf ${CONTIGS%.*}.genome
 
 .. [#] http://seqanswers.com/forums/showthread.php?t=6543 
