@@ -19,7 +19,8 @@ Set up variables:
     SMALT_IDX=${SCAFFOLD%/*}/smalt/${SCAFFOLD##*/}-k13s4
     CPUS=8
 
-Create index for the scaffold and map the reads:
+Create index for the scaffold and map the reads.
+Mapping 3 GB of reads (fastq format) takes ~5 hours in 8 threads on Intel Xeon E5620.
 
 .. code-block:: bash
 

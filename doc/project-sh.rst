@@ -56,9 +56,9 @@ Example ``project.sh`` :
   
 Adding the tools to your PATH
 -----------------------------
-For each scrimer session, you need to have all used executables in ``PATH``.
-Using the file with paths according to your system you created during installation,
-you can set up your ``PATH`` easily by:
+For each scrimer session, all the executables that are used have to be in one of 
+the directories mentioned in ``PATH``.
+You can set up your ``PATH`` easily by using the file you created during :ref:`installation <path>`:
 
 .. code-block:: bash
 

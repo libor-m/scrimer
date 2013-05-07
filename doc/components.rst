@@ -48,7 +48,7 @@ Filter sequences in FASTQ, FASTA based on their identifier
 ----------------------------------------------------------
 File: ``scripts/seq_filter_by_id.py``
 
-Taken from [BioPython]_. FASTA and FASTQ readers are pasted in the file,
+Taken from :ref:`BioPython <software>`. FASTA and FASTQ readers are pasted in the file,
 so the program is standalone.
 
 .. automodule:: seq_filter_by_id
@@ -57,10 +57,10 @@ Break sequences in FASTA file into fragments
 --------------------------------------------
 File: ``scripts/fasta_fragments.py``
 
-Taken from [lastz]_. Break sequences in fasta file to fragments, so 
+Taken from :ref:`lastz <software>`. Break sequences in fasta file to fragments, so 
 some kind of short read aligner can be used for further processing.
 
-. .. automodule:: fasta_fragments
+.. automodule:: fasta_fragments
 
 General purpose tools
 =====================

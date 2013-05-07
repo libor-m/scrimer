@@ -53,6 +53,8 @@ Additional tools can be installed to provide some more options.
 - **BioPython** [#BioPython]_ and **NumPy** [#numpy]_ are required for running ``5prime_stats.py``
 - **mawk** [#mawk]_, awk is often used in the pipeline, and mawk is usually an order of magnitude faster
 
+.. _path:
+
 Add installed tools to your PATH
 --------------------------------
 To easily manage locations of tools that you're using with Scrimer pipeline, create a text file

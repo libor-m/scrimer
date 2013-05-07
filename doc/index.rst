@@ -15,8 +15,8 @@ Scrimer is a GNU/Linux pipeline for designing PCR and genotyping primers from 45
 
 Installation
 ------------
-Scrimer itself is a set of Python scripts that work with genome/annotation/variant data produced by other programs.
-These scripts are supplemented by shell (bash) commands to run the basic set of programs producing the required data.
+Scrimer is a set of Python scripts that serve as a glue for several external programs. 
+Bash commands used to run the external programs can be found in this documentation.
 
 A detailed description how to install Scrimer can be found here:
 
