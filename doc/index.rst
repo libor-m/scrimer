@@ -48,6 +48,7 @@ It takes about a day to push your data through the pipeline, if everything goes 
    4-map-reads
    5-choose-variants
    6-design-primers
+   igv
 
 Scrimer dataflow
 ----------------

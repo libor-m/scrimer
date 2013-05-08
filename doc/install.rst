@@ -20,7 +20,7 @@ the technique described at http://eli.thegreenplace.net/2013/04/20/bootstrapping
     # with it's additional dependencies (pyvcf, pysam, pybedtools)
     pip install scrimer
 
-Scimer depends on several python modules, that should be installed automatically using the above procedue.
+Scrimer depends on several python modules, that should be installed automatically using the above procedue.
 
 - **pysam** [#pysam]_ is used to manipulate with indexed fasta and bam files
 - **pybedtools** [#pybedtools]_ is used to read and write the annotations
@@ -48,7 +48,7 @@ Additional tools can be installed to provide some more options.
 - **newbler** [#newbler]_ is the best option for assembling 454 mRNA data [#mundry]_ [#kumar]_
 - **MIRA** [#mira]_ does well on 454 transcriptome assembly as well [#mundry]_ [#kumar]_
 - **sim4db** [#sim4db]_ can be used as alternative spliced mapper, 
-  part of kmer suite, apply my patch [#sim4db-patch]_ to get standard conformant output
+  part of kmer suite, apply our patch [#sim4db-patch]_ to get standard conformant output
 - **Pipe Viewer** [#pv]_ can be used to display progress of longer operations
 - **BioPython** [#BioPython]_ and **NumPy** [#numpy]_ are required for running ``5prime_stats.py``
 - **mawk** [#mawk]_, awk is often used in the pipeline, and mawk is usually an order of magnitude faster

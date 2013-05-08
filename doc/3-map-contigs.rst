@@ -123,4 +123,6 @@ to avoid the mapping of the reads across gaps:
     bgzip $OUTFILE
     tabix -p gff $OUTFILE.gz
 
+Transcript scaffold with the sorted ``.sorted.gff3`` is the first thing worth loading to :doc:`IGV <igv>`.
+
 .. [#] http://sourceforge.net/apps/mediawiki/kmer/index.php?title=Getting_Started_with_Sim4db

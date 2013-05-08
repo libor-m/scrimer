@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+try:
+    from setuptools import setup
+    have_setuptools = True
+except ImportError:
+    from distutils.core import setup
+    have_setuptools = False
 
 import glob
 
@@ -16,7 +21,7 @@ setup(name='scrimer',
       author='Libor Morkovsky',
       author_email='morkovsk@natur.cuni.cz',
       url='https://github.com/libor-m/scrimer',
-      py_modules=[f.replace('.py', '') for f in glob.glob('modules/*.py')],
+      py_modules=[f.replace('.py', '') for f in glob.glob('scrimer/*.py')],
       scripts=glob.glob('scripts/*.py'),
       # http://stackoverflow.com/questions/6947988/when-to-use-pip-requirements-file-versus-install-requires-in-setup-py
       #install_requires=['PyVCF (>=0.6)', 'pybedtools (>=0.6)', 'pysam (>=0.7)'],
@@ -38,4 +43,8 @@ setup(name='scrimer',
           'Topic :: Scientific/Engineering :: Bio-Informatics',
       ],
       license=license,
+      entry_points="""
+      [vcf.filters]
+      contrast-samples = scrimer.pyvcf_filters:DistinguishingVariants
+      """,
      )

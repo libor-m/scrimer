@@ -67,7 +67,7 @@ General purpose tools
 
 Primer3 wrapper
 ---------------
-File: ``modules/primer3_connector.py``
+File: ``scrimer/primer3_connector.py``
 
 .. automodule:: primer3_connector
    :members:
@@ -86,7 +86,7 @@ File: ``scripts/5prime_stats.py``
 
 Variant filters for PyVCF vcf_filter.py
 ---------------------------------------
-File: ``modules/pyvcf_filters.py``
+File: ``scrimer/pyvcf_filters.py``
 
 .. automodule:: pyvcf_filters
    :members:

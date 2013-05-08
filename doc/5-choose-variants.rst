@@ -38,6 +38,11 @@ Remove the intermediate results, if the merge was ok:
 Filter variants
 ---------------
 
+We're interested in two kinds of variant qualities 
+
+- all possible variants so they can be avoided in primer design
+- high confidence variants that can be used to answer our questions
+
 Filtering strategy:
  
 - use common ``samtools`` filtering
@@ -81,14 +86,14 @@ We can expect quite high *strand bias* in RNASeq data, so don't filter on strand
 Convenience filtering
 ^^^^^^^^^^^^^^^^^^^^^
 
-Usew ``pv`` as progress meter. ``pv`` can be substituted by ``cat``:
+Use ``pv`` as progress meter. ``pv`` can be substituted by ``cat``:
 
 .. code-block:: bash
 
     # filter on average read depth and site quality
     VCFINPUT=$VARIANTS-filtered.vcf.gz
     VCFOUTPUT=$VARIANTS-filt2.vcf.gz
-    pv -p $VCFINPUT | bgzip -d | vcf_filter.py --local-script pyvcf_filters.py --no-filtered - avg-dps sq| bgzip > $VCFOUTPUT
+    pv -p $VCFINPUT | bgzip -d | vcf_filter.py --no-filtered - avg-dps sq| bgzip > $VCFOUTPUT
     tabix -p vcf $VCFOUTPUT
 
 Interesting variants
@@ -101,7 +106,7 @@ the selected and non-selected variants can be checked in IGV:
 
     VCFINPUT=$VARIANTS-filt2.vcf.gz
     VCFOUTPUT=$VARIANTS-selected.vcf.gz
-    pv -p $VCFINPUT | bgzip -d | vcf_filter.py --local-script pyvcf_filters.py - dps --depth-per-sample 3 snp-only contrast-samples --sample-names lu02 lu05 lu07 lu10 lu12 lu14 lu15| bgzip > $VCFOUTPUT
+    pv -p $VCFINPUT | bgzip -d | vcf_filter.py - dps --depth-per-sample 3 snp-only contrast-samples --sample-names lu02 lu05 lu07 lu10 lu12 lu14 lu15| bgzip > $VCFOUTPUT
     tabix -p vcf $VCFOUTPUT
 
 Check the results

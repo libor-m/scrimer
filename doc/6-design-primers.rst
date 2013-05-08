@@ -1,3 +1,5 @@
+.. _primers:
+
 Design primers
 ==============
 .. note::
@@ -32,6 +34,12 @@ Sort and index the annotation before using it in IGV:
     sortBed -i $GFF | bgzip > $PRIMERS
     tabix -f -p gff $PRIMERS
 
+Create a region list for IGV to quickly inspect all the primers.
+
+.. code-block:: bash
+
+    awk 'BEGIN{OFS="\t";} /pcr-product/ {print $1, $4, $5;}' $GFF > ${GFF%.*}.bed
+    
 Convert scaffold to blat format
 -------------------------------
 

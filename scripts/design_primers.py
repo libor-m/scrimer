@@ -39,7 +39,8 @@ import string
 import pysam
 import vcf
 import pybedtools
-import primer3_connector
+
+from scrimer import primer3_connector
 
 min_gt_primer_len = 20
 max_gt_primer_len = 28
@@ -129,7 +130,7 @@ def primer_to_gff(name, primer, tag, seq_name, seq_start, strand, **kwargs):
     
     # transfer the calculated values to attributes
     # skip the fields used elsewhere in gff
-    at = pybedtools.Attributes()
+    at = pybedtools.Attributes(' ')
     for k, v in primer.iteritems():
         if k == 'position': continue
         at[k] = v.replace(';', '%3B')
@@ -137,7 +138,7 @@ def primer_to_gff(name, primer, tag, seq_name, seq_start, strand, **kwargs):
     at['ID'] = name
     
     # pass all optional params to attributes
-    at.update(kwargs)
+    at.update({k:str(v) for k, v in kwargs.iteritems()})
     
     # primer3 provides the coordinates of right primer with the 
     # pos pointing to the last base
@@ -182,7 +183,7 @@ def primers_for_var(genome, annotations, variants_random_access, var):
         reason for rejection of selected variant in 
         the design process.
         """
-        at = pybedtools.Attributes()
+        at = pybedtools.Attributes(' ')
         at['Note'] = reason
         at['color'] = "#bb0000"
         
