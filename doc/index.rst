@@ -54,7 +54,7 @@ Scrimer dataflow
 ----------------
 
 Dataflow diagram of the pipeline. Inputs are in green, processing steps in yellow and results in red. 
-Edges are labelled with data format.
+Edges are labelled with data format. Image was created with :ref:`yEd <yed>`.
 
 .. figure:: images/dataflow.png
    

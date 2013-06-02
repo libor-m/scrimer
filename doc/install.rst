@@ -121,6 +121,7 @@ Optional software
 .. [#sim4db-patch] patch for sim4db gff output http://sourceforge.net/p/kmer/patches/2/
 .. [#pv] Pipe Viewer http://www.ivarch.com/programs/pv.shtml
 .. [#mawk] mawk http://invisible-island.net/mawk/
+.. [#yed] yEd http://www.yworks.com/en/products_yed_about.html
 
 Papers
 ******

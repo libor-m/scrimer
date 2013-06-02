@@ -2,10 +2,6 @@
 
 Design primers
 ==============
-.. note::
-    
-    Ideal case would be to add the annotations found by ``isPcr`` to the primer gff3 tags.
-
 Design primers with Primer3
 ---------------------------
 Set inputs and outputs for this step:
@@ -50,6 +46,10 @@ Convert scaffold to blat format
     
 Validate primers with blat/isPcr
 --------------------------------
+
+.. note::
+    
+    Ideal case would be to add the annotations found by ``isPcr`` to the primer gff3 tags.
 
 Recomended parameters for PCR primers in blat [#]_: ``-tileSize=11``, ``-stepSize=5``
 
