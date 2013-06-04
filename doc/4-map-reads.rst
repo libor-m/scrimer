@@ -17,7 +17,6 @@ Set up variables:
 
     OUT=40-map-smalt
     SMALT_IDX=${SCAFFOLD%/*}/smalt/${SCAFFOLD##*/}-k13s4
-    CPUS=8
 
 Create index for the scaffold and map the reads.
 Mapping 3 GB of reads (fastq format) takes ~5 hours in 8 threads on Intel Xeon E5620, 0.5 GB memory
@@ -79,13 +78,13 @@ have to reorder lines and fill the places marked with '??':
     DIR=12-cutadapt
     find $DIR -name '*.fastq'|xargs -n1 basename|sed s/.fastq//|gawk '{OFS="\t";print "@RG", "ID:" $0, "SM:??", "LB:" gensub(/\..*$/,"",$0), "PL:LS454", "DS:??";}' > $OUT/readgroups.txt
 
-Prepate the sam files
+Prepare the sam files
 ^^^^^^^^^^^^^^^^^^^^^
-Extract the sequence headers, from first ``.sam`` file (the rest of files should be identical):
+Extract the sequence headers from first ``.sam`` file (other files should have identical headers):
 
 .. code-block:: bash
 
-    export SAMFILE=$( echo $OUT/*.sam|gawk '{print $1;}' )
+    SAMFILE=$( echo $OUT/*.sam|gawk '{print $1;}' )
     samtools view -S -t $SCAFFOLD.fai -H $SAMFILE > $OUT/sequences.txt
     cat $OUT/sequences.txt $OUT/readgroups.txt > $OUT/sam-header.txt
 
@@ -94,11 +93,11 @@ in the output directory:
 
 .. code-block:: bash
 
-    parallel "samtools view -but $SCAFFOLD.fai {} | samtools sort - {.}" ::: $OUT/*.sam
+    parallel -j $CPUS "samtools view -but $SCAFFOLD.fai {} | samtools sort - {.}" ::: $OUT/*.sam
 
 Merge it
 ^^^^^^^^
-Merge all the alignments. Do not remove duplcates because the duplicate
+Merge all the alignments. Do not remove duplicates because the duplicate
 detection algorithm is based on read properties of genomic DNA ([#]_, [#]_). 
 
 ``/[GH]*.bam`` avoids generated files like ``alldup.bam`` in glob expansion.
@@ -116,7 +115,7 @@ Unmapped read counts.
 
 .. code-block:: bash
 
-    parallel 'echo $( cut -f2 {}|grep -c "^4$" ) {}' ::: $OUT/*.sam
+    parallel -j $CPUS 'echo $( cut -f2 {}|grep -c "^4$" ) {}' ::: $OUT/*.sam
 
 Mapping statistics
 

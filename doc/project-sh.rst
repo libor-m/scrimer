@@ -2,15 +2,29 @@ Set up project dependent settings
 =================================
 
 All commands in scrimer scripts and manual suppose that you will set some environment 
-variables that define your project and that you put the required tools into your path. 
+variables that define your project and that you add the required tools into your ``PATH``. 
 
+Directory layout
+----------------
 .. note::
 
     The way of organizing your data presented here is just our suggestion. Python scripts 
     doing most of the work are not dependent on any directory structure.
 
+Genomes directory
+^^^^^^^^^^^^^^^^^
+We suppose that genome data can be shared among different projects and different people
+on the same machine. Thus we place it in location different from project specific data.
+
 Project directory
------------------
+^^^^^^^^^^^^^^^^^
+A directory containing files specific for one input dataset. Various setps can be run with
+various settings in the same project directory. We organize our files in a *waterfall*
+structure of directories, where each directory name is prefixed with two digit number.
+The directory name is some short meaningful description of the step, first digit in the 
+prefix corresponds to part of the process (read mapping, variant calling etc.), and the 
+second digit distinguishes substeps or runs with different settings.
+
 To start a new project, create a new direcotry. Scrimer is working with ``.fastq`` 
 data. Put your ``.fastq`` data in a subdirecotry called ``00-raw``. 
 
@@ -68,3 +82,5 @@ You can set up your ``PATH`` easily by using the file you created during :ref:`i
     export PATH=$( cat ~/scrimer-env/paths | tr "\n" ":" ):$PATH
     
 Such line can be at the end of your ``project.sh`` file, so everythig is set up at once.
+
+Alternatively you can copy all the tool executables into your virtual environment.

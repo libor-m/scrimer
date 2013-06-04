@@ -10,7 +10,7 @@ the technique described at http://eli.thegreenplace.net/2013/04/20/bootstrapping
     # create and activate new python virtual environment for scrimer
     # in home directory of current user
     virtualenv ~/scrimer-env
-    . ~/scrimer-env/activate
+    . ~/scrimer-env/bin/activate
     
     # install cython in advance because of pybedtools
     # and distribute because of pyvcf
@@ -19,6 +19,9 @@ the technique described at http://eli.thegreenplace.net/2013/04/20/bootstrapping
     # now install scrimer from pypi
     # with it's additional dependencies (pyvcf, pysam, pybedtools)
     pip install scrimer
+	
+	# if you're in a grid environment, this can help
+	virtualnev --relocatable ~/scrimer-env
 
 Scrimer depends on several python modules, that should be installed automatically using the above procedue.
 
@@ -36,6 +39,7 @@ in your PATH. Default installations - following the included instructions - are 
 - **GMAP** [#gmap]_ produces a spliced mapping of your contigs to the reference genome
 - **smalt** [#smalt]_ maps short reads to consensus contigs to discover variants
 - **GNU parallel** [#parallel]_ is used throughout the pipeline to speed up some lenghty calculations [#tange]_
+- **blat** and **isPcr** [#blat]_ are used to check the designed primers
 
 Additional tools can be installed to provide some more options.
 
@@ -98,12 +102,15 @@ Other software
 
 .. [#lastz] lastz http://www.bx.psu.edu/~rsharris/lastz/
 .. [#bedtools] bedtools http://code.google.com/p/bedtools/
-.. [#tabix] tabix http://samtools.sourceforge.net/tabix.shtml
+.. [#tabix] tabix http://samtools.sourceforge.net/tabix.shtml, http://sourceforge.net/projects/samtools/files/
 .. [#sortalt] sort-alt https://github.com/lh3/foreign/tree/master/sort
 .. [#gmap] gmap http://research-pub.gene.com/gmap/
-.. [#samtools] samtools http://samtools.sourceforge.net/
-.. [#smalt] smalt http://www.sanger.ac.uk/resources/software/smalt/
+.. [#samtools] samtools http://samtools.sourceforge.net/, http://sourceforge.net/projects/samtools/files/
+.. [#smalt] smalt http://www.sanger.ac.uk/resources/software/smalt/, 
+   we used 0.7.0.1, because the latest version (0.7.3) crashes
 .. [#parallel] GNU parallel http://www.gnu.org/software/parallel/
+.. [#blat] http://users.soe.ucsc.edu/~kent/src/, get ``blatSrc35.zip`` and  ``isPcr33.zip``, 
+   before ``make`` do ``export MACHTYPE`` and ``export BINDIR=<dir>``
 
 Optional software
 *****************

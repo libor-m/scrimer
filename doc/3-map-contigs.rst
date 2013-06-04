@@ -13,7 +13,7 @@ GMAP
     OUT=30-tg-gmap
     mkdir $OUT
     
-    OUTFILE=$OUT/lu_master300_v2.gmap.gff3
+    OUTFILE=$OUT/$( basename ${INFILE%%.*} ).gmap.gff3
 
     gmap -D $GMAP_IDX_DIR -d $GMAP_IDX -f gff3_gene -B 3 -x 30 -t $CPUS\
         --cross-species $INFILE  > $OUTFILE
@@ -83,7 +83,7 @@ during the scaffold phase:
 
     # multiple coordinate systems if needed (one system per mapping)
     COORDS="30-tg-gmap/lu_master300_v2.gmap.gff3 31-tg-sim4db/lu_master500_v2.fna.filtered.gff3"
-    ANNOTS=/data/genomes/taeGut1/annot/ensGene_s.bed.gz
+    ANNOTS=$GENOMEDIR/annot/ensGene_s.bed.gz
     OUT=32-liftover
     mkdir -p $OUT
 

@@ -18,21 +18,23 @@ Downlaod and prepare the reference genome
 
     # check downloaded data integrity
     md5sum -c md5sum.txt
-    cat *.md5|md5sum -c
+    cat *.md5 | md5sum -c
 
 Unpack the genome - this differs for genomes
-some are in single .fa, some are split by chromosomes:
+some are in single .fa, some are split by chromosomes. Some archives are *tarbombs*, so unpack
+to ``chromFa`` directory to avoid possible mess:
 
 .. code-block:: bash    
 
-    tar xvzf chromFa.tar.gz
+    mkdir chromFa
+	tar xvzf chromFa.tar.gz -C chromFa
 
 Create concatenated genome, use Heng Li's :ref:`sort-alt <sortalt>`
 to get common ordering of chromosomes:
 
 .. code-block:: bash
 
-    find chromFa -type f|sort-alt -N|xargs cat > $GENOME.fa
+    find chromFa -type f | sort-alt -N | xargs cat > $GENOME.fa
 
 Downlaod all needed annotations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -50,6 +52,14 @@ For example: http://genome.ucsc.edu/cgi-bin/hgTables?db=taeGut1:
     bgzip $ANNOT/ensGene.sorted.bed
     tabix -p bed $ANNOT/ensGene.sorted.bed.gz
 
+Or using compressed files:
+
+.. code-block:: bash
+	zcat -d $ANNOT/refSeqGenes.bed.gz | sortBed | bgzip > $ANNOT/refSeqGenes.sorted.bed.gz
+	zcat -d $ANNOT/ensGenes.bed.gz | sortBed | bgzip > $ANNOT/ensGenes.sorted.bed.gz
+    tabix -p bed $ANNOT/ensGenes.sorted.bed.gz
+	tabix -p bed $ANNOT/refSeqGenes.sorted.bed.gz
+	
 Build indexes for all programs used in the pipeline
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Some programs need a preprocessed form of the genome, to speed up their operation.
@@ -60,6 +70,7 @@ Some programs need a preprocessed form of the genome, to speed up their operatio
     samtools faidx $GENOMEFA
 
     # build gmap index for zebra finch
+	# with some newer versions it is necessary to use -B <path/to/bindir>
     gmap_build -d $GMAP_IDX -D $GMAP_IDX_DIR $GENOMEFA
 
     # smalt index

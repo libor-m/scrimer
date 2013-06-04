@@ -19,7 +19,7 @@ Run the variant calling in parallel. Takes 3 hours for 15 samples on single Inte
 
 .. code-block:: bash
 
-    vcfutils.pl splitchr $SCAFFOLD.fai | parallel "samtools mpileup -DSu -L 10000 -f $SCAFFOLD -r {} $ALIGNS | bcftools view -bvcg - > $OUT/part-{}.bcf"
+    vcfutils.pl splitchr $SCAFFOLD.fai | parallel -j $CPUS "samtools mpileup -DSu -L 10000 -f $SCAFFOLD -r {} $ALIGNS | bcftools view -bvcg - > $OUT/part-{}.bcf"
 
 Merge the intermediate results. ``vcfutils.pl`` is used to generate the correct ordering of parts, as in the ``.fai``:
 
