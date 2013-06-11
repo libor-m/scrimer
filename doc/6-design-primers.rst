@@ -54,7 +54,7 @@ Validate primers with blat/isPcr
 
 Recomended parameters for PCR primers in blat [#]_: ``-tileSize=11``, ``-stepSize=5``
 
-Get the primes sequences, in both formats:
+Get the primes sequences, in formats for isPcr and blat:
     
 .. code-block:: bash
 
@@ -92,5 +92,13 @@ but at least some sequences should be found:
     # agrep is quite enough for simple checks on assemblies of this size (30 MB)
     SEQ=GCACATTTCATGGTCTCCAA
     agrep $SEQ $SCAFFOLD|grep $SEQ
+
+Import your primers to any spreadsheet program with some selected information on each
+primer. Use copy and paste, file format is tab separated values. When there is more 
+than one genotyping primer for one pcr product, the information on pcr product is repeated.
+
+.. code-block:: bash
+
+    extract_primers.py $PRIMERS table > $PRIMERS_BASE.tsv
 
 .. [#] http://genomewiki.ucsc.edu/index.php/Blat-FAQ
