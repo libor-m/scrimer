@@ -27,7 +27,7 @@ to ``chromFa`` directory to avoid possible mess:
 .. code-block:: bash    
 
     mkdir chromFa
-	tar xvzf chromFa.tar.gz -C chromFa
+    tar xvzf chromFa.tar.gz -C chromFa
 
 Create concatenated genome, use Heng Li's :ref:`sort-alt <sortalt>`
 to get common ordering of chromosomes:

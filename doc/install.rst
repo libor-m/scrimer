@@ -40,6 +40,7 @@ in your PATH. Default installations - following the included instructions - are 
 - **smalt** [#smalt]_ maps short reads to consensus contigs to discover variants
 - **GNU parallel** [#parallel]_ is used throughout the pipeline to speed up some lenghty calculations [#tange]_
 - **blat** and **isPcr** [#blat]_ are used to check the designed primers
+- **Primer3** [#primer3]_ is used to find the most optimal primes sequences
 
 Additional tools can be installed to provide some more options.
 
@@ -111,6 +112,7 @@ Other software
 .. [#parallel] GNU parallel http://www.gnu.org/software/parallel/
 .. [#blat] http://users.soe.ucsc.edu/~kent/src/, get ``blatSrc35.zip`` and  ``isPcr33.zip``, 
    before ``make`` do ``export MACHTYPE`` and ``export BINDIR=<dir>``
+.. [#primer3] http://primer3.sourceforge.net/
 
 Optional software
 *****************

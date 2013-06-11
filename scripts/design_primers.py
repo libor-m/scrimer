@@ -34,7 +34,6 @@ Author: Libor Morkovsky, 2012
 import sys
 import os
 import itertools
-import string
 
 import pysam
 import vcf
@@ -44,6 +43,12 @@ from scrimer import primer3_connector
 
 min_gt_primer_len = 20
 max_gt_primer_len = 28
+
+# get location of config dir from environment
+if 'PRIMER3_CONFIG' in os.environ:
+    PRIMER3_CONFIG = os.environ['PRIMER3_CONFIG']
+else:
+    PRIMER3_CONFIG = '/opt/primer3/bin/primer3_config/'
 
 def patched_sequence(seq, seq_start, variants):
     """Returns sequence with all variant sites replaced by Ns
@@ -69,7 +74,7 @@ def find_pcr_primers(pseq, target):
     """call primer3 executable, return the results
     """
     def_params = {
-    'PRIMER_THERMODYNAMIC_PARAMETERS_PATH':'/opt/primer3/bin/primer3_config/',
+    'PRIMER_THERMODYNAMIC_PARAMETERS_PATH': PRIMER3_CONFIG,
     'PRIMER_MAX_NS_ACCEPTED':'0',
     }
     
@@ -94,7 +99,7 @@ def find_gt_primers(pseq, target):
     to avoid off-by-one error present in primer3
     """
     def_params = {
-    'PRIMER_THERMODYNAMIC_PARAMETERS_PATH':'/opt/primer3/bin/primer3_config/',
+    'PRIMER_THERMODYNAMIC_PARAMETERS_PATH': PRIMER3_CONFIG,
     'PRIMER_MAX_NS_ACCEPTED':'0',
     }
     

@@ -21,6 +21,7 @@ Set inputs and outputs for this step:
 
     # for all selected variants design pcr and genotyping primers
     # takes about a minute for 1000 selected variants, 5 MB gzipped vcf, 26 MB uncompressed genome, 5 MB gzipped gff
+    export PRIMER3_CONFIG=/opt/primer3/bin/primer3_config/
     design_primers.py $SCAFFOLD $ANNOTS $VARIANTS > $GFF
 
 Sort and index the annotation before using it in IGV:
@@ -80,7 +81,7 @@ See all places where ``primer3`` reported problems:
 
 .. code-block:: bash
 
-    grep primer-gt $GFF | grep -v -c 'PROBLEMS='
+    grep primer-gt $GFF | grep -c 'PROBLEMS='
 
 Use agrep to find similar sequences in transcript scaffold, to check if the 
 settings of blat are ok. Line wrapping in ``fasta`` can lead to false negatives,
