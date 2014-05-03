@@ -14,8 +14,8 @@ Set up variables:
     # data from previous steps
     SCAFFOLD=33-scaffold/lx4.fasta
     INFILES=12-cutadapt/*.fastq
-
     OUT=40-map-smalt
+
     SMALT_IDX=${SCAFFOLD%/*}/smalt/${SCAFFOLD##*/}-k13s4
 
 Create index for the scaffold and map the reads.
@@ -76,7 +76,8 @@ have to reorder lines and fill the places marked with '??':
 
     OUT=40-map-smalt
     DIR=12-cutadapt
-    find $DIR -name '*.fastq'|xargs -n1 basename|sed s/.fastq//|gawk '{OFS="\t";print "@RG", "ID:" $0, "SM:??", "LB:" gensub(/\..*$/,"",$0), "PL:LS454", "DS:??";}' > $OUT/readgroups.txt
+
+    find $DIR -name '*.fastq' | xargs -n1 basename | sed s/.fastq// | gawk '{OFS="\t";print "@RG", "ID:" $0, "SM:??", "LB:" gensub(/\..*$/,"",$0), "PL:LS454", "DS:??";}' > $OUT/readgroups.txt
 
 Prepare the sam files
 ^^^^^^^^^^^^^^^^^^^^^
@@ -84,7 +85,7 @@ Extract the sequence headers from first ``.sam`` file (other files should have i
 
 .. code-block:: bash
 
-    SAMFILE=$( echo $OUT/*.sam|gawk '{print $1;}' )
+    SAMFILE=$( echo $OUT/*.sam | awk '{print $1;}' )
     samtools view -S -t $SCAFFOLD.fai -H $SAMFILE > $OUT/sequences.txt
     cat $OUT/sequences.txt $OUT/readgroups.txt > $OUT/sam-header.txt
 
@@ -121,7 +122,7 @@ Mapping statistics
 
 .. code-block:: bash
 
-    samtools idxstats $OUT/alldup.bam|gawk '{map += $3; unmap += $4;} END {print  unmap/map;}'
+    samtools idxstats $OUT/alldup.bam | gawk '{map += $3; unmap += $4;} END {print  unmap/map;}'
 
 Coverage sums for IGV
 

@@ -11,7 +11,7 @@ to check the improvments done by this step.
     IN=00-raw
     OUT=10-fastqc
     mkdir $OUT
-    fastqc --outdir=$OUT --noextract --threads=8 $IN/*.fastq
+    fastqc --outdir=$OUT --noextract --threads=$CPUS $IN/*.fastq
 
 Split the files according to MIDs with SFFile
 ---------------------------------------------
@@ -33,9 +33,9 @@ of mRNA and for following PCR amplification of cDNA. We remove them by ``cutadap
 
     # cut out the evrogen sequences using GNU parallel and cutadapt
     # cutadapt supports only 'N' wildcards, no ambiguity codes
-    parallel cutadapt --anywhere=$PRIMER1 --anywhere=$PRIMER2 --anywhere=$PRIMER3 \
+    parallel -j $CPUS "cutadapt --anywhere=$PRIMER1 --anywhere=$PRIMER2 --anywhere=$PRIMER3 \
       --error-rate=0.2 --overlap=15 --minimum-length=40 \
-      --output=$OUT/{/.}.fastq --rest-file=$OUT/{/.}.rest {} ::: $IN/*.fastq > $OUT/cutadapt.log
+      --output=$OUT/{/.}.fastq --rest-file=$OUT/{/.}.rest {}" ::: $IN/*.fastq > $OUT/cutadapt.log
 
 Check the results
 -----------------

@@ -12,6 +12,10 @@ the technique described at http://eli.thegreenplace.net/2013/04/20/bootstrapping
     virtualenv ~/scrimer-env
     . ~/scrimer-env/bin/activate
     
+    # if you're in a grid environment, this can help with 
+    # changing absolute paths on different nodes
+    virtualnev --relocatable ~/scrimer-env
+    
     # install cython in advance because of pybedtools
     # and distribute because of pyvcf
     pip install cython distribute
@@ -19,9 +23,7 @@ the technique described at http://eli.thegreenplace.net/2013/04/20/bootstrapping
     # now install scrimer from pypi
     # with it's additional dependencies (pyvcf, pysam, pybedtools)
     pip install scrimer
-	
-	# if you're in a grid environment, this can help
-	virtualnev --relocatable ~/scrimer-env
+
 
 Scrimer depends on several python modules, that should be installed automatically using the above procedue.
 
@@ -41,6 +43,7 @@ in your PATH. Default installations - following the included instructions - are 
 - **GNU parallel** [#parallel]_ is used throughout the pipeline to speed up some lenghty calculations [#tange]_
 - **blat** and **isPcr** [#blat]_ are used to check the designed primers
 - **Primer3** [#primer3]_ is used to find the most optimal primes sequences
+- **cutadapt** [#cutadapt]_ is used to remove cDNA synthesis primers.
 
 Additional tools can be installed to provide some more options.
 
@@ -97,6 +100,7 @@ Python packages
 .. [#pysam] pysam http://code.google.com/p/pysam/
 .. [#pybedtools] pybedtools http://pythonhosted.org/pybedtools/
 .. [#PyVCF] PyVCF https://github.com/jamescasbon/PyVCF
+.. [#cutadapt] https://code.google.com/p/cutadapt/
 
 Other software
 **************

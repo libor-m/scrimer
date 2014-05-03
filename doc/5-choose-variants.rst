@@ -34,6 +34,34 @@ Remove the intermediate results, if the merge was ok:
 
     vcfutils.pl splitchr $SCAFFOLD.fai | xargs -i echo $OUT/part-{}.bcf | xargs rm
 
+Call variants with FreeBayes
+----------------------------
+
+This is an alternative to previous section. FreeBayes uses local realignment around INDELs, so the 
+variant calling for 454 data should be better.
+
+.. code-block:: bash
+
+    REF=51-liftover-all/lp2.fasta
+    BAM=63-smalt-all/alldup.bam
+    OUT=78-freebayes
+
+    GNAME=$( echo ${REF##*/} | cut -d. -f1 )
+    mkdir -p $OUT   
+    awk '{print $1;}' $REF.fai | parallel -j $CPUS "freebayes -f $REF -r {} $BAM > $OUT/${GNAME}-{}.vcf"
+
+    # join the results
+    OFILE=$OUT/variants-raw.vcf
+
+    # headers
+    FILE=$( find $OUT -name ${GNAME}-*.vcf | sort | head -1 )
+    < $FILE egrep '^#' > $OFILE
+    # the rest in .fai order
+    awk '{print "'$OUT/$GNAME'-" $1 ".vcf";}' $REF.fai | parallel -j 1 "egrep -v '^#' {} >> $OFILE"
+    # the rest, ignore order
+    cat $OUT/${GNAME}-*.vcf | egrep -v '^#' >> $OFILE
+    < $OFILE $VCFLIB/vcffilter -f 'QUAL > 20' > $OUT/variants-qual.vcf
+
 
 Filter variants
 ---------------
