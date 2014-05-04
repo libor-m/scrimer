@@ -60,6 +60,8 @@ variant calling for 454 data should be better.
     awk '{print "'$OUT/$GNAME'-" $1 ".vcf";}' $REF.fai | parallel -j 1 "egrep -v '^#' {} >> $OFILE"
     # the rest, ignore order
     cat $OUT/${GNAME}-*.vcf | egrep -v '^#' >> $OFILE
+    
+    # filter the variants on quality
     < $OFILE $VCFLIB/vcffilter -f 'QUAL > 20' > $OUT/variants-qual.vcf
 
 

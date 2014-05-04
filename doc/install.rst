@@ -60,7 +60,7 @@ Additional tools can be installed to provide some more options.
 - **Pipe Viewer** [#pv]_ can be used to display progress of longer operations
 - **BioPython** [#BioPython]_ and **NumPy** [#numpy]_ are required for running ``5prime_stats.py``
 - **mawk** [#mawk]_, awk is often used in the pipeline, and mawk is usually an order of magnitude faster
-
+- **vcflib** [#vcflib]_ has nice interface for working with vcf files
 .. _path:
 
 Add installed tools to your PATH
@@ -135,6 +135,7 @@ Optional software
 .. [#pv] Pipe Viewer http://www.ivarch.com/programs/pv.shtml
 .. [#mawk] mawk http://invisible-island.net/mawk/
 .. [#yed] yEd http://www.yworks.com/en/products_yed_about.html
+.. [#vcflib] vcflib https://github.com/ekg/vcflib
 
 Papers
 ******

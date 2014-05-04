@@ -35,7 +35,7 @@ Create a region list for IGV to quickly inspect all the primers.
 
 .. code-block:: bash
 
-    awk 'BEGIN{OFS="\t";} /pcr-product/ {print $1, $4, $5;}' $GFF > ${GFF%.*}.bed
+    awk 'BEGIN{OFS="\t";} /pcr-product/ {match($9, "ID=[^;]+"); print $1, $4, $5, substr($9, RSTART+3, RLENGTH);}' $GFF > ${GFF%.*}.bed
     
 Convert scaffold to blat format
 -------------------------------
