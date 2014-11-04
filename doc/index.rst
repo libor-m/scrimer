@@ -1,22 +1,24 @@
 Wellcome to Scrimer
 ===================
 
-Scrimer is a GNU/Linux pipeline for designing PCR and genotyping primers from 454 transcriptomic data. 
+Scrimer is a GNU/Linux pipeline for designing PCR and genotyping primers from transcriptomic data. 
 
 .. note::
 
     We present scrimer as an *end-to-end solution*, from raw reads to usable primers. This is intended to help
-    novice users, so they can see the whole picture. But it has an important downside as well. The whole pipeline 
-    is a series of steps that are considered to be complex on their own (contig assembly, read mapping, variant calling etc.).
+    novice users, so they can see the whole picture. It has an important downside - many steps in the pipeline 
+    are considered to be complex on their own (contig assembly, read mapping, variant calling etc.). Appropriate 
+    attention should be put at least to checking the intermediate results.
     
-    Our approach was to choose the most common solution for given step, use some reasonable default settings, and give the user 
-    an option to choose another program - we're using standart formats for input and output. The fine tuning of each step is up
-    to the users.
+    We tend to choose the most common solution for given step, use some reasonable default settings, and give the user 
+    an option to choose another program - we're using standart formats for input and output. The fine tuning of each step
+    depending on the input data is up to the users.
 
 Installation
 ------------
-Scrimer is a set of Python scripts that serve as a glue for several external programs. 
-Bash commands used to run the external programs can be found in this documentation.
+Scrimer is a set of Python and Bash scripts that serve as a glue for several external programs. 
+Python code is in the ``scrimer`` package, Bash commands to run the Python scripts and the external
+programs can be found in this documentation.
 
 A detailed description how to install Scrimer can be found here:
 
@@ -28,11 +30,11 @@ A detailed description how to install Scrimer can be found here:
 Pipeline workflow
 -----------------
 The workflow is divided into several steps. Intermediate results of these steps can be 
-visually inspected and checked for validity. It is usually not meaningful to continue with the process 
-if something went wrong. Whole pipeline is thus a series of pre-made shell commands, 
-that are supposed to be executed one by one by pasting them into the console.
+visually inspected and checked for validity. It is not meaningful to continue with the process 
+when a step fails. Whole pipeline is a series of pre-made shell commands, 
+that are supposed to be executed each after another by pasting them into the console.
 
-Following pages describe these steps in detail, provide some explanations for the choices
+Following pages describe these steps in detail, explain some choices
 we made and suggest ways how to check validity of the intermediate results.
 
 It takes about a day to push your data through the pipeline, if everything goes well.

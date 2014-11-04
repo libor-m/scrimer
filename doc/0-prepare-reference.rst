@@ -20,7 +20,7 @@ Downlaod and prepare the reference genome
     md5sum -c md5sum.txt
     cat *.md5 | md5sum -c
 
-Unpack the genome - this differs for genomes
+Now unpack the genome - this differs for genomes
 some are in single .fa, some are split by chromosomes. Some archives are *tarbombs*, so unpack
 to ``chromFa`` directory to avoid possible mess:
 
@@ -55,6 +55,7 @@ For example: http://genome.ucsc.edu/cgi-bin/hgTables?db=taeGut1:
 Or using compressed files:
 
 .. code-block:: bash
+
 	zcat -d $ANNOT/refSeqGenes.bed.gz | sortBed | bgzip > $ANNOT/refSeqGenes.sorted.bed.gz
 	zcat -d $ANNOT/ensGenes.bed.gz | sortBed | bgzip > $ANNOT/ensGenes.sorted.bed.gz
     tabix -p bed $ANNOT/ensGenes.sorted.bed.gz

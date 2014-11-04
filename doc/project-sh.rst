@@ -6,6 +6,10 @@ variables that define your project and that you add the required tools into your
 
 Directory layout
 ----------------
+Here we present a layout that we're using to organize all the data needed to run the pipeline.
+The inputs together with immediate (and final) results can total to tens of files. Having those
+files organized can help to prevent mistakes.
+
 .. note::
 
     The way of organizing your data presented here is just our suggestion. Python scripts 
@@ -25,8 +29,8 @@ The directory name is some short meaningful description of the step, first digit
 prefix corresponds to part of the process (read mapping, variant calling etc.), and the 
 second digit distinguishes substeps or runs with different settings.
 
-To start a new project, create a new direcotry. Scrimer is working with ``.fastq`` 
-data. Put your ``.fastq`` data in a subdirecotry called ``00-raw``. 
+To start a new project, create a new direcotry. To use scrimer you have to convert your data
+to ``.fastq`` format. Put your ``.fastq`` data in a subdirecotry called ``00-raw``. 
 
 project.sh
 ----------
@@ -83,4 +87,5 @@ You can set up your ``PATH`` easily by using the file you created during :ref:`i
     
 Such line can be at the end of your ``project.sh`` file, so everythig is set up at once.
 
-Alternatively you can copy all the tool executables into your virtual environment.
+Alternatively you can copy all the tool executables into your virtual environment 
+bin directory (``~/scrimer-env/bin``).

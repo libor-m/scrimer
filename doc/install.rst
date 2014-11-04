@@ -2,8 +2,6 @@ Scrimer installation
 ====================
 
 You need a default installation of **Python 2.7** [#Python]_ with **virtualenv** [#virtualenv]_.
-If you're in an environment where you're not able to install virtualenv, we recommend to use 
-the technique described at http://eli.thegreenplace.net/2013/04/20/bootstrapping-virtualenv/.
 
 .. code-block:: bash
   
@@ -11,10 +9,6 @@ the technique described at http://eli.thegreenplace.net/2013/04/20/bootstrapping
     # in home directory of current user
     virtualenv ~/scrimer-env
     . ~/scrimer-env/bin/activate
-    
-    # if you're in a grid environment, this can help with 
-    # changing absolute paths on different nodes
-    virtualnev --relocatable ~/scrimer-env
     
     # install cython in advance because of pybedtools
     # and distribute because of pyvcf
@@ -25,6 +19,17 @@ the technique described at http://eli.thegreenplace.net/2013/04/20/bootstrapping
     pip install scrimer
 
 
+Special cases
+-------------
+If you're in an environment where you're not able to install virtualenv systemwide, we recommend to use 
+the technique described at http://eli.thegreenplace.net/2013/04/20/bootstrapping-virtualenv/.
+
+If you're in a grid environment, this can help with changing absolute paths on different nodes
+
+.. code-block:: bash
+
+    virtualnev --relocatable ~/scrimer-env
+
 Scrimer depends on several python modules, that should be installed automatically using the above procedue.
 
 - **pysam** [#pysam]_ is used to manipulate with indexed fasta and bam files
@@ -32,7 +37,7 @@ Scrimer depends on several python modules, that should be installed automaticall
 - **PyVCF** [#PyVCF]_ is used to access variants data
 
 Apart from the python modules, the scrimer pipeline relies on some other tools that should be installed 
-in your PATH. Default installations - following the included instructions - are sufficient.
+in your PATH. Default installations - following the instructions in their respective packages - are sufficient.
 
 - **bedtools** [#bedtools]_ is a dependency of pybedtools, used for manipulating with gff and bed files
 - **samtools** [#samtools]_ is used for manipulating short read alignments, and for calling variants
@@ -61,6 +66,8 @@ Additional tools can be installed to provide some more options.
 - **BioPython** [#BioPython]_ and **NumPy** [#numpy]_ are required for running ``5prime_stats.py``
 - **mawk** [#mawk]_, awk is often used in the pipeline, and mawk is usually an order of magnitude faster
 - **vcflib** [#vcflib]_ has nice interface for working with vcf files
+
+
 .. _path:
 
 Add installed tools to your PATH
@@ -90,7 +97,7 @@ You can run the following snippet when starting your work session:
 References
 ----------
 
-.. store all software references here, and cite them throughout the documents
+.. keep all software references here, and cite them throughout the documents
 
 Python packages
 ***************

@@ -24,6 +24,9 @@ Remove cDNA synthesis primers with cutadapt
 Another source of noise in the data is the primers that were used for reverse transcription
 of mRNA and for following PCR amplification of cDNA. We remove them by ``cutadapt``.
 
+Here if you've got more or less than three primers, you have to change the command by adding/removing
+``--anywhere=`` parts.
+
 .. code-block:: bash
     
     # data from previous steps
@@ -52,6 +55,7 @@ matching algorithm than cutadapt, so some remaining hits are usually found.
 
 Next thing to check is logs produced by ``cutadapt``.
 Results for our data - 454 Titanium data from Smart kit synthesized cDNA: 
+
 - ~70% trimmed reads
 - ~10% trimmed basepairs
 - ~10% too short reads
@@ -60,7 +64,7 @@ Results for our data - 454 Titanium data from Smart kit synthesized cDNA:
 
     grep -A5 Processed $OUT/cutadapt.log | less
 
-Length of the removed sequence should be close to length of the adapter (31 in this case):
+Mean length of the removed sequences should be close to length of the adapter (31 in this case):
 
 .. code-block:: bash
 
@@ -104,8 +108,9 @@ Look where the primers are in the sequence. ``tre-agrep`` is used to color the o
     NERR=5
     agrep -n -$NERR "$PRIMER3" $FQFILE |tre-agrep -$NERR "$PRIMER3" --color|less -S -R
 
-Try to find ``NERR`` where the primer sequence starts to appear randomly in the data. This 
-techique requires a primer, that is expected to be in the beginning of many reads:
+To find out how many differences should we allow in pattern matching, we try to find a value of ``NERR``
+where the primer sequence starts to match randomly inside the reads, and not only in the beginning.
+Notice the ``^`` marking start of the read in the first command.
 
 .. code-block:: bash
 
@@ -117,7 +122,7 @@ techique requires a primer, that is expected to be in the beginning of many read
     # 6 errors: 17146 23858
     # 7 errors: 18041 67844
 
-In sample results, numbers start to diverge for ``NERR`` > 5, so 5 is a good choice.
+In our sample results, numbers start to diverge for ``NERR`` > 5, so 5 is a good choice.
 
 Read count statistics
 ---------------------
@@ -131,6 +136,8 @@ For single file:
 
     # count of sequences
     gawk '((NR%4)  == 1)' $FQFILE | wc -l
+    # or more effective
+    echo $(( $(wc -l $FQFILE) / 4 ))
 
     # count of sequenced bases
     gawk '((NR%4)  == 2)' $FQFILE | wc -m
