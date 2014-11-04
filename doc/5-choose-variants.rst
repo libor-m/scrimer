@@ -1,8 +1,9 @@
 Detect and choose variants
 ==========================
 
-Call variants
--------------
+Call variants with samtools
+---------------------------
+
 Set up input and output for current step:
 
 .. code-block:: bash
@@ -37,7 +38,7 @@ Remove the intermediate results, if the merge was ok:
 Call variants with FreeBayes
 ----------------------------
 
-This is an alternative to previous section. FreeBayes uses local realignment around INDELs, so the 
+This is an alternative to the previous section. FreeBayes uses local realignment around INDELs, so the 
 variant calling for 454 data should be better.
 
 .. code-block:: bash
@@ -75,7 +76,7 @@ We're interested in two kinds of variant qualities
 
 Filtering strategy:
  
-- use common ``samtools`` filtering
+- use predefined ``samtools`` filtering
   
   - indels caused by 454 homopolymer problems have generally low quality score,
     so they should be filtered at this stage

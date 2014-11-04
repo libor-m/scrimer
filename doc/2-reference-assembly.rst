@@ -65,3 +65,12 @@ Check the results
     # view how many contigs we got after filtering
     grep -c '>' $SEQFILE.filtered
 
+Assembling of Illumina data
+---------------------------
+`Trinity <http://trinityrnaseq.sourceforge.net/>`_ gives fairly good results for transcriptome assembly from Illumina data.
+Simple Trinity usage looks like:
+
+.. code-block:: bash
+
+    # as mentioned on the homepage
+    Trinity --seqType fq --JM 50G --left reads_1.fq  --right reads_2.fq --CPU 6
