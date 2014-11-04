@@ -34,6 +34,7 @@ Author: Libor Morkovsky, 2012
 import sys
 import os
 import itertools
+import argparse
 
 import pysam
 import vcf
@@ -42,6 +43,7 @@ import pybedtools
 from scrimer import primer3_connector
 
 min_gt_primer_len = 20
+pref_gt_primer_len = 22
 max_gt_primer_len = 28
 
 # get location of config dir from environment
@@ -112,7 +114,7 @@ def find_gt_primers(pseq, target):
     'SEQUENCE_TARGET': "%d,1" % target,
     'SEQUENCE_FORCE_LEFT_END': str(target - 1),
     'SEQUENCE_FORCE_RIGHT_END': str(target + 1),
-    'PRIMER_OPT_SIZE':'22',
+    'PRIMER_OPT_SIZE': str(pref_gt_primer_len),
     'PRIMER_MIN_SIZE': str(min_gt_primer_len),
     'PRIMER_MAX_SIZE': str(max_gt_primer_len),
     'PRIMER_PRODUCT_SIZE_RANGE':'%d-%d' % (2*min_gt_primer_len + 1, 2*max_gt_primer_len + 1),
@@ -290,21 +292,59 @@ def primers_for_var(genome, annotations, variants_random_access, var):
             color=color, VAR_mindps=mindps, VAR_dp4=dp4, VAR_fq=var.INFO['FQ'], VAR_mq=var.INFO['MQ']))
             
     return result
+
+def argparser():
+    args = argparse.ArgumentParser(description="Design primers using PRIMER3.")
+
+    args.add_argument("--primer-min", type=int, default=20,
+        help="Minimal length of the genotyping primer (default: 20).")
+    args.add_argument("--primer-pref", type=int, default=22,
+        help="Preferred length of the genotyping primer (default: 22).")
+    args.add_argument("--primer-max", type=int, default=28,
+        help="Minimal length of the genotyping primer (default: 28).")
+
+    args.add_argument("--annot-type", default="exon",
+        help="Annotatoin type that should represent contiguous sequence in DNA (default: exon).")
+
+    args.add_argument("genome",
+        help="Fasta file with associated .fai index (use samtools fai to index).")
+    args.add_argument("annots",
+        help="GFF file with associated .tbi (use tabix to index).")
+    args.add_argument("variants",
+        help="VCF file with selected variants.")
+
+    return args
+
+def crc(line):
+    return zlib.crc32(line)
     
 def main():
-    if len(sys.argv) < 4:
-        sys.exit('use: %s genome_fasta_with_fai gff_with_tbi variants_vcf_with_tbi' % sys.argv[0])
 
-    genome = pysam.Fastafile(sys.argv[1])
-    annotations = pybedtools.BedTool(sys.argv[2])
-    variants = vcf.Reader(filename=sys.argv[3])
+    parser = argparser()
+    args = parser.parse_args() 
+
+    genome = pysam.Fastafile(args.genome)
+    annotations = pybedtools.BedTool(args.annots)
+    variants = vcf.Reader(filename=args.variants)
     # open the variants once more, so the ifilter is not broken by .fetch
-    var_fetcher = vcf.Reader(filename=sys.argv[3])
-    
-    seen_loci = set()
+    var_fetcher = vcf.Reader(filename=args.variants)
+
+    # the most commonly changed value will be 
+    # preferred length, fix the min/max if pref
+    # is not in the default range
+    if args.primer_pref < args.primer_min:
+        args.primer_min = args.primer_pref
+    if args.primer_pref > args.primer_max:
+        args.primer_max = args.primer_pref
+        
+    min_gt_primer_len = args.primer_min
+    pref_gt_primer_len = args.primer_pref
+    max_gt_primer_len = args.primer_max
 
     # locus can be either exon or mrna, for now we consider mrna a locus
-    locus_feature_type = 'mRNA'
+    locus_feature_type = args.annot_type
+    
+    seen_loci = set()
 
     # by-locus naming convention implies following algo
     # (almost single pass, keeping only the names of loci already seen 

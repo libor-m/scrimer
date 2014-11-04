@@ -21,8 +21,13 @@ Set inputs and outputs for this step:
 
     # for all selected variants design pcr and genotyping primers
     # takes about a minute for 1000 selected variants, 5 MB gzipped vcf, 26 MB uncompressed genome, 5 MB gzipped gff
+    # default values are set for SNaPshot
     export PRIMER3_CONFIG=/opt/primer3/bin/primer3_config/
     design_primers.py $SCAFFOLD $ANNOTS $VARIANTS > $GFF
+    
+    # use --primer-pref to set preferred length of genotyping primer
+    # this is useful for other genotyping methods, like MALDI-TOF
+    design_primers.py --primer-pref 15 --primer-max 25 $SCAFFOLD $ANNOTS $VARIANTS > $GFF
 
 Sort and index the annotation before using it in IGV:
 
