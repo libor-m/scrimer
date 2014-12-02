@@ -29,7 +29,7 @@ Please use the patched version sim4db to obtain correct mapping coordinates in t
 
 .. code-block:: bash
 
-    INFILE=20-jp-contigs/lu_master500_v2.fna.filtered
+    INFILE=20-newbler/454Isotigs.fna.filtered
     OUT=31-tg-sim4db
     mkdir $OUT
 
@@ -65,25 +65,17 @@ Run sim4db using the script. (takes several seconds for the whole genome):
 
 Transfer genome annotations to our contigs
 ------------------------------------------
-Annotatate our sequences by data from similar sequences in reference genome.
-
-    sim4db manual [#]_ states: Exon coordinates are nucleotide based, starting from 1. Genomic coordinates are always 
-    in the original sequence, while the cDNA coordinates will refer to positions in the reverse 
-    complement of the sequence if the match orientation is indicated as 'complement'.
-
-- this seems unnecessary, because the orientation of the transcript can be deduced from the target chromosome strand (..?)
-- patched in sim4db, submitted patch to sourceforge
-
-Each contig mapping to genome creates different coordinate system for transferring
-the annotations. Annotation data should be sorted and tabix indexed. Multiple coordinate systems 
-and multiple annotations can be used. There is one output per coordinate system, they're merged 
-during the scaffold phase:
+Annotatate our sequences by data from similar sequences in the reference genome. Annotations are transferred
+in coordinates relative to each of the mapped contigs. The input annotation data have to be sorted and indexed with tabix. Multiple contig mappings and multiple reference annotations can be used. 
 
 .. code-block:: bash
-
-    # multiple coordinate systems if needed (one system per mapping)
-    COORDS="30-tg-gmap/lu_master300_v2.gmap.gff3 31-tg-sim4db/lu_master500_v2.fna.filtered.gff3"
-    ANNOTS=$GENOMEDIR/annot/ensGene_s.bed.gz
+    
+    # use multiple mappings like this:
+    # COORDS="30-tg-gmap/lu_master300_v2.gmap.gff3 31-tg-sim4db/lu_master500_v2.fna.filtered.gff3"
+    # use multiple annots like this:
+    # ANNOTS="$GENOMEDIR/annot/ensGene_s.bed.gz $GENOMEDIR/annot/refSeq_s.bed.gz"
+    COORDS=30-tg-gmap/454Isotigs.gmap.gff3
+    ANNOTS=$GENOMEDIR/ensGene.sorted.gz
     OUT=32-liftover
     mkdir -p $OUT
 
@@ -102,13 +94,13 @@ to avoid the mapping of the reads across gaps:
 .. code-block:: bash
     
     # filtered contigs
-    INFILE=20-jp-contigs/lu_master500_v2.fna.filtered
+    INFILE=20-newbler/454Isotigs.fna.filtered
     # transferred annotations from previous step
     ANNOTS=32-liftover/*-lo.gff3
     # output directory
     OUT=33-scaffold
     # name of the output 'genome'
-    GNAME=lx4
+    GNAME=sc-demo
 
     mkdir $OUT
     OUTGFF=$OUT/$GNAME.gff3

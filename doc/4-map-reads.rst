@@ -12,8 +12,8 @@ Set up variables:
 .. code-block:: bash
 
     # data from previous steps
-    SCAFFOLD=33-scaffold/lx4.fasta
-    INFILES=12-cutadapt/*.fastq
+    SCAFFOLD=33-scaffold/sc-demo.fasta
+    INFILES=10-cutadapt/*.fastq
     OUT=40-map-smalt
 
     SMALT_IDX=${SCAFFOLD%/*}/smalt/${SCAFFOLD##*/}-k13s4
@@ -22,12 +22,6 @@ Create index for the scaffold and map the reads.
 Mapping 3 GB of reads (fastq format) takes ~5 hours in 8 threads on Intel Xeon E5620, 0.5 GB memory
 per each mapping. 
 This step is probably worth some parallelization on multiple machines.
-
-.. note::
-
-    we used smalt-0.7.0.1, because smalt-0.7.4 was crashing with 
-    
-    $ [0] rmap.c:1448 ERROR: assertion failed
 
 .. code-block:: bash
 
@@ -55,14 +49,16 @@ Create a fasta index for the scaffold:
 Create readgroups.txt
 ^^^^^^^^^^^^^^^^^^^^^
 
-According to real sample info, create a ``readgroups.txt`` file.
+According to your sample wet lab details, create a ``readgroups.txt`` file.
 Because ``samtools merge -r`` attaches read group to each alignment (line) in input 
-according to original filename, the format is (\t separated)::
+according to original filename, the format is ($BASENAME is the fastq file name
+without suffix, $SAMPLE is your biological sample, ${BASENAME%%.*} is dna library name
+all <tab> separated)::
 
-    @RG	ID:$BASENAME	SM:$SAMPLE	LB:${BASENAME%%.*}	PL:LS454
+    @RG	ID:$BASENAME	SM:$SAMPLE	LB:${BASENAME%%.*}	PL:LS454 DS:$SPECIES
 
 The library name (LB) is important because of ``rmdup``,
-description (DS) is used to identify the species
+description (DS) is here used to identify the species.
 
 .. note::
 
@@ -75,9 +71,15 @@ have to reorder lines and fill the places marked with '??':
 .. code-block:: bash
 
     OUT=40-map-smalt
-    DIR=12-cutadapt
+    DIR=10-cutadapt
 
-    find $DIR -name '*.fastq' | xargs -n1 basename | sed s/.fastq// | gawk '{OFS="\t";print "@RG", "ID:" $0, "SM:??", "LB:" gensub(/\..*$/,"",$0), "PL:LS454", "DS:??";}' > $OUT/readgroups.txt
+    find $DIR -name '*.fastq' | xargs -n1 basename | sed s/.fastq// | awk '{OFS="\t";lb=$0;sub(/\..*$/,"",lb);print "@RG", "ID:" $0, "SM:??", "LB:" lb, "PL:LS454", "DS:??";}' > $OUT/readgroups.txt
+
+    # edit the file (ctrl-o enter ctrl-x saves and exits the editor)
+    nano $OUT/readgroups.txt
+
+    # sort the readgroups according to species
+    <$OUT/readgroups.txt sort -k6,6 > $OUT/readgroups-s.txt
 
 Prepare the sam files
 ^^^^^^^^^^^^^^^^^^^^^
@@ -87,7 +89,7 @@ Extract the sequence headers from first ``.sam`` file (other files should have i
 
     SAMFILE=$( echo $OUT/*.sam | awk '{print $1;}' )
     samtools view -S -t $SCAFFOLD.fai -H $SAMFILE > $OUT/sequences.txt
-    cat $OUT/sequences.txt $OUT/readgroups.txt > $OUT/sam-header.txt
+    cat $OUT/sequences.txt $OUT/readgroups-s.txt > $OUT/sam-header.txt
 
 ``samtools merge`` requires sorted alignments, sort them in parallel. This creates ``.bam`` files 
 in the output directory:
@@ -122,7 +124,7 @@ Mapping statistics
 
 .. code-block:: bash
 
-    samtools idxstats $OUT/alldup.bam | gawk '{map += $3; unmap += $4;} END {print  unmap/map;}'
+    samtools idxstats $OUT/alldup.bam | awk '{map += $3; unmap += $4;} END {print  unmap/map;}'
 
 Coverage sums for IGV
 

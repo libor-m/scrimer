@@ -56,11 +56,11 @@ Or using compressed files:
 
 .. code-block:: bash
 
-	zcat -d $ANNOT/refSeqGenes.bed.gz | sortBed | bgzip > $ANNOT/refSeqGenes.sorted.bed.gz
-	zcat -d $ANNOT/ensGenes.bed.gz | sortBed | bgzip > $ANNOT/ensGenes.sorted.bed.gz
+    zcat -d $ANNOT/refSeqGenes.bed.gz | sortBed | bgzip > $ANNOT/refSeqGenes.sorted.bed.gz
+    zcat -d $ANNOT/ensGenes.bed.gz | sortBed | bgzip > $ANNOT/ensGenes.sorted.bed.gz
     tabix -p bed $ANNOT/ensGenes.sorted.bed.gz
-	tabix -p bed $ANNOT/refSeqGenes.sorted.bed.gz
-	
+    tabix -p bed $ANNOT/refSeqGenes.sorted.bed.gz
+    
 Build indexes for all programs used in the pipeline
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Some programs need a preprocessed form of the genome, to speed up their operation.
@@ -71,12 +71,13 @@ Some programs need a preprocessed form of the genome, to speed up their operatio
     samtools faidx $GENOMEFA
 
     # build gmap index for zebra finch
-	# with some newer versions it is necessary to use -B <path/to/bindir>
+    # with some newer versions it is necessary to use -B <path/to/bindir>
+    # beware, this requires quite a lot of memory (gigabytes)
     gmap_build -d $GMAP_IDX -D $GMAP_IDX_DIR $GENOMEFA
 
     # smalt index
-    # recommended settings for 454 (step 4, k-mer size 13)
-    mkdir smalt
+    # needed only for speeding up sim4db
+    mkdir -p $GENOMEDIR/smalt
     smalt index -s 4 $SMALT_IDX $GENOMEFA
     
     # convert to blat format

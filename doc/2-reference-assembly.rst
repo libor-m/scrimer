@@ -60,7 +60,7 @@ Check the results
 .. code-block:: bash
 
     # check the input contig length distribution
-    grep '>' $SEQFILE | awk '{ sub(/length=/,"",$3); print $3}' > $SEQFILE.lengths
+    grep '>' $SEQFILE | awk '{ sub(/length=/,"",$3); print $3}' | histogram.py -b 30
 
     # view how many contigs we got after filtering
     grep -c '>' $SEQFILE.filtered
@@ -74,3 +74,5 @@ Simple Trinity usage looks like:
 
     # as mentioned on the homepage
     Trinity --seqType fq --JM 50G --left reads_1.fq  --right reads_2.fq --CPU 6
+
+Some more `tips on assembling 'perfect' transcripts <ftp://flamingo.bio.indiana.edu/evigene/docs/perfect-mrna-assembly-2013jan.txt>`_ by Don Gilbert.

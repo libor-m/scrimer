@@ -18,6 +18,11 @@ You need a default installation of **Python 2.7** [#Python]_ with **virtualenv**
     # with it's additional dependencies (pyvcf, pysam, pybedtools)
     pip install scrimer
 
+Scrimer depends on several python modules, that should be installed automatically using the above procedue.
+
+- **pysam** [#pysam]_ is used to manipulate with indexed fasta and bam files
+- **pybedtools** [#pybedtools]_ is used to read and write the annotations
+- **PyVCF** [#PyVCF]_ is used to access variants data
 
 Special cases
 -------------
@@ -30,14 +35,10 @@ If you're in a grid environment, this can help with changing absolute paths on d
 
     virtualnev --relocatable ~/scrimer-env
 
-Scrimer depends on several python modules, that should be installed automatically using the above procedue.
-
-- **pysam** [#pysam]_ is used to manipulate with indexed fasta and bam files
-- **pybedtools** [#pybedtools]_ is used to read and write the annotations
-- **PyVCF** [#PyVCF]_ is used to access variants data
-
-Apart from the python modules, the scrimer pipeline relies on some other tools that should be installed 
-in your PATH. Default installations - following the instructions in their respective packages - are sufficient.
+Non-python dependecies
+----------------------
+Apart from the python modules, the scrimer pipeline relies on other tools that should be installed 
+in your PATH. Follow the installation instructions in each package.
 
 - **bedtools** [#bedtools]_ is a dependency of pybedtools, used for manipulating with gff and bed files
 - **samtools** [#samtools]_ is used for manipulating short read alignments, and for calling variants
@@ -66,7 +67,6 @@ Additional tools can be installed to provide some more options.
 - **BioPython** [#BioPython]_ and **NumPy** [#numpy]_ are required for running ``5prime_stats.py``
 - **mawk** [#mawk]_, awk is often used in the pipeline, and mawk is usually an order of magnitude faster
 - **vcflib** [#vcflib]_ has nice interface for working with vcf files
-
 
 .. _path:
 
@@ -113,17 +113,18 @@ Other software
 **************
 
 .. [#lastz] lastz http://www.bx.psu.edu/~rsharris/lastz/
-.. [#bedtools] bedtools http://code.google.com/p/bedtools/
-.. [#tabix] tabix http://samtools.sourceforge.net/tabix.shtml, http://sourceforge.net/projects/samtools/files/
+.. [#bedtools] bedtools https://github.com/arq5x/bedtools2
+.. [#tabix] tabix http://www.htslib.org/, http://samtools.sourceforge.net/tabix.shtml
 .. [#sortalt] sort-alt https://github.com/lh3/foreign/tree/master/sort
 .. [#gmap] gmap http://research-pub.gene.com/gmap/
-.. [#samtools] samtools http://samtools.sourceforge.net/, http://sourceforge.net/projects/samtools/files/
+.. [#samtools] samtools http://www.htslib.org/, http://sourceforge.net/projects/samtools/files/
 .. [#smalt] smalt http://www.sanger.ac.uk/resources/software/smalt/, 
    we used 0.7.0.1, because the latest version (0.7.3) crashes
 .. [#parallel] GNU parallel http://www.gnu.org/software/parallel/
 .. [#blat] http://users.soe.ucsc.edu/~kent/src/, get ``blatSrc35.zip`` and  ``isPcr33.zip``, 
    before ``make`` do ``export MACHTYPE`` and ``export BINDIR=<dir>``
 .. [#primer3] http://primer3.sourceforge.net/
+.. [#eautils] https://code.google.com/p/ea-utils/
 
 Optional software
 *****************

@@ -13,11 +13,22 @@ to check the improvments done by this step.
     mkdir $OUT
     fastqc --outdir=$OUT --noextract --threads=$CPUS $IN/*.fastq
 
-Split the files according to MIDs with SFFile
----------------------------------------------
-If you used multiplexing via MID adaptors during library preparation, you have to split the 
-reads according to the information stored in the sequences. This is done by ``sfffile``, and you 
-have to convert resulting sff files to fastq format.
+Split the files by multiplex tags
+---------------------------------
+If you used multiplexing during library preparation, your reads have either
+already been split in your sequencing facility, or you have to split the 
+reads according to the 'barcodes' stored in the sequences yourself. 
+
+- for 454, this is done by ``sfffile``, you have to convert resulting sff files to fastq format
+- for Illumina this can be done e.g. by `eautils <https://code.google.com/p/ea-utils/>`_
+
+.. code-block:: bash
+
+    IN=03-sff
+    OUT=04-sff-split
+    mkdir -p $OUT
+
+    parallel -j 1 sfffile -s RLMIDs -o $OUT/{/.} {} ::: $IN/*.sff
 
 Remove cDNA synthesis primers with cutadapt
 -------------------------------------------
@@ -135,12 +146,12 @@ For single file:
     # @ can be in the beginning of quality string, so filter the rows in order
 
     # count of sequences
-    gawk '((NR%4)  == 1)' $FQFILE | wc -l
+    awk '((NR%4)  == 1)' $FQFILE | wc -l
     # or more effective
     echo $(( $(wc -l $FQFILE) / 4 ))
 
     # count of sequenced bases
-    gawk '((NR%4)  == 2)' $FQFILE | wc -m
+    awk '((NR%4)  == 2)' $FQFILE | wc -m
 
 For all files in ``OUT``:
 
