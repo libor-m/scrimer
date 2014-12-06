@@ -107,7 +107,7 @@ detection algorithm is based on read properties of genomic DNA ([#]_, [#]_).
 
 .. code-block:: bash
 
-    samtools merge -ru -h $OUT/sam-header.txt - $OUT/[GH]*.bam | samtools sort - $OUT/alldup
+    samtools merge -ru -h $OUT/sam-header.txt - $OUT/*.bam | samtools sort - $OUT/alldup
     samtools index $OUT/alldup.bam
 
 

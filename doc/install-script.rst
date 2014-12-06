@@ -24,11 +24,16 @@ cd ~/sw
 wget -O - 'http://downloads.sourceforge.net/project/samtools/samtools/1.1/samtools-1.1.tar.bz2?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fsamtools%2Ffiles%2Fsamtools%2F1.1%2F&ts=1416174418&use_mirror=netcologne'|tar xvj
 cd samtools-1.1
 sudo apt-get install -y ncurses-dev
-make
-sudo make install
+make && sudo make install
+
+# tabix, bgzip
 cd htslib-1.1
-make
-sudo make install
+make && sudo make install
+
+# vcfutils.pl
+wget -O - http://sourceforge.net/projects/samtools/files/samtools/1.1/bcftools-1.1.tar.bz2/download|tar xvj
+cd bcftools-1.1/ 
+make && sudo make install
 
 lastz
 -----
@@ -146,18 +151,23 @@ cd ~/sw
 wget -O - http://www.ivarch.com/programs/sources/pv-1.5.7.tar.bz2|tar xvj
 cd pv-1.5.7/
 ./configure
-make
-sudo make install
+make && sudo make install
 
 mawk
 ----
 wget -O - http://invisible-island.net/datafiles/release/mawk.tar.gz|tar xvz
 cd mawk-1.3.4-20141027/
 ./configure
-make
-sudo make install
+make && sudo make install
 
 bit.ly data hacks
 -----------------
 . ~/scrimer-env/bin/activate
 pip install data_hacks
+
+freebayes
+---------
+sudo apt-get install cmake
+git clone --recursive git://github.com/ekg/freebayes.git
+cd freebayes/
+make && sudo make install

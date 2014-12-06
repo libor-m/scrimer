@@ -52,6 +52,7 @@ For example: http://genome.ucsc.edu/cgi-bin/hgTables?db=taeGut1:
     bgzip $ANNOT/ensGene.sorted.bed
     tabix -p bed $ANNOT/ensGene.sorted.bed.gz
 
+FIXME: rozepsat 
 Or using compressed files:
 
 .. code-block:: bash

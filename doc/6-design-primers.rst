@@ -8,11 +8,11 @@ Set inputs and outputs for this step:
 
 .. code-block:: bash
 
-    VARIANTS=50-variants/lx4-variants-selected.vcf.gz
-    SCAFFOLD=33-scaffold/lx4.fasta
-    ANNOTS=33-scaffold/lx4.sorted.gff3.gz 
+    VARIANTS=50-variants/demo-variants-selected.vcf.gz
+    SCAFFOLD=33-scaffold/sc-demo.fasta
+    ANNOTS=33-scaffold/sc-demo.sorted.gff3.gz
 
-    GFFILE=lx4-primers.gff3
+    GFFILE=demo-primers.gff3
     OUT=60-gff-primers
     
     GFF=$OUT/$GFFILE
@@ -22,25 +22,26 @@ Set inputs and outputs for this step:
     # for all selected variants design pcr and genotyping primers
     # takes about a minute for 1000 selected variants, 5 MB gzipped vcf, 26 MB uncompressed genome, 5 MB gzipped gff
     # default values are set for SNaPshot
-    export PRIMER3_CONFIG=/opt/primer3/bin/primer3_config/
+    export PRIMER3_CONFIG=/opt/primer3/primer3_config/
     design_primers.py $SCAFFOLD $ANNOTS $VARIANTS > $GFF
     
     # use --primer-pref to set preferred length of genotyping primer
     # this is useful for other genotyping methods, like MALDI-TOF
     design_primers.py --primer-pref 15 --primer-max 25 $SCAFFOLD $ANNOTS $VARIANTS > $GFF
 
-Sort and index the annotation before using it in IGV:
+Sort and index the annotation before using it in IGV. For a small set of primers it is not necessary to 
+compress and index the file, IGV can handle raw files as well.
 
 .. code-block:: bash
 
     sortBed -i $GFF | bgzip > $PRIMERS
     tabix -f -p gff $PRIMERS
 
-Create a region list for IGV to quickly inspect all the primers.
+Create a region list for IGV to quickly inspect all the primers. 
 
 .. code-block:: bash
 
-    awk 'BEGIN{OFS="\t";} /pcr-product/ {match($9, "ID=[^;]+"); print $1, $4, $5, substr($9, RSTART+3, RLENGTH);}' $GFF > ${GFF%.*}.bed
+    <$GFF awk 'BEGIN{OFS="\t";} /pcr-product/ {match($9, "ID=[^;]+"); print $1, $4, $5, substr($9, RSTART+3, RLENGTH);}' > ${GFF%.*}.bed
     
 Convert scaffold to blat format
 -------------------------------
@@ -59,7 +60,7 @@ Validate primers with blat/isPcr
 
 Recomended parameters for PCR primers in blat [#]_: ``-tileSize=11``, ``-stepSize=5``
 
-Get the primes sequences, in formats for isPcr and blat:
+Get the primer sequences, in formats for isPcr and blat:
     
 .. code-block:: bash
 
