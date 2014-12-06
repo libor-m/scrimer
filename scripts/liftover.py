@@ -33,6 +33,9 @@ def main():
     # load all feature files as IntervalFiles
     # convert to bed6 if needed
     bedtools = [pybedtools.BedTool(fname) for fname in sys.argv[2:]]
+    # fix for some damned bug in pybedtools
+    for bt in bedtools:
+        bt._isbam = False
     featurefiles = [bedtool.as_intervalfile() if bedtool.field_count() < 12 else bedtool.bed6().as_intervalfile() for bedtool in bedtools]
 
     gff = pybedtools.BedTool(sys.argv[1])

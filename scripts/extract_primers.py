@@ -37,7 +37,7 @@ import pybedtools
     
 def main():
     if len(sys.argv) < 2:
-        sys.exit('use: %s primer_gff [isPcr]' % sys.argv[0])
+        sys.exit('use: %s primer_gff [isPcr|table]' % sys.argv[0])
 
     # output blat isPcr format?
     out_type = 'fasta'
@@ -48,7 +48,10 @@ def main():
 
     pcr_pairs = dict()
     pcr_products = dict()
-    for f in pybedtools.BedTool(sys.argv[1]):
+    # hack fix an error in newer pybedtools
+    bt = pybedtools.BedTool(sys.argv[1])
+    bt._isbam = False
+    for f in bt:
         # fasta output
         if out_type == 'fasta':
             if 'SEQUENCE' in f.attrs:
@@ -126,7 +129,7 @@ def main():
                         ]
 
                 # add selected attributes
-                fields.extend(f_gt.attrs[k] for k in att_names)
+                fields.extend(f_gt.attrs[k] if k in f_gt.attrs else '' for k in att_names)
 
                 print '\t'.join(fields)
             

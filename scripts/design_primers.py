@@ -24,7 +24,7 @@ Algorithm
   - find suitable genotyping primers
   - design PCR primers to flank the (usable) genotyping primers
 
-Author: Libor Morkovsky, 2012
+Author: Libor Morkovsky, 2012, 2014
 """
 
 # This file is a part of Scrimer.
@@ -203,7 +203,7 @@ def primers_for_var(genome, annotations, variants_random_access, var):
     # container for the output
     result = []
 
-    var_features = annotations.tabix_intervals(pybedtools.Interval(var.CHROM, var.POS, var.POS))
+    var_features = annotations.tabix_intervals(pybedtools.Interval(var.CHROM, var.POS, var.POS + 1))
     var_exons = [f for f in var_features if f.fields[2] == 'exon']
     
 
@@ -282,14 +282,17 @@ def primers_for_var(genome, annotations, variants_random_access, var):
     mindps = min(sam['DP'] for sam in var.samples)
     dp4 = ','.join(map(str, var.INFO['DP4']))
     
+    vkeys = ['FQ', 'MQ']
     if len(gt_primers[0]['LEFT']):
         color = '#bb0000' if 'PROBLEMS' in gt_primers[0]['LEFT'][0] else '#00bb00'
+        more = {('VAR_%s' % k):var.INFO[k] for k in vkeys if k in var.INFO}
         result.append(primer_to_gff('gt-left', gt_primers[0]['LEFT'][0], 'gt-primer', var.CHROM, min_exon.start, '+', 
-            color=color, VAR_mindps=mindps, VAR_dp4=dp4, VAR_fq=var.INFO['FQ'], VAR_mq=var.INFO['MQ']))
+            color=color, VAR_mindps=mindps, VAR_dp4=dp4, **more))
     if len(gt_primers[0]['RIGHT']):
         color = '#bb0000' if 'PROBLEMS' in gt_primers[0]['RIGHT'][0] else '#00bb00'
+        more = {('VAR_%s' % k):var.INFO[k] for k in vkeys if k in var.INFO}
         result.append(primer_to_gff('gt-right', gt_primers[0]['RIGHT'][0], 'gt-primer', var.CHROM, min_exon.start, '-', 
-            color=color, VAR_mindps=mindps, VAR_dp4=dp4, VAR_fq=var.INFO['FQ'], VAR_mq=var.INFO['MQ']))
+            color=color, VAR_mindps=mindps, VAR_dp4=dp4, **more))
             
     return result
 
@@ -303,8 +306,8 @@ def argparser():
     args.add_argument("--primer-max", type=int, default=28,
         help="Minimal length of the genotyping primer (default: 28).")
 
-    args.add_argument("--annot-type", default="exon",
-        help="Annotatoin type that should represent contiguous sequence in DNA (default: exon).")
+    #args.add_argument("--annot-type", default="exon",
+    #    help="Annotatoin type that should represent contiguous sequence in DNA (default: exon).")
 
     args.add_argument("genome",
         help="Fasta file with associated .fai index (use samtools fai to index).")
@@ -342,7 +345,7 @@ def main():
     max_gt_primer_len = args.primer_max
 
     # locus can be either exon or mrna, for now we consider mrna a locus
-    locus_feature_type = args.annot_type
+    # locus_feature_type = args.annot_type
     
     seen_loci = set()
 
@@ -360,12 +363,17 @@ def main():
     # use iterator filter, so the variants are streamed
     for var in itertools.ifilter(lambda v: not v.FILTER, variants):
         # get a locus feature for the var
-        var_features = annotations.tabix_intervals(pybedtools.Interval(var.CHROM, var.POS, var.POS))
-        var_loci = [f for f in var_features if f.fields[2] == locus_feature_type]
+        var_features = annotations.tabix_intervals(pybedtools.Interval(var.CHROM, var.POS, var.POS + 1))
+        # var_loci = [f for f in var_features if f.fields[2] == locus_feature_type]
+        var_loci = [f for f in var_features if f.fields[2] == 'mRNA']
         
+        # var is not in any known feature
+        if len(var_loci) == 0:
+            continue
+
         # quick check for now
-        if len(var_loci) != 1:
-            print sys.stderr >> 'too many locus features for %s: %s' % (str(var), str(var_loci))
+        if len(var_loci) > 1:
+            print >> sys.stderr, 'too many locus features for %s: %s' % (str(var), str(var_loci))
             continue
         
         locus = var_loci[0]
