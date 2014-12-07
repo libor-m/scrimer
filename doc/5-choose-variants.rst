@@ -69,9 +69,9 @@ variant calling for 454 data should be better.
     # the rest in .fai order
     vcfutils.pl splitchr $SCAFFOLD.fai | parallel -j 1 "egrep -v '^#' $OUT/${GNAME}-{}.vcf >> $OFILE"
     
-    # filter the variants on quality
-    < $OFILE $VCFLIB/vcffilter -f 'QUAL > 20' > $OUT/variants-qual.vcf
-
+    # filter the variants on quality (ignore the warning messages)
+    <$OFILE bcftools view -i 'QUAL > 20' -O z > $OUT/variants-qual.vcf.gz
+    tabix -p vcf $OUT/variants-qual.vcf.gz
 
 Filter variants
 ---------------
@@ -137,6 +137,9 @@ Use ``pv`` as progress meter. ``pv`` can be substituted by ``cat``:
     # samtools > 0.1.19 produce conflicting info tags, get rid of it if the above filtering fails
     pv -p $VCFINPUT | bgzip -d | sed 's/,Version="3"//' | vcf_filter.py --no-filtered - avg-dps sq| bgzip > $VCFOUTPUT
 
+    # freebayes output
+    zcat $OUT/variants-qual.vcf.gz| vcfutils.pl varFilter -1 0 | vcf_filter.py --no-filtered - avg-dps sq | bgzip > $OUT/demo-filt1.vcf.gz
+
 Interesting variants
 ^^^^^^^^^^^^^^^^^^^^
 
@@ -149,6 +152,10 @@ the selected and non-selected variants can be checked in IGV:
     VCFOUTPUT=$VARIANTS-selected.vcf.gz
     pv -p $VCFINPUT | bgzip -d | vcf_filter.py - dps --depth-per-sample 3 snp-only contrast-samples --sample-names lu02 lu14 lu15| bgzip > $VCFOUTPUT
     tabix -p vcf $VCFOUTPUT
+
+    # freebayes
+    VCFOUTPUT=$OUT/demo-selected.vcf.gz
+    <$OUT/demo-filt1.vcf.gz pv -p | zcat | vcf_filter.py - dps --depth-per-sample 3 snp-only contrast-samples --sample-names lu02 lu14 lu15 | bgzip > $VCFOUTPUT
 
 Check the results
 -----------------
