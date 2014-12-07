@@ -95,7 +95,7 @@ def main():
     if out_type == 'table':
         fnames = ['ID', 'ref-chromosome', 'pcr-F', 'pcr-R', 'product-size', 'pcr-penalty', 'gt-tag',]
         # dp4 is: reference forward, reference reverse, alternate forward, alternate reverse
-        att_names = ['SEQUENCE', 'TM', 'GC_PERCENT', 'PENALTY', 'VAR_mindps', 'VAR_dp4', 'VAR_fq', 'VAR_mq',]
+        att_names = ['SEQUENCE', 'TM', 'GC_PERCENT', 'PENALTY', 'VAR_mindps', 'VAR_dp4', 'VAR_FQ', 'VAR_MQ',]
         
         # print header
         print "\t".join(fnames + att_names)

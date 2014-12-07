@@ -42,6 +42,10 @@ class DistinguishingVariants(vcf.Filter):
       alleles = lambda grp: set(chain.from_iterable(self.splitter.split(record.genotype(sam).gt_bases) for sam in grp))
       
       # if there are any alleles in common, filter the record
-      common = alleles(rest) & alleles(self.group)
+      try:
+          common = alleles(rest) & alleles(self.group)
+      except:
+          return 'contrast-exception'
+
       if len(common): return common
 

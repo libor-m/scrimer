@@ -279,20 +279,22 @@ def primers_for_var(genome, annotations, variants_random_access, var):
         return [rejected_var_feature('no suitable PCR primers found')]
     
     # decorate all genotyping primers with basic statistics about the variant being genotyped
-    mindps = min(sam['DP'] for sam in var.samples)
-    dp4 = ','.join(map(str, var.INFO['DP4']))
     
     vkeys = ['FQ', 'MQ']
+    more = {('VAR_%s' % k):var.INFO[k] for k in vkeys if k in var.INFO}
+    more['VAR_mindps'] = min(sam['DP'] for sam in var.samples)
+    if 'DP4' in var.INFO:
+        more['VAR_dp4'] = ','.join(map(str, var.INFO['DP4']))
+
     if len(gt_primers[0]['LEFT']):
         color = '#bb0000' if 'PROBLEMS' in gt_primers[0]['LEFT'][0] else '#00bb00'
-        more = {('VAR_%s' % k):var.INFO[k] for k in vkeys if k in var.INFO}
         result.append(primer_to_gff('gt-left', gt_primers[0]['LEFT'][0], 'gt-primer', var.CHROM, min_exon.start, '+', 
-            color=color, VAR_mindps=mindps, VAR_dp4=dp4, **more))
+            color=color, **more))
     if len(gt_primers[0]['RIGHT']):
         color = '#bb0000' if 'PROBLEMS' in gt_primers[0]['RIGHT'][0] else '#00bb00'
         more = {('VAR_%s' % k):var.INFO[k] for k in vkeys if k in var.INFO}
         result.append(primer_to_gff('gt-right', gt_primers[0]['RIGHT'][0], 'gt-primer', var.CHROM, min_exon.start, '-', 
-            color=color, VAR_mindps=mindps, VAR_dp4=dp4, **more))
+            color=color, **more))
             
     return result
 
