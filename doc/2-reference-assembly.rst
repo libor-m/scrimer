@@ -1,5 +1,5 @@
-Create a reference assembly
-==========================
+Assemble reads into contigs
+===========================
 
 Use newbler to assemble the reads
 ---------------------------------

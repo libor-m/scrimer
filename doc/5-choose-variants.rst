@@ -4,7 +4,7 @@ Detect and choose variants
 Call variants with samtools
 ---------------------------
 
-Set up input and output for current step:
+Set up input and output for the current step:
 
 .. code-block:: bash
 
@@ -16,7 +16,7 @@ Set up input and output for current step:
     VARIANTS=$OUT/demo-variants
     mkdir -p $OUT
 
-Run the variant calling in parallel. Takes 3 hours for 15 samples on single Intel Xeon E5620:
+Run the variant calling in parallel. Takes 3 hours for 15 samples on a single Intel Xeon E5620:
 
 .. code-block:: bash
 
@@ -85,10 +85,10 @@ Filtering strategy:
  
 - use predefined ``samtools`` filtering
   
-  - indels caused by 454 homopolymer problems have generally low quality score,
+  - indels caused by 454 homopolymer problems generally have low quality scores,
     so they should be filtered at this stage
 
-- remove uninteresting information (for convinient viewing in IGV)
+- remove uninteresting information (for convenient viewing in IGV)
   
   - overall low coverage sites (less than 3 reads per sample - averaged, to avoid discarding
     some otherwise interesting information because of one bad sample)
@@ -102,8 +102,8 @@ Filtering strategy:
 Samtools filtering
 ^^^^^^^^^^^^^^^^^^
 
-We can expect quite high *strand bias* in RNASeq data, so don't filter on strand bias
-(``-1 0``), use the defaults for other settings of ``vcfutils varFilter`` command:
+Quite high *strand bias* in RNASeq data can be expected, so don't filter on strand bias
+(``-1 0``). Use the defaults for other settings of ``vcfutils varFilter`` command:
 
 - minimum RMS mapping quality for SNPs [10]
 - minimum read depth [2]
@@ -124,7 +124,7 @@ We can expect quite high *strand bias* in RNASeq data, so don't filter on strand
 Convenience filtering
 ^^^^^^^^^^^^^^^^^^^^^
 
-Use ``pv`` as progress meter. ``pv`` can be substituted by ``cat``:
+Use ``pv`` as a progress meter. ``pv`` can be substituted by ``cat``:
 
 .. code-block:: bash
 

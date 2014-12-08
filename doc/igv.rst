@@ -11,7 +11,7 @@ Tracks, from top to bottom:
   are shown in lighter color,
   produced in :doc:`5-choose-variants`
 - sample list - provides detailed information on variants in each sample
-- ``alldup.bam`` - details on coverage and SNP (colored) / INDEL (balck), in context menu
+- ``alldup.bam`` - details on coverage and SNP (colored) / INDEL (black), in the context menu
   choose ``Group alignments by > sample`` and ``Color alignments by > read group``,
   produced in :doc:`4-map-reads`
 - sequence
@@ -19,7 +19,7 @@ Tracks, from top to bottom:
   produced in :doc:`6-design-primers`
 - ``lx5.sorted.gff3.gz`` - annotations for the scaffold - predicted and transferred exons,
   produced in :doc:`3-map-contigs`
-- floating window with list of designed primers, produced in :doc:`6-design-primers`
+- floating window with a list of designed primers, produced in :doc:`6-design-primers`
 
 How to get to this view
 -----------------------
@@ -27,6 +27,6 @@ How to get to this view
 - run IGV (version 2.2 is used here)
 - ``Genomes > Load genome from file``, choose your scaffold
 - load all the tracks by ``File > Load from File``
-- rearrange tracks by dragging the label with mouse to your taste
+- rearrange tracks according to your preference by dragging the label with the mouse
 - choose ``Regions > Import Regions``, pick the ``.bed`` file created in :doc:`6-design-primers`,
   choose ``Regions > Region Navigator``

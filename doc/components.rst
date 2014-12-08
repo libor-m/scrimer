@@ -1,17 +1,17 @@
-Components of scrimer pipeline
-##############################
+Components of the Scrimer pipeline
+##################################
 
 Components bound to the pipeline
 ================================
 
-Transfer annotation from reference genome to the mapped reads
--------------------------------------------------------------
+Transfer annotation from the reference genome to the contigs
+------------------------------------------------------------
 File: ``scripts/liftover.py``
 
 .. automodule:: liftover
 
-Create a contig scaffold with help of spliced mapping
------------------------------------------------------
+Create a contig scaffold according to contig hits in the reference genome
+-------------------------------------------------------------------------
 File: ``scripts/scaffold.py``
 
 .. automodule:: scaffold
@@ -22,8 +22,8 @@ File: ``scripts/design_primers.py``
 
 .. automodule:: design_primers
 
-Export primers from gff3 to FASTA or isPcr format
--------------------------------------------------
+Export primers from gff3 to the FASTA, tabular or isPcr format
+--------------------------------------------------------------
 File: ``scripts/extract_primers.py``
 
 .. automodule:: extract_primers
@@ -38,8 +38,8 @@ File: ``scripts/find_redundant_sequences.py``
 
 .. automodule:: find_redundant_sequences
 
-Filter sequences in FASTQ file based on their position in the file
-------------------------------------------------------------------
+Filter sequences in a FASTQ file based on their position in the file
+--------------------------------------------------------------------
 File: ``scripts/fastq_kill_lines.py``
 
 .. automodule:: fastq_kill_lines
@@ -57,7 +57,7 @@ Break sequences in FASTA file into fragments
 --------------------------------------------
 File: ``scripts/fasta_fragments.py``
 
-Taken from :ref:`lastz <lastz>`. Break sequences in fasta file to fragments, so 
+Taken from :ref:`lastz <lastz>`. Break sequences in a fasta file into fragments, so 
 some kind of short read aligner can be used for further processing.
 
 .. automodule:: fasta_fragments

@@ -1,5 +1,5 @@
-Map contigs to the scaffold
-===========================
+Map reads to the scaffold
+=========================
 
 Map all the reads using smalt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -32,7 +32,7 @@ This step would benefit from parallelization even on multiple machines (not impl
 
     # Illumina reads can be maped e.g. with bwa
     bwa index $SCAFFOLD
-    parallel -j 1 "bwa mem -t $CPUS -R {/.} $SCAFFOLD {} > $OUT/{/.}.sam" ::: $INFILES
+    parallel -j 1 "bwa mem -t $CPUS $SCAFFOLD {} > $OUT/{/.}.sam" ::: $INFILES
 
 Merge mapping output to single file 
 -----------------------------------
@@ -47,10 +47,10 @@ Create readgroups.txt
 ^^^^^^^^^^^^^^^^^^^^^
 
 According to your sample wet lab details, create a ``readgroups.txt`` file.
-Because ``samtools merge -r`` attaches read group to each alignment (line) in input 
-according to original filename, the format is ($BASENAME is the fastq file name
-without suffix, $SAMPLE is your biological sample, ${BASENAME%%.*} is dna library name
-all <tab> separated)::
+Because ``samtools merge -r`` attaches read group to each alignment (line) in the input 
+according to the original filename, the format is ($BASENAME is the fastq file name
+without suffix, $SAMPLE is your biological sample, ${BASENAME%%.*} is the dna library name,
+all ``tab`` separated)::
 
     @RG	ID:$BASENAME	SM:$SAMPLE	LB:${BASENAME%%.*}	PL:LS454 DS:$SPECIES
 
@@ -60,9 +60,9 @@ description (DS) is here used to identify the species.
 .. note::
 
     The order of the rows matters for the vcf output,
-    the sample columns order is probably the order of first apperance in the @RG.
+    the sample columns order is probably the order of first appearance in the @RG.
 
-Following code generates most of the ``readgroups.txt`` file, you 
+The following code generates most of the ``readgroups.txt`` file, you 
 have to reorder lines and fill the places marked with '??':
 
 .. code-block:: bash
@@ -80,7 +80,7 @@ have to reorder lines and fill the places marked with '??':
 
 Prepare the sam files
 ^^^^^^^^^^^^^^^^^^^^^
-Extract the sequence headers from first ``.sam`` file (other files should have identical headers):
+Extract the sequence headers from the first ``.sam`` file (other files should have identical headers):
 
 .. code-block:: bash
 
@@ -95,12 +95,10 @@ in the output directory:
 
     parallel -j $CPUS "samtools view -but $SCAFFOLD.fai {} | samtools sort - {.}" ::: $OUT/*.sam
 
-Merge it
-^^^^^^^^
+Merge
+^^^^^
 Merge all the alignments. Do not remove duplicates because the duplicate
-detection algorithm is based on read properties of genomic DNA ([#]_, [#]_). 
-
-``/[GH]*.bam`` avoids generated files like ``alldup.bam`` in glob expansion.
+detection algorithm is based on the read properties of genomic DNA ([#]_, [#]_). 
 
 .. code-block:: bash
 

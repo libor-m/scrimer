@@ -43,8 +43,8 @@ Create a region list for IGV to quickly inspect all the primers.
 
     <$GFF awk 'BEGIN{OFS="\t";} /pcr-product/ {match($9, "ID=[^;]+"); print $1, $4, $5, substr($9, RSTART+3, RLENGTH);}' > ${GFF%.*}.bed
     
-Convert scaffold to blat format
--------------------------------
+Convert scaffold to the blat format
+-----------------------------------
 
 .. code-block:: bash
 
@@ -54,11 +54,7 @@ Convert scaffold to blat format
 Validate primers with blat/isPcr
 --------------------------------
 
-.. note::
-    
-    Ideal case would be to add the annotations found by ``isPcr`` to the primer gff3 tags.
-
-Recomended parameters for PCR primers in blat [#]_: ``-tileSize=11``, ``-stepSize=5``
+Recommended parameters for PCR primers in blat [#]_: ``-tileSize=11``, ``-stepSize=5``
 
 Get the primer sequences, in formats for isPcr and blat:
     
@@ -68,7 +64,7 @@ Get the primer sequences, in formats for isPcr and blat:
     extract_primers.py $PRIMERS isPcr > $PRIMERS_BASE.isPcr
     extract_primers.py $PRIMERS > $PRIMERS_BASE.fa
 
-Check against transcriptome data and reference genome:
+Check against transcriptome data and the reference genome:
 
 .. code-block:: bash
     
@@ -80,18 +76,23 @@ Check against transcriptome data and reference genome:
     isPcr -out=psl $TARGET $PRIMERS_BASE.isPcr $PRIMERS_BASE.isPcr.$TARGET_TAG.psl
     blat -minScore=15 -tileSize=11 -stepSize=5 -maxIntron=0 $TARGET $PRIMERS_BASE.fa $PRIMERS_BASE.$TARGET_TAG.psl
 
+.. note::
+    
+    TODO: It would be nice to add the annotations found by ``isPcr`` to the primer gff3 tags (not implemented yet). 
+
 Check the results
 -----------------
 
-See all places where ``primer3`` reported problems:
+Count and check all places where ``primer3`` reported problems:
 
 .. code-block:: bash
 
-    grep gt-primer $GFF | grep -c 'PROBLEMS='
+    <$GFF grep gt-primer | grep -c 'PROBLEMS='
+    <$GFF grep gt-primer | grep -c 'PROBLEMS=' | less -S
 
-Use agrep to find similar sequences in transcript scaffold, to check if the 
-settings of blat are ok. Line wrapping in ``fasta`` can lead to false negatives,
-but at least some sequences should be found:
+Use agrep to find similar sequences in the transcript scaffold, to check if the 
+sensitivity settings of blat are OK. Line wrapping in ``fasta`` can lead to false negatives,
+but at least some primers should yield hits:
 
 .. code-block:: bash
 
@@ -100,8 +101,8 @@ but at least some sequences should be found:
     agrep $SEQ $SCAFFOLD|grep $SEQ
 
 Import your primers to any spreadsheet program with some selected information on each
-primer. Use copy and paste, file format is tab separated values. When there is more 
-than one genotyping primer for one pcr product, the information on pcr product is repeated.
+primer. Use copy and paste, the file format is ``tab`` separated values. When there is more 
+than one genotyping primer for one PCR product, the information on the PCR product is repeated.
 
 .. code-block:: bash
 
