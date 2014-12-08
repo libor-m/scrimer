@@ -1,5 +1,5 @@
-Create reference assembly
-=========================
+Create a reference assembly
+==========================
 
 Use newbler to assemble the reads
 ---------------------------------
@@ -17,7 +17,7 @@ Here **newbler** is used to assemble the contigs. For 3 GB of read data the asse
 
 Remove contigs that are similar to each other
 ---------------------------------------------
-We'd like to get one transcript per locus, preferably the longest one. Otherwise the read mapping
+The aim is to get one transcript per locus, preferably the longest one. Otherwise the read mapping
 process would be faced with many ambiguous locations. We achieve this by:
 
 - doing all-to-all comparison within the isotigs
@@ -65,8 +65,9 @@ Check the results
     # view how many contigs we got after filtering
     grep -c '>' $SEQFILE.filtered
 
-Assembling of Illumina data
----------------------------
+Assembling Illumina data
+------------------------
+
 `Trinity <http://trinityrnaseq.sourceforge.net/>`_ gives fairly good results for transcriptome assembly from Illumina data.
 Simple Trinity usage looks like:
 

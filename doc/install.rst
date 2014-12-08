@@ -18,18 +18,18 @@ You need a default installation of **Python 2.7** [#Python]_ with **virtualenv**
     # with it's additional dependencies (pyvcf, pysam, pybedtools)
     pip install scrimer
 
-Scrimer depends on several python modules, that should be installed automatically using the above procedue.
+Scrimer depends on several python modules, that should be installed automatically using the above procedrue.
 
-- **pysam** [#pysam]_ is used to manipulate with indexed fasta and bam files
+- **pysam** [#pysam]_ is used to manipulate the indexed fasta and bam files
 - **pybedtools** [#pybedtools]_ is used to read and write the annotations
 - **PyVCF** [#PyVCF]_ is used to access variants data
 
 Special cases
 -------------
-If you're in an environment where you're not able to install virtualenv systemwide, we recommend to use 
+If you're in an environment where you're not able to install virtualenv systemwide, we recommend using 
 the technique described at http://eli.thegreenplace.net/2013/04/20/bootstrapping-virtualenv/.
 
-If you're in a grid environment, this can help with changing absolute paths on different nodes
+If you're in a grid environment, this can help with paths that differ on different nodes
 
 .. code-block:: bash
 
@@ -37,7 +37,7 @@ If you're in a grid environment, this can help with changing absolute paths on d
 
 Non-python dependecies
 ----------------------
-Apart from the python modules, the scrimer pipeline relies on other tools that should be installed 
+Apart from the Python modules, the Scrimer pipeline relies on other tools that should be installed 
 in your PATH. Follow the installation instructions in each package.
 
 - **bedtools** [#bedtools]_ is a dependency of pybedtools, used for manipulating with gff and bed files
@@ -46,7 +46,7 @@ in your PATH. Follow the installation instructions in each package.
 - **tabix** [#tabix]_ creates compressed and indexed verisions of annotation files
 - **GMAP** [#gmap]_ produces a spliced mapping of your contigs to the reference genome
 - **smalt** [#smalt]_ maps short reads to consensus contigs to discover variants
-- **GNU parallel** [#parallel]_ is used throughout the pipeline to speed up some lenghty calculations [#tange]_
+- **GNU parallel** [#parallel]_ is used throughout the pipeline to speed up some lengthy calculations [#tange]_
 - **blat** and **isPcr** [#blat]_ are used to check the designed primers
 - **Primer3** [#primer3]_ is used to find the most optimal primes sequences
 - **cutadapt** [#cutadapt]_ is used to remove cDNA synthesis primers.
@@ -54,25 +54,23 @@ in your PATH. Follow the installation instructions in each package.
 Additional tools can be installed to provide some more options.
 
 - **FastQC** [#FastQC]_ can be used to check the tag cleaning process
-- **agrep** [#agrep]_ and **tre-agrep** [#tre-agrep]_ can be used to check the tag cleaning process, 
-  compile by ``make`` command
-- **sort-alt** [#sortalt]_ provides alphanumeric sorting of chromosome names, 
-  compile by ``make`` command
-- **IGV** [#IGV]_ is great at visualizing the data when checking the results
+- **agrep** [#agrep]_ and **tre-agrep** [#tre-agrep]_ can be used to check the tag cleaning process
+- **sort-alt** [#sortalt]_ provides alphanumeric sorting of chromosome names, rename ``sort`` to ``sort-alt`` after compiling
+- **IGV** [#IGV]_ is great for visualizing the data when checking the results
 - **newbler** [#newbler]_ is the best option for assembling 454 mRNA data [#mundry]_ [#kumar]_
-- **MIRA** [#mira]_ does well on 454 transcriptome assembly as well [#mundry]_ [#kumar]_
+- **MIRA** [#mira]_ does well with 454 transcriptome assembly as well [#mundry]_ [#kumar]_
 - **sim4db** [#sim4db]_ can be used as alternative spliced mapper, 
-  part of kmer suite, apply our patch [#sim4db-patch]_ to get standard conformant output
-- **Pipe Viewer** [#pv]_ can be used to display progress of longer operations
+  part of the kmer suite, apply our patch [#sim4db-patch]_ to get standard conformant output
+- **Pipe Viewer** [#pv]_ can be used to display the progress of longer operations
 - **BioPython** [#BioPython]_ and **NumPy** [#numpy]_ are required for running ``5prime_stats.py``
 - **mawk** [#mawk]_, awk is often used in the pipeline, and mawk is usually an order of magnitude faster
-- **vcflib** [#vcflib]_ has nice interface for working with vcf files
+- **vcflib** [#vcflib]_ has a nice interface for working with vcf files (but new bcftools are good as well)
 
 .. _path:
 
 Add installed tools to your PATH
 --------------------------------
-To easily manage locations of tools that you're using with Scrimer pipeline, create a text file
+To easily manage locations of the tools that you're using with the Scrimer pipeline, create a text file
 containing paths to directories, where binaries of your tools are located.
 The format is one path per line, for example::
 

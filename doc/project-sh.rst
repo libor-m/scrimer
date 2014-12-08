@@ -1,41 +1,42 @@
 Set up project dependent settings
 =================================
 
-All commands in scrimer scripts and manual suppose that you will set some environment 
+All commands in Scrimer scripts and this manual suppose that you will set some environment 
 variables that define your project and that you add the required tools into your ``PATH``. 
 
 Directory layout
 ----------------
-Here we present a layout that we're using to organize all the data needed to run the pipeline.
-The inputs together with immediate (and final) results can total to tens of files. Having those
-files organized can help to prevent mistakes.
+Here we present the layout that we use to organize all the data needed to run the pipeline.
+The inputs together with intermediate (and final) results total to hundreds of files. Having those
+files organized can help prevent mistakes.
 
 .. note::
 
-    The way of organizing your data presented here is just our suggestion. Python scripts 
-    doing most of the work are not dependent on any directory structure.
+    The method of organizing your data presented here is just our suggestion. Python scripts 
+    doing most of the work are not dependent on any particular directory structure.
 
 Genomes directory
 ^^^^^^^^^^^^^^^^^
-We suppose that genome data can be shared among different projects and different people
-on the same machine. Thus we place it in location different from project specific data.
+We assume that genome data is shared among different projects and different people
+on the same machine. Thus we place it in a location that is different from project specific data.
+This is where the reference genome should be placed.
 
 Project directory
 ^^^^^^^^^^^^^^^^^
-A directory containing files specific for one input dataset. Various setps can be run with
+A directory containing files specific for one input dataset. Various steps can be run with
 various settings in the same project directory. We organize our files in a *waterfall*
-structure of directories, where each directory name is prefixed with two digit number.
-The directory name is some short meaningful description of the step, first digit in the 
+structure of directories, where each directory name is prefixed with a two digit number.
+The directory name is some short meaningful description of the step, the first digit in the 
 prefix corresponds to part of the process (read mapping, variant calling etc.), and the 
 second digit distinguishes substeps or runs with different settings.
 
-To start a new project, create a new direcotry. To use scrimer you have to convert your data
-to ``.fastq`` format. Put your ``.fastq`` data in a subdirecotry called ``00-raw``. 
+To start a new project, create a new directory. To use Scrimer you have to convert your data
+to the ``fastq`` format. Put your ``.fastq`` data in a subdirecotry called ``00-raw``. 
 
 project.sh
 ----------
 Create a file called ``project.sh`` in your project directory. It will consist of ``KEY=VALUE``
-lines that will define your project specific settings, and each time you want to use scrimer
+lines that will define your project specific settings, and each time you want to use Scrimer
 you'll start by:
 
 .. code-block:: bash

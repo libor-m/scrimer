@@ -4,7 +4,7 @@ Remove cDNA synthesis adaptors
 Quality check of the raw data
 -----------------------------
 Results of the quality check of the raw data can be used as a reference point
-to check the improvments done by this step.
+to check the improvements done by this step.
 
 .. code-block:: bash
 
@@ -33,9 +33,9 @@ reads according to the 'barcodes' stored in the sequences yourself.
 Remove cDNA synthesis primers with cutadapt
 -------------------------------------------
 Another source of noise in the data is the primers that were used for reverse transcription
-of mRNA and for following PCR amplification of cDNA. We remove them by ``cutadapt``.
+of mRNA and for the following PCR amplification of cDNA. We remove them using ``cutadapt``.
 
-Here if you've got more or less than three primers, you have to change the command by adding/removing
+If you have more or less than three primers, you have to change the command by adding/removing
 ``--anywhere=`` parts.
 
 .. code-block:: bash
@@ -55,16 +55,16 @@ Check the results
 -----------------
 It is necessary to check the results of adaptor cutting. 
 
-First we can check how many of the primers were missed by cutadapt. ``agrep`` uses a different 
+First you can check how many of the primers were missed by cutadapt. ``agrep`` uses a different 
 matching algorithm than cutadapt, so some remaining hits are usually found.
-``/dev/null`` is used as second input to ``agrep`` so the filenames are output.
+``/dev/null`` is used as the second input to ``agrep`` so the filenames are output.
 
 .. code-block:: bash
 
     NERR=5
     parallel agrep -c -$NERR "$PRIMER3" {} /dev/null ::: $OUT/*.fastq|grep -v /dev
 
-Next thing to check is logs produced by ``cutadapt``.
+The next thing to check is the logs produced by ``cutadapt``.
 Results for our data - 454 Titanium data from Smart kit synthesized cDNA: 
 
 - ~70% trimmed reads
@@ -75,7 +75,7 @@ Results for our data - 454 Titanium data from Smart kit synthesized cDNA:
 
     grep -A5 Processed $OUT/cutadapt.log | less
 
-Mean length of the removed sequences should be close to length of the adapter (31 in this case):
+The mean length of the removed sequences should be close to length of the adapter (31 in this case):
 
 .. code-block:: bash
 
@@ -93,7 +93,7 @@ Mean length of the removed sequences should be close to length of the adapter (3
     # 32      6656    0.0
     # ...
 
-Size of the ``.rest`` files is 1/500 of the ``.fastq`` (should be 1/250 for ``.fasta``)
+The size of the ``.rest`` files is 1/500 of the ``.fastq`` (should be 1/250 for ``.fasta``)
 
 .. code-block:: bash
 
@@ -108,7 +108,7 @@ The ``fastqc`` checks should be +- ok.
 Visual debugging
 ----------------
 If something in the previous checks looks weird, look directly at the data. Substitute filenames below with 
-names of your files. 
+the names of your files. 
 
 Look where the primers are in the sequence. ``tre-agrep`` is used to color the output of ``agrep``, because
 ``agrep`` throughput is ~ 42 MB/s while ``tre-agrep`` throughput is ~ 2 MB/s.
@@ -119,9 +119,9 @@ Look where the primers are in the sequence. ``tre-agrep`` is used to color the o
     NERR=5
     agrep -n -$NERR "$PRIMER3" $FQFILE |tre-agrep -$NERR "$PRIMER3" --color|less -S -R
 
-To find out how many differences should we allow in pattern matching, we try to find a value of ``NERR``
-where the primer sequence starts to match randomly inside the reads, and not only in the beginning.
-Notice the ``^`` marking start of the read in the first command.
+To find out how many differences should be allowed in the pattern matching, we try to find a value of ``NERR``
+where the primer sequence starts to match randomly inside the reads, and not only in at the beginning.
+Notice the ``^`` in the first command, marking the start of the read.
 
 .. code-block:: bash
 
@@ -138,7 +138,7 @@ In our sample results, numbers start to diverge for ``NERR`` > 5, so 5 is a good
 Read count statistics
 ---------------------
 
-For single file:
+For a single file:
 
 .. code-block:: bash
 

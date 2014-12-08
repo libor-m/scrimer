@@ -1,8 +1,5 @@
-Map reads to reference assembly
-===============================
-
-Map contigs to scaffold
------------------------
+Map contigs to the scaffold
+===========================
 
 Map all the reads using smalt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -21,7 +18,7 @@ Set up variables:
 Create index for the scaffold and map the reads.
 Mapping 3 GB of reads (fastq format) takes ~5 hours in 8 threads on Intel Xeon E5620, 0.5 GB memory
 per each mapping. 
-This step is probably worth some parallelization on multiple machines.
+This step would benefit from parallelization even on multiple machines (not implemented here).
 
 .. code-block:: bash
 
@@ -31,11 +28,11 @@ This step is probably worth some parallelization on multiple machines.
 
     # map each file, smalt is multithreaded so feed the files sequentially
     mkdir -p $OUT
-    for FQFILE in $INFILES
-    do
-      SAMFILE=$OUT/$( basename ${FQFILE%.*} ).sam
-      smalt map -n $CPUS -p -f sam -o $SAMFILE $SMALT_IDX $FQFILE
-    done
+    parallel -j 1 "smalt map -n $CPUS -p -f sam -o $OUT/{/.}.sam $SMALT_IDX {}" ::: $INFILES
+
+    # Illumina reads can be maped e.g. with bwa
+    bwa index $SCAFFOLD
+    parallel -j 1 "bwa mem -t $CPUS -R {/.} $SCAFFOLD {} > $OUT/{/.}.sam" ::: $INFILES
 
 Merge mapping output to single file 
 -----------------------------------

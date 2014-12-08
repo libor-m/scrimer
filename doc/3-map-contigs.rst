@@ -54,7 +54,7 @@ exon/gene models with sim4db:
     # construct the script for sim4db
     cat $SMALT_OUT | cigar_to_sim4db_scr.py $GENOMEFA.fai | sort --key=5n,5 > $SIM4_SCR
 
-Run sim4db using the script. (takes several seconds for the whole genome):
+Run sim4db using the script. (It takes several seconds for the whole genome.):
 
 .. code-block:: bash
 
@@ -65,7 +65,7 @@ Run sim4db using the script. (takes several seconds for the whole genome):
 
 Transfer genome annotations to our contigs
 ------------------------------------------
-Annotatate our sequences by data from similar sequences in the reference genome. Annotations are transferred
+Annotate our sequences using data from similar sequences in the reference genome. Annotations are transferred
 in coordinates relative to each of the mapped contigs. The input annotation data have to be sorted and indexed with tabix. Multiple contig mappings and multiple reference annotations can be used. 
 
 .. code-block:: bash
@@ -85,11 +85,12 @@ in coordinates relative to each of the mapped contigs. The input annotation data
     done  
 
 
-Create 'transcript scaffold' using the annotations
---------------------------------------------------
-Construct a 'transcript scaffold' (contigs joined in order of appearance on reference genome chromosomes).
-This is mainly because of viewing conveninence with IGV. 'N' gaps should be larger than max read size
-to avoid the mapping of the reads across gaps:
+Create a 'transcript scaffold' using the annotations
+----------------------------------------------------
+
+Construct a 'transcript scaffold' (contigs joined in their order of appearance on reference genome chromosomes).
+This is mainly because of viewing convenience with IGV. 'N' gaps should be larger than the longest read size
+to avoid mapping of the reads across gaps:
 
 .. code-block:: bash
     
@@ -115,6 +116,6 @@ to avoid the mapping of the reads across gaps:
     bgzip $OUTFILE
     tabix -p gff $OUTFILE.gz
 
-Transcript scaffold with the sorted ``.sorted.gff3`` is the first thing worth loading to :doc:`IGV <igv>`.
+The transcript scaffold with the sorted ``.sorted.gff3`` is the first thing worth loading to :doc:`IGV <igv>`.
 
 .. [#] http://sourceforge.net/apps/mediawiki/kmer/index.php?title=Getting_Started_with_Sim4db

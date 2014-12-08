@@ -1,10 +1,10 @@
-Prepare reference genome
-========================
+Prepare the reference genome
+============================
 
-Downlaod and prepare the reference genome
+Download and prepare the reference genome
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-- List of available genomes is at http://hgdownload.cse.ucsc.edu/downloads.html
+- A list of available genomes is at http://hgdownload.cse.ucsc.edu/downloads.html
 - We download the full data set, but it's possible to interrupt the download during xenoMrna (not needed, too big).
 - ``md5sum`` is a basic utility that should be present in your system, otherwise check your packages (yum, apt-get, ...)
 
@@ -20,9 +20,9 @@ Downlaod and prepare the reference genome
     md5sum -c md5sum.txt
     cat *.md5 | md5sum -c
 
-Now unpack the genome - this differs for genomes
+Now unpack the genome. This process differs for different genomes -
 some are in single .fa, some are split by chromosomes. Some archives are *tarbombs*, so unpack
-to ``chromFa`` directory to avoid possible mess:
+to directory ``chromFa`` to avoid a possible mess:
 
 .. code-block:: bash    
 
@@ -30,13 +30,13 @@ to ``chromFa`` directory to avoid possible mess:
     tar xvzf chromFa.tar.gz -C chromFa
 
 Create concatenated genome, use Heng Li's :ref:`sort-alt <sortalt>`
-to get common ordering of chromosomes:
+to get the common ordering of chromosomes:
 
 .. code-block:: bash
 
     find chromFa -type f | sort-alt -N | xargs cat > $GENOME.fa
 
-Downlaod all needed annotations
+Download all needed annotations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Annotation data is best obtained in UCSC table browser
