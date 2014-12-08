@@ -1,10 +1,10 @@
-# Scrimer: from 454 transcriptome data to SNaPShot primers
-Scrimer is a GNU/Linux pipeline for designing PCR and genotyping primers from 454 transcriptomic data. 
+# Scrimer: designing primers from transcriptome data
+Scrimer is a GNU/Linux pipeline for designing PCR and genotyping primers from transcriptomic data. 
 
 # Documentation
-http://scrimer.rtfd.org
+The documentation is available online: http://scrimer.rtfd.org
 
-Documentation in sphinx format is in the ``doc`` directory.
+Source files in sphinx format are in the ``doc`` directory.
 
 # Source code and bug reports
 https://github.com/libor-m/scrimer
