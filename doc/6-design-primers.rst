@@ -88,7 +88,7 @@ Count and check all places where ``primer3`` reported problems:
 .. code-block:: bash
 
     <$GFF grep gt-primer | grep -c 'PROBLEMS='
-    <$GFF grep gt-primer | grep -c 'PROBLEMS=' | less -S
+    <$GFF grep gt-primer | grep 'PROBLEMS=' | less -S
 
 Use agrep to find similar sequences in the transcript scaffold, to check if the 
 sensitivity settings of blat are OK. Line wrapping in ``fasta`` can lead to false negatives,

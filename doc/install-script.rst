@@ -171,3 +171,11 @@ sudo apt-get install cmake
 git clone --recursive git://github.com/ekg/freebayes.git
 cd freebayes/
 make && sudo make install
+
+bwa
+---
+# change 'CC = gcc' to 'CC = gcc -msse2'
+nano Makefile
+make
+cp bwa ~/scrimer-env/bin
+ 
