@@ -20,12 +20,13 @@ Scrimer is a set of Python and Bash scripts that serve as a glue for several ext
 The Python code is in the ``scrimer`` package, while Bash commands to run the Python scripts and the external
 programs can be found in this documentation.
 
-A detailed description of how to install Scrimer can be found here:
+You can install Scrimer either to your own GNU/Linux machine, or use a prebuilt VirtualBox image:
 
 .. toctree::
     :maxdepth: 1
     
     install
+    install-vbox
 
 Pipeline workflow
 -----------------
