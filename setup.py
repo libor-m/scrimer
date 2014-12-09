@@ -16,7 +16,7 @@ with open('LICENSE.txt') as f:
     license = f.read()
 
 setup(name='scrimer',
-      version='1.0',
+      version='1.1',
       description='Primer designing pipeline',
       author='Libor Morkovsky',
       author_email='morkovsk@natur.cuni.cz',
