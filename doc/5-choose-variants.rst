@@ -123,40 +123,40 @@ Quite high *strand bias* in RNASeq data can be expected, so don't filter on stra
 
 Convenience filtering
 ^^^^^^^^^^^^^^^^^^^^^
-
-Use ``pv`` as a progress meter. ``pv`` can be substituted by ``cat``:
+The required average depth per sample can be adjusted here.
+Using ``pv`` as a progress meter. ``pv`` can be substituted by ``cat``:
 
 .. code-block:: bash
 
     # filter on average read depth and site quality
     VCFINPUT=$VARIANTS-filtered.vcf.gz
     VCFOUTPUT=$VARIANTS-filt2.vcf.gz
-    pv -p $VCFINPUT | bgzip -d | vcf_filter.py --no-filtered - avg-dps sq| bgzip > $VCFOUTPUT
-    tabix -p vcf $VCFOUTPUT
+    pv -p $VCFINPUT | bgzip -d | vcf_filter.py --no-filtered - avg-dps --avg-depth-per-sample 5 sq --site-quality 30 | bgzip > $VCFOUTPUT
 
     # samtools > 0.1.19 produce conflicting info tags, get rid of it if the above filtering fails
-    pv -p $VCFINPUT | bgzip -d | sed 's/,Version="3"//' | vcf_filter.py --no-filtered - avg-dps sq| bgzip > $VCFOUTPUT
+    pv -p $VCFINPUT | bgzip -d | sed 's/,Version="3"//' | vcf_filter.py --no-filtered - avg-dps --avg-depth-per-sample 5 sq --site-quality 30 | bgzip > $VCFOUTPUT
 
     # freebayes output
-    zcat $OUT/variants-qual.vcf.gz| vcfutils.pl varFilter -1 0 | vcf_filter.py --no-filtered - avg-dps sq | bgzip > $OUT/demo-filt1.vcf.gz
+    zcat $OUT/variants-qual.vcf.gz| vcfutils.pl varFilter -1 0 | vcf_filter.py --no-filtered - avg-dps --avg-depth-per-sample 5 sq --site-quality 30 | bgzip > $OUT/demo-filt1.vcf.gz
 
 Interesting variants
 ^^^^^^^^^^^^^^^^^^^^
-
-Keep the rest in the file, with mark in ``FILTER`` filed. This way both 
-the selected and non-selected variants can be checked in IGV:
+The filtered out variants are kept in the file, only marked as filtered out. This way both 
+the selected and non-selected variants can be checked in IGV. Required minumum depth per sample can be adjusted here:
 
 .. code-block:: bash
 
+    # samtools files
     VCFINPUT=$VARIANTS-filt2.vcf.gz
     VCFOUTPUT=$VARIANTS-selected.vcf.gz
-    pv -p $VCFINPUT | bgzip -d | vcf_filter.py - dps --depth-per-sample 3 snp-only contrast-samples --sample-names lu02 lu14 lu15| bgzip > $VCFOUTPUT
-    tabix -p vcf $VCFOUTPUT
-
-    # freebayes
+    
+    # freebayes files
+    VCFINPUT=$OUT/demo-filt1.vcf.gz
     VCFOUTPUT=$OUT/demo-selected.vcf.gz
-    <$OUT/demo-filt1.vcf.gz pv -p | zcat | vcf_filter.py - dps --depth-per-sample 3 snp-only contrast-samples --sample-names lu02 lu14 lu15 | bgzip > $VCFOUTPUT
-
+    
+    <$VCFINPUT pv -p | zcat | vcf_filter.py - dps --depth-per-sample 3 snp-only contrast-samples --sample-names lu02 lu14 lu15 | bgzip > $VCFOUTPUT
+    tabix -p vcf $VCFOUTPUT
+    
 Check the results
 -----------------
 
@@ -168,7 +168,7 @@ can be checked (-> common power law distribution, additional peak at 999):
     zcat $VCFINPUT | grep -v '^#' | cut -f6 > $VCFINPUT.qual
     # and visualize externally
 
-    # or directly in terminal
+    # or directly in terminal, using bit.ly data_hacks tools
     zcat $VCFINPUT | grep -v '^#' | cut -f6 | histogram.py -b 30
 
 Count selected variants:
