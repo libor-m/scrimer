@@ -40,6 +40,9 @@ Non-python dependecies
 Apart from the Python modules, the Scrimer pipeline relies on other tools that should be installed 
 in your PATH. Follow the installation instructions in each package.
 
+For reference we recorded the :doc:`commands used to install those dependencies <install-script>` in
+the scrimer virtual box image. If your system is Debian 7, the commands could work verbatim.
+
 - **bedtools** [#bedtools]_ is a dependency of pybedtools, used for manipulating with gff and bed files
 - **samtools** [#samtools]_ is used for manipulating short read alignments, and for calling variants
 - **LASTZ** [#lastz]_ is used to find the longest isotigs

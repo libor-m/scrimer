@@ -81,7 +81,7 @@ In Windows this is done with PuTTY.
 In the black wnidow that appears, type your credentials:
 
 - login as: ``user``
-- user@localhost’s password: ``user``
+- user@localhost's password: ``user``
 
 .. image:: _static/putty.png
 
