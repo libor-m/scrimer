@@ -6,22 +6,24 @@ intermediate files generated from a subset of reads from our nightingale data se
 as a reference genome.
 
 The machine is set up tu use 2 GB of RAM and one CPU. Those settings can be adjusted in the main VirtualBox 
-interface.
+interface. We decieded to use 32 bit machine, because it is the most compatible setting. The downside is
+that you cannot use more than 4 GB of RAM. We can provide 64 bit image on request.
 
 Because of licensing issues, the image does not contain Newbler. Trinity is not included as well,
-because of high memory requirements of the assembly.
+because of high memory requirements of the assembly. We recommend to perform the assembly on
+a dedicated machine and then transfer the data back to the scrimer project directory.
 
 Virtual machine installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Installation steps (it should take less than 10 minutes):
 
-- Install VirtualBox (https://www.virtualbox.org/wiki/Downloads). It works on Linux and Mac too.
-- Download the virtual machine image from this link: http://goo.gl/ofOtS9 You'll get a single file with ``.ova`` extension 
+- Install VirtualBox (https://www.virtualbox.org/wiki/Downloads). It works on Windows, Linux and Mac.
+- Download the virtual machine image from http://goo.gl/Xf2cVU. You'll get a single file with ``.ova`` extension 
   on your hard drive.
 - You can either double click the ``.ova`` file, or run VirtualBox, and choose ``File > Import Appliance``.
   Follow the instructions after the import is started.
 
-After asuccessful instalation you should see something like this (only the machine list will contain jsut one machine).
+After a successful instalation you should see something like this (only the machine list will contain jsut one machine).
 Check whether you can start the virtual machine: click ``Start`` in the main VirtualBox window:
 
 .. image:: _static/vbox-main.png

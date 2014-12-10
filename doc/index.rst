@@ -28,6 +28,10 @@ You can install Scrimer either to your own GNU/Linux machine, or use a prebuilt 
     install
     install-vbox
 
+Additionally a `demo data set <http://goo.gl/YDc5f9>`_ is available (it is already included in the VirtualBox image).
+It contains the whole project tree of one Scrimer run with all the intermediate files and an IGV session file,
+which can be used to load all the relevant tracks to IGV at once.
+
 Pipeline workflow
 -----------------
 The workflow is divided into several steps. The intermediate results of these steps can be 
