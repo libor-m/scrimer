@@ -3,6 +3,13 @@ Welcome to Scrimer
 
 Scrimer is a GNU/Linux pipeline for designing PCR and genotyping primers from transcriptomic data. 
 
+Scrimer has been published in a peer-reviewed journal, please cite this if you use the pipeline
+or derive your own pipeline from our work:
+
+| Scrimer: designing primers from transcriptome data.
+| Mořkovský L, Pačes J, Rídl J, Reifová R.
+| Mol Ecol Resour. 2015 Nov;15(6):1415-20. doi: 10.1111/1755-0998.12403.
+
 .. note::
 
     We present Scrimer as an *end-to-end solution*, from raw reads to usable primers. This is intended to help
