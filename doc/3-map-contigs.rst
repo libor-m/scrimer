@@ -108,6 +108,9 @@ to avoid mapping of the reads across gaps:
 
     scaffold.py $INFILE $ANNOTS $OUT/$GNAME.fasta $OUTGFF
 
+    # index the new genome
+    samtools faidx $OUT/$GNAME.fasta
+
     # sort, compress and index the merged annotations
     # so they can be used further down in the pipeline
     OUTFILE=${OUTGFF%.*}.sorted.gff3

@@ -90,6 +90,9 @@ Count and check all places where ``primer3`` reported problems:
     <$GFF grep gt-primer | grep -c 'PROBLEMS='
     <$GFF grep gt-primer | grep 'PROBLEMS=' | less -S
 
+    # count unique variants with available primer set
+    <$GFF grep gt-primer|grep -v PROBLEM|egrep -o 'ID=[^;]+'|cut -c-13|sort -u|wc -l
+
 Use agrep to find similar sequences in the transcript scaffold, to check if the 
 sensitivity settings of blat are OK. Line wrapping in ``fasta`` can lead to false negatives,
 but at least some primers should yield hits:
